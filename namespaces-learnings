@@ -1,0 +1,213 @@
+Trials & Tribulations - Namespaces:
+
+
+# add the namespaces
+
+ip netns add ns1
+ip netns add ns2
+
+# create the switch
+ovs-vsctl add-br br0 -- set bridge br0 datapath=netdev
+
+#
+#### PORT 1
+# create an interinal ovs
+ovs-vsctl add-port br0 tap1 -- set Interface tap1 type=internal
+
+# attach it to namespace
+ip link set tap1 netns ns1
+
+# set the ports to up
+ip netns exec ns1 ip link set dev tap1 up
+
+#
+#### PORT 2
+
+# create an internal ovs port
+ovs-vsctl add-port br0 tap2 -- set Interface tap2 type=internal
+
+# attach it to namespace
+ip link set tap2 netns ns2
+
+# set the ports to up
+ip netns exec ns2 ip link set dev tap2 up
+
+
+Bridge "br0"
+        Port "br0"
+            Interface "br0"
+                type: internal
+        Port "tap2"
+            Interface "tap2"
+                type: internal
+        Port "tap1"
+            Interface "tap1"
+                type: internal
+
+
+ip netns exec ns1 ip addr add 10.1.1.1/24 dev tap1
+
+
+tap1      Link encap:Ethernet  HWaddr fe:26:46:cc:6c:3f  
+          inet addr:10.1.1.1  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::fc26:46ff:fecc:6c3f/64 Scope:Link
+          UP BROADCAST RUNNING PROMISC  MTU:1500  Metric:1
+          RX packets:8 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:500 
+          RX bytes:648 (648.0 B)  TX bytes:648 (648.0 B)
+
+
+
+
+ip netns exec ns2 ip addr add 10.2.1.1/24 dev tap2
+
+tap2      Link encap:Ethernet  HWaddr 72:7c:40:9b:6c:2d  
+          inet addr:10.2.1.1  Bcast:0.0.0.0  Mask:255.255.255.0
+          inet6 addr: fe80::707c:40ff:fe9b:6c2d/64 Scope:Link
+          UP BROADCAST RUNNING PROMISC  MTU:1500  Metric:1
+          RX packets:0 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:8 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:500 
+          RX bytes:0 (0.0 B)  TX bytes:648 (648.0 B)
+
+
+
+
+
+ip netns exec ns1 xterm
+
+sh zookeeper-server-start.sh /home/cep/kafka/kafka_2.10-0.8.2.1/config/zookeeper.properties
+
+[properties: clientPort=2181]
+
+----successful 
+
+
+ip netns exec ns1 xterm
+
+sh kafka-server-start.sh /home/cep/kafka/kafka_2.10-0.8.2.1/config/server.properties
+
+-- failed conneciton timed out
+[properties:port=9092,zookeeper.connect=10.1.1.1:2181]
+
+
+--reason no loopback interface in ns1
+
+solution: 
+ip netns exec ns1 ip link set lo up && delete /tmp/kafka-logs
+ip netns exec ns2 ip link set lo up 
+
+
+ip netns exec ns1 xterm
+sh kafka-topics.sh --create --topic test --zookeeper localhost:2181 --partitions 1 --replication-factor 1	
+
+--successful
+
+
+ip netns exec ns1 xterm
+kafka-console-consumer.sh --topic test --zookeeper localhost:2181
+
+--sucessful
+
+
+Now, consumer and zookeeper are running in Namespace ns1
+The producer needs to be brought up on ns2 ;
+
+
+
+
+but wait!
+
+can ns2 be pinged from ns1 and vice versa?
+
+ip netns exec ns1 ping 10.2.1.1
+--network unreachable!
+
+'#Add-flows
+ovs-ofctl add-flow br0 in_port=2,actions=output:1
+ovs-ofctl add-flow br0 in_port=1,actions=output:2
+
+'ping again
+ip netns exec ns1 ping 10.2.1.1
+--network unreachable!
+
+
+Using veth pairs
+
+##add the namespaces
+ip netns add ns1
+ip netns add ns2
+# create the switch
+
+
+ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
+#
+#### PORT 1
+# create a port pair
+ip link add tap1 type veth peer name ovs-tap1
+# attach one side to ovs
+ovs-vsctl add-port br0 ovs-tap1
+# attach the other side to namespace
+ip link set tap1 netns ns1
+# set the ports to up
+ip netns exec ns1 ip link set dev tap1 up
+ip netns exec ns1 ip addr add 10.1.1.1/24 dev tap1
+ip netns exec ns1 ip link set lo up
+ip link set dev ovs-tap1 up
+#
+#### PORT 2
+# create a port pair
+ip link add tap2 type veth peer name ovs-tap2
+# attach one side to ovs
+ovs-vsctl add-port br0 ovs-tap2
+# attach the other side to namespace
+ip link set tap2 netns ns2
+# set the ports to up
+ip netns exec ns2 ip link set dev tap2 up
+ip netns exec ns2 ip addr add 10.1.2.1/24 dev tap2
+ip netns exec ns2 ip link set lo up
+ip link set dev ovs-tap2 up
+
+
+ip netns exec ns1 ping 10.1.2.1
+Not successful again.
+
+
+both the ports should be in the same network! of course.
+
+ip netns exec ns1 ip addr add 10.1.1.1/24 dev tap1
+ip netns exec ns1 ip addr add 10.1.1.2/24 dev tap2
+
+
+ip netns exec ns1 ping 10.1.2.1 -- now successful
+
+
+Now change server.properties file.
+hostname=10.1.1.1
+advertised.hostname=10.1.1.1:2181
+
+zookeeper.connect=10.1.1.1:9092
+
+Used 10.1.1.1 instead of localhost in consumer and producer arguments.
+
+ works.
+
+consumer
+kafka server          producer
+zookeper 
+
+
+|-------------|               |--------------|  
+
+    ns1                        ns2
+
+|------|-------|              |------|-------|
+tap1| 10.1.1.1                 | tap2 - 10.1.1.2
+       |                             |
+       |      |--------------|       |
+       |                             |
+        -------user-ovs--------- ovs-tap2
+ovs-tap1
+               |-------------|
+
