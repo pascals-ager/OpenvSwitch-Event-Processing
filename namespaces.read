@@ -1,0 +1,15 @@
+#Set up two network namespaces connected by an userspace openvswitch
+#userspace openvswitch uses the same processing path as dpdk-ovs 
+#until dpdk-ovs configuration is complete, userspace ovs can be used for dev
+
+Setup: run the following scripts in order
+1. sh startup.sh
+2. sh veth-setup.sh
+3. ip netns exec ns1 sh consumer-start.sh
+4. ip netns exec ns2 sh producer-start.sh
+
+Destroy:
+
+1. rm -r /tmp/kafka-logs && rm -r /tmp/zookeper
+2. sh veth-dest-sh
+3. sh end.sh
