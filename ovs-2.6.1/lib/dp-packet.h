@@ -73,6 +73,11 @@ static inline void *dp_packet_base(const struct dp_packet *);
 static inline void dp_packet_set_base(struct dp_packet *, void *);
 
 static inline uint32_t dp_packet_size(const struct dp_packet *);
+/* Advith */
+static inline uint16_t dp_packet_data_ofs(const struct dp_packet *);
+static inline uint16_t dp_packet_l4_ofs(const struct dp_packet *);
+static inline uint32_t dp_packet_cutlen(const struct dp_packet *);
+
 static inline void dp_packet_set_size(struct dp_packet *, uint32_t);
 
 static inline uint16_t dp_packet_get_allocated(const struct dp_packet *);
@@ -92,6 +97,9 @@ static inline void *dp_packet_l4(const struct dp_packet *);
 static inline void dp_packet_set_l4(struct dp_packet *, void *);
 static inline size_t dp_packet_l4_size(const struct dp_packet *);
 static inline const void *dp_packet_get_tcp_payload(const struct dp_packet *);
+/* Advith */
+static inline const void *dp_packet_get_payload(const struct dp_packet *);
+
 static inline const void *dp_packet_get_udp_payload(const struct dp_packet *);
 static inline const void *dp_packet_get_sctp_payload(const struct dp_packet *);
 static inline const void *dp_packet_get_icmp_payload(const struct dp_packet *);
@@ -357,6 +365,24 @@ dp_packet_get_tcp_payload(const struct dp_packet *b)
     return NULL;
 }
 
+/* Advith*/
+static inline const void *
+dp_packet_get_payload(const struct dp_packet *b)
+{
+    size_t l4_size = dp_packet_l4_size(b);
+
+    if (OVS_LIKELY(l4_size >= TCP_HEADER_LEN)) {
+        struct tcp_header *tcp = dp_packet_l4(b);
+        int tcp_len = TCP_OFFSET(tcp->tcp_ctl) * 4;
+
+        if (OVS_LIKELY(tcp_len >= TCP_HEADER_LEN && tcp_len <= l4_size)) {
+            return (const char *) dp_packet_data(b) + l4_size;
+        }
+    }
+    return NULL;
+}
+
+
 static inline const void *
 dp_packet_get_udp_payload(const struct dp_packet *b)
 {
@@ -462,6 +488,26 @@ static inline uint32_t
 dp_packet_size(const struct dp_packet *b)
 {
     return b->size_;
+}
+
+/*Thesis Advith*/
+static inline uint16_t
+dp_packet_data_ofs(const struct dp_packet *b)
+{
+    return b->data_ofs;
+}
+
+
+static inline uint16_t
+dp_packet_l4_ofs(const struct dp_packet *b)
+{
+    return b->l4_ofs;
+}
+
+static inline uint32_t 
+dp_packet_cutlen(const struct dp_packet *b)
+{
+    return b->cutlen;
 }
 
 static inline void

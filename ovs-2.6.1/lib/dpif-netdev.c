@@ -3794,6 +3794,34 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
     struct flow_tnl orig_tunnel;
     int err;
 
+/* Advith*/
+    //char * payload;
+
+    //payload = ofp_packet_to_string(dp_packet_get_tcp_payload(packet_),118);
+
+    uint16_t data_ofs=dp_packet_data_ofs(packet_);
+    uint32_t size =dp_packet_size(packet_);
+    uint16_t l4_ofs= dp_packet_l4_ofs(packet_);
+    size_t l4_size = dp_packet_l4_size(packet_);
+    //int tcp_len = 8;
+    uint32_t cutlen = dp_packet_cutlen(packet_);
+
+   
+
+    /*struct tcp_header *tcp = (tcp_header *)dp_packet_l4(packet_);
+     tcp_len = TCP_OFFSET(tcp->tcp_ctl) * 4;*/
+
+    //VLOG_DBG("VLOG: The size of packet is %d", sizeof(packet_)); 
+    VLOG_DBG("VLOG:Packet size is  %d\n",size);
+    VLOG_DBG("VLOG:TCP payload (char)is %s\n",dp_packet_get_tcp_payload(packet_));
+    VLOG_DBG("VLOG:TCP payload (int) is %d\n",dp_packet_get_tcp_payload(packet_));
+    //VLOG_DBG("VLOG:packet data is  %s\n",dp_packet_data(packet_));
+    VLOG_DBG("VLOG:packet data offset is  %d\n",data_ofs);
+    VLOG_DBG("VLOG:packet l4 offset is  %d\n",l4_ofs);
+    VLOG_DBG("VLOG:packet l4 size is %d\n",l4_size);
+    //VLOG_DBG("VLOG:tcp len is %d\n",tcp_len);
+    VLOG_DBG("VLOG:cut len is %d\n",cutlen);
+   /* Advith*/ 
     if (OVS_UNLIKELY(!dp->upcall_cb)) {
         return ENODEV;
     }
@@ -3829,7 +3857,7 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
 
         odp_flow_key_format(key.data, key.size, &ds);
 
-        VLOG_DBG("%s: %s upcall:\n%s\n%s", dp->name,
+        VLOG_DBG("%s: %s upcall:\n%s\nVLOG: packet_str %s", dp->name,
                  dpif_upcall_type_to_string(type), ds_cstr(&ds), packet_str);
 
         ofpbuf_uninit(&key);

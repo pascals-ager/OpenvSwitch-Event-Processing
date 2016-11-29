@@ -4,8 +4,7 @@ ip netns add ns2
 # create the switch
 
 
-ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
-#### PORT 1
+# PORT 1
 # create a port pair
 ip link add tap1 type veth peer name ovs-tap1
 # attach one side to ovs
