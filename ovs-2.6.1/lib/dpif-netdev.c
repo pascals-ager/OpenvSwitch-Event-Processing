@@ -3795,26 +3795,14 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
     struct flow_tnl orig_tunnel;
     int err;
 
-/* Advith*/
-   
-
-    uint16_t data_ofs=dp_packet_data_ofs(packet_);
-    uint32_t size =dp_packet_size(packet_);
-    uint16_t l4_ofs= dp_packet_l4_ofs(packet_);
     size_t l4_size = dp_packet_l4_size(packet_);
-    //int tcp_len = 8;
-    uint32_t cutlen = dp_packet_cutlen(packet_);
-
-
-
-     const char *  payload = dp_packet_get_tcp_payload(packet_);
-
+    const char *  payload = dp_packet_get_udp_payload(packet_);
 
      if (payload) {
                 
                     struct ds string = DS_EMPTY_INITIALIZER;
 
-                    ds_put_hex(&string,payload,l4_size-32);
+                    ds_put_hex(&string,payload,l4_size-8);
                     char *try = ds_steal_cstr(&string);
                     VLOG_DBG("VLOG %s\n",try);
                     ds_destroy(&string);
@@ -3822,9 +3810,18 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
                 
             }
 
+/* Advith*/
+   
+/*
+    uint16_t data_ofs=dp_packet_data_ofs(packet_);
+    uint32_t size =dp_packet_size(packet_);
+    uint16_t l4_ofs= dp_packet_l4_ofs(packet_);
+    size_t l4_size = dp_packet_l4_size(packet_);
+    //int tcp_len = 8;
+    uint32_t cutlen = dp_packet_cutlen(packet_); 
 
 
- 
+
 
     
     /*char pack[200];
@@ -3852,7 +3849,9 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
     VLOG_DBG("VLOG:packet l4 size is %d\n",l4_size);
     //VLOG_DBG("VLOG:tcp len is %d\n",tcp_len);
     VLOG_DBG("VLOG:cut len is %d\n",cutlen);
-       
+
+     */  
+
    /* Advith */
 
     if (OVS_UNLIKELY(!dp->upcall_cb)) {

@@ -1,3 +1,3 @@
 #!/bin/bash
 cd /usr/src/cep/kafka_2.10-0.8.2.1/bin/
-sh kafka-console-producer.sh --topic test --broker-list 10.1.1.1:9092
+sh kafka-console-producer.sh --topic advith --broker-list 10.1.1.1:9092

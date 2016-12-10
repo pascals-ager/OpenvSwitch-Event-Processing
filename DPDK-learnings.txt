@@ -1,0 +1,120 @@
+  Enter hex bitmask of cores to execute testpmd app on
+  Example: to execute app on cores 0 to 7, enter 0xff
+bitmask: 0x05
+Launching app
+EAL: Detected 5 lcore(s)
+EAL: No free hugepages reported in hugepages-1048576kB
+EAL: Probing VFIO support...
+EAL: WARNING: cpu flags constant_tsc=yes nonstop_tsc=no -> using unreliable clock cycles !
+PMD: bnxt_rte_pmd_init() called for (null)
+EAL: PCI device 0000:00:07.0 on NUMA socket -1
+EAL:   probe driver: 8086:154c rte_i40evf_pmd
+EAL: PCI device 0000:00:09.0 on NUMA socket -1
+EAL:   probe driver: 8086:1572 rte_i40e_pmd
+PMD: eth_i40e_dev_init(): FW 5.0 API 1.5 NVM 05.00.02 eetrack 80002284
+EAL: PCI device 0000:00:0a.0 on NUMA socket -1
+EAL:   probe driver: 8086:1572 rte_i40e_pmd
+PMD: eth_i40e_dev_init(): FW 5.0 API 1.5 NVM 05.00.02 eetrack 80002284
+Interactive-mode selected
+USER1: create a new mbuf pool <mbuf_pool_socket_0>: n=155456, size=2176, socket=0
+Configuring Port 0 (socket 0)
+Port 0: 3C:FD:FE:9E:EE:21
+Configuring Port 1 (socket 0)
+Port 1: 3C:FD:FE:9F:A8:D2
+Checking link statuses...
+Port 0 Link Down
+Port 1 Link Down
+Done
+testpmd>
+
+
+
+
+root@dsp-marcel-cepinp:/usr/src# ovs-appctl dpif-netdev/pmd-stats-show
+main thread:
+        emc hits:0
+        megaflow hits:0
+        avg. subtable lookups per hit:0.00
+        miss:0
+        lost:0
+        polling cycles:3752005 (100.00%)
+        processing cycles:0 (0.00%)
+pmd thread numa_id 0 core_id 0:
+        emc hits:0
+        megaflow hits:0
+        avg. subtable lookups per hit:0.00
+        miss:0
+        lost:0
+        polling cycles:71865879902 (100.00%)
+        processing cycles:0 (0.00%)
+
+		
+		
+		
+root@dsp-marcel-cepinp:/usr/src# ovs-appctl dpif-netdev/pmd-rxq-show
+pmd thread numa_id 0 core_id 0:
+        isolated : false
+        port: dpdk0     queue-id: 0
+        port: dpdk1     queue-id: 0
+
+root@dsp-marcel-cepinp:/usr/src# ovs-vsctl show
+d2ba5d5e-0d45-4b74-973b-917e9c8c3d15
+    Bridge "br0"
+        Port "dpdk1"
+            Interface "dpdk1"
+                type: dpdk
+        Port "br0"
+            Interface "br0"
+                type: internal
+        Port "dpdk0"
+            Interface "dpdk0"
+                type: dpdk
+
+				
+				Option: 23
+
+
+Network devices using DPDK-compatible driver
+============================================
+0000:00:09.0 'Ethernet Controller X710 for 10GbE SFP+' drv=igb_uio unused=i40e
+0000:00:0a.0 'Ethernet Controller X710 for 10GbE SFP+' drv=igb_uio unused=i40e
+
+Network devices using kernel driver
+===================================
+0000:00:07.0 'XL710/X710 Virtual Function' if=ens7 drv=i40evf unused=igb_uio *Active*
+
+Other network devices
+=====================
+<none>
+
+
+
+
+--------------------------------------------------------------------------
+
+
+
+
+  Enter hex bitmask of cores to execute testpmd app on
+  Example: to execute app on cores 0 to 7, enter 0xff
+bitmask: 0x05
+Launching app
+EAL: Detected 5 lcore(s)
+EAL: No free hugepages reported in hugepages-1048576kB
+EAL: Error - exiting with code: 1
+  Cause: Cannot create lock on '/var/run/.rte_config'. Is another primary process running?
+
+Press enter to continue ...'/var/run/.rte_config'
+
+
+Maybe cos I have OVS with DPDK already set up??
+
+"As for your specific issue. If you have a DPDK process running to manage the KNI device, 
+that is the process holding the lock on .rte_config. 
+You will need to run the second process with a different file-prefix parameter to have two DPDK processes running side-by-side.
+"
+
+http://dpdk.org/ml/archives/dev/2015-June/018865.html
+
+
+		
