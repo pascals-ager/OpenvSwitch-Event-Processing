@@ -329,6 +329,8 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
     case MFF_TCP_FLAGS:
         return !wc->masks.tcp_flags;
 
+    case MFF_UDP_PYD:
+         return !wc->masks.udp_pyd;
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -523,6 +525,7 @@ mf_is_value_valid(const struct mf_field *mf, const union mf_value *value)
         return !(value->be32 & ~htonl(CS_SUPPORTED_MASK));
 
     case MFF_N_IDS:
+    case MFF_UDP_PYD:
     default:
         OVS_NOT_REACHED();
     }
@@ -769,6 +772,10 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
         break;
 
     case MFF_N_IDS:
+        break;
+    case MFF_UDP_PYD:
+        value->be64 = flow->udp_pyd;
+        break;
     default:
         OVS_NOT_REACHED();
     }
@@ -1031,6 +1038,7 @@ mf_set_value(const struct mf_field *mf,
         break;
 
     case MFF_N_IDS:
+    case MFF_UDP_PYD:
     default:
         OVS_NOT_REACHED();
     }
@@ -1365,6 +1373,10 @@ mf_set_flow_value(const struct mf_field *mf,
         break;
 
     case MFF_N_IDS:
+        break;
+    case MFF_UDP_PYD:
+        flow->udp_pyd = value->be64;
+        break;        
     default:
         OVS_NOT_REACHED();
     }
@@ -1694,6 +1706,11 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         memset(&match->flow.nd_target, 0, sizeof match->flow.nd_target);
         break;
 
+    case MFF_UDP_PYD:
+        match->wc.masks.udp_pyd = htons(0);
+        match->flow.udp_pyd = htons(0);
+        break;
+
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -1923,6 +1940,7 @@ mf_set(const struct mf_field *mf,
         match_set_tcp_flags_masked(match, value->be16, mask->be16);
         break;
 
+    case MFF_UDP_PYD:    
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();

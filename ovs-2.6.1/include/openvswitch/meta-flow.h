@@ -1773,7 +1773,23 @@ enum OVS_PACKED_ENUM mf_field_id {
      */
     MFF_ND_TLL,
 
-    MFF_N_IDS
+    MFF_N_IDS,
+
+    /* "udp_pyd".
+     *
+     * UDP payload
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read.
+     * NXM: none
+     * OXM: none
+     * OF1.0: exact match.
+     */
+
+    MFF_UDP_PYD
 };
 
 /* A set of mf_field_ids. */

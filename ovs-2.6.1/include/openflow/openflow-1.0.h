@@ -282,8 +282,10 @@ struct ofp10_match {
     ovs_be32 nw_dst;           /* IP destination address. */
     ovs_be16 tp_src;           /* TCP/UDP source port. */
     ovs_be16 tp_dst;           /* TCP/UDP destination port. */
+    ovs_be64 udp_pyd; 
+    
 };
-OFP_ASSERT(sizeof(struct ofp10_match) == 40);
+OFP_ASSERT(sizeof(struct ofp10_match) == 48);             /* 40->48 CEP */
 
 enum ofp10_flow_mod_flags {
     OFPFF10_EMERG       = 1 << 2 /* Part of "emergency flow cache". */
@@ -310,7 +312,7 @@ struct ofp10_flow_mod {
     /* Followed by OpenFlow actions whose length is inferred from the length
      * field in the OpenFlow header. */
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_mod) == 64);
+OFP_ASSERT(sizeof(struct ofp10_flow_mod) == 72);        /* 64->72 CEP */
 
 /* Flow removed (datapath -> controller). */
 struct ofp10_flow_removed {
@@ -329,7 +331,7 @@ struct ofp10_flow_removed {
     ovs_be64 packet_count;
     ovs_be64 byte_count;
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_removed) == 80);
+OFP_ASSERT(sizeof(struct ofp10_flow_removed) == 88);    /* 80->88 CEP */
 
 /* Stats request of type OFPST_AGGREGATE or OFPST_FLOW. */
 struct ofp10_flow_stats_request {
@@ -338,17 +340,22 @@ struct ofp10_flow_stats_request {
                                  or 0xff for all tables. */
     uint8_t pad;              /* Align to 32 bits. */
     ovs_be16 out_port;        /* Require matching entries to include this
-                                 as an output port.  A value of OFPP_NONE
+                                  as an output port.  A value of OFPP_NONE
                                  indicates no restriction. */
+    uint8_t pad1[4];
+                         
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_stats_request) == 44);
+OFP_ASSERT(sizeof(struct ofp10_flow_stats_request) == 56);     /* 44->56->60->64->52 CEP */
 
 /* Body of reply to OFPST_FLOW request. */
 struct ofp10_flow_stats {
+    
     ovs_be16 length;          /* Length of this entry. */
     uint8_t table_id;         /* ID of table flow came from. */
     uint8_t pad;
+    uint8_t pad1[4];
     struct ofp10_match match; /* Description of fields. */
+    uint8_t pad3[4];
     ovs_be32 duration_sec;    /* Time flow has been alive in seconds. */
     ovs_be32 duration_nsec;   /* Time flow has been alive in nanoseconds
                                  beyond duration_sec. */
@@ -360,9 +367,10 @@ struct ofp10_flow_stats {
     ovs_32aligned_be64 cookie;       /* Opaque controller-issued identifier. */
     ovs_32aligned_be64 packet_count; /* Number of packets in flow. */
     ovs_32aligned_be64 byte_count;   /* Number of bytes in flow. */
+      
     /* Followed by OpenFlow actions whose length is inferred from 'length'. */
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_stats) == 88);
+OFP_ASSERT(sizeof(struct ofp10_flow_stats) == 104);       /* 88->104 CEP */
 
 /* Body of reply to OFPST_TABLE request. */
 struct ofp10_table_stats {
