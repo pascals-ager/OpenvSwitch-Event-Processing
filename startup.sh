@@ -17,6 +17,6 @@ export DB_SOCK=/usr/local/var/run/openvswitch/db.sock
 ovs-vsctl --no-wait init
 ovs-vswitchd --pidfile --detach
 
-ovs-appctl vlog/set netdev_linux:syslog:dbg && ovs-appctl vlog/set dpif_netdev:syslog:dbg && ovs-appctl vlog/set netlink_socket:syslog:dbg && ovs-appctl vlog/set ofproto_dpif_upcall:syslog:dbg && ovs-appctl vlog/set ofproto_dpif:syslog:dbg
+#ovs-appctl vlog/set netdev_linux:syslog:dbg && ovs-appctl vlog/set dpif_netdev:syslog:dbg && ovs-appctl vlog/set netlink_socket:syslog:dbg && ovs-appctl vlog/set ofproto_dpif_upcall:syslog:dbg && ovs-appctl vlog/set ofproto_dpif:syslog:dbg
 
 

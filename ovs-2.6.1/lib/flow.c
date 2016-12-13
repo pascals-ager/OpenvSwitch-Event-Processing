@@ -30,6 +30,7 @@
 #include "coverage.h"
 #include "csum.h"
 #include "openvswitch/dynamic-string.h"
+#include "openvswitch/vlog.h"
 #include "hash.h"
 #include "jhash.h"
 #include "openvswitch/match.h"
@@ -43,7 +44,7 @@
 
 COVERAGE_DEFINE(flow_extract);
 COVERAGE_DEFINE(miniflow_malloc);
-
+VLOG_DEFINE_THIS_MODULE(flow_extract);
 /* U64 indices for segmented flow classification. */
 const uint8_t flow_segment_u64s[4] = {
     FLOW_SEGMENT_1_ENDS_AT / sizeof(uint64_t),
@@ -125,7 +126,7 @@ struct mf_ctx {
  * away.  Some GCC versions gave warnings on ALWAYS_INLINE, so these are
  * defined as macros. */
 
-#if (FLOW_WC_SEQ != 36)
+#if (FLOW_WC_SEQ != 37)
 #define MINIFLOW_ASSERT(X) ovs_assert(X)
 BUILD_MESSAGE("FLOW_WC_SEQ changed: miniflow_extract() will have runtime "
                "assertions enabled. Consider updating FLOW_WC_SEQ after "
@@ -281,6 +282,9 @@ BUILD_MESSAGE("FLOW_WC_SEQ changed: miniflow_extract() will have runtime "
     memcpy(MF.data, (VALUEP), 2 * ETH_ADDR_LEN);                \
     MF.data += 1;                   /* First word only. */      \
 }
+
+#define miniflow_push_be64(MF, FIELD, VALUE)                        \
+    miniflow_push_be64_(MF, offsetof(struct flow, FIELD), VALUE)
 
 #define miniflow_push_uint32(MF, FIELD, VALUE)                      \
     miniflow_push_uint32_(MF, offsetof(struct flow, FIELD), VALUE)
@@ -774,10 +778,22 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
         } else if (OVS_LIKELY(nw_proto == IPPROTO_UDP)) {
             if (OVS_LIKELY(size >= UDP_HEADER_LEN)) {
                 const struct udp_header *udp = data;
+                size_t l4_size = dp_packet_l4_size(packet); /*CEP*/
+                const char *  payload = dp_packet_get_udp_payload(packet);
 
+            if (payload) {
+                    struct ds string = DS_EMPTY_INITIALIZER;
+                    ds_put_hex(&string,payload,l4_size-8);
+                    char *try = ds_steal_cstr(&string);
+                    VLOG_DBG("VLOG %s\n",try);
+                    miniflow_push_be64(mf, udp_pyd, try);
+                    ds_destroy(&string);
+                    free(try);                
+            }
                 miniflow_push_be16(mf, tp_src, udp->udp_src);
                 miniflow_push_be16(mf, tp_dst, udp->udp_dst);
                 miniflow_pad_to_64(mf, tp_dst);
+                
             }
         } else if (OVS_LIKELY(nw_proto == IPPROTO_SCTP)) {
             if (OVS_LIKELY(size >= SCTP_HEADER_LEN)) {
@@ -869,7 +885,7 @@ flow_get_metadata(const struct flow *flow, struct match *flow_metadata)
 {
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 36);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
 
     match_init_catchall(flow_metadata);
     if (flow->tunnel.tun_id != htonll(0)) {
@@ -1275,7 +1291,7 @@ void flow_wildcards_init_for_packet(struct flow_wildcards *wc,
     memset(&wc->masks, 0x0, sizeof wc->masks);
 
     /* Update this function whenever struct flow changes. */
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 36);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
 
     if (flow_tnl_dst_is_set(&flow->tunnel)) {
         if (flow->tunnel.flags & FLOW_TNL_F_KEY) {
@@ -1392,7 +1408,7 @@ void
 flow_wc_map(const struct flow *flow, struct flowmap *map)
 {
     /* Update this function whenever struct flow changes. */
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 36);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
 
     flowmap_init(map);
 
@@ -1434,6 +1450,7 @@ flow_wc_map(const struct flow *flow, struct flowmap *map)
         FLOWMAP_SET(map, nw_ttl);
         FLOWMAP_SET(map, tp_src);
         FLOWMAP_SET(map, tp_dst);
+        FLOWMAP_SET(map, udp_pyd);  /* CEP */
 
         if (OVS_UNLIKELY(flow->nw_proto == IPPROTO_IGMP)) {
             FLOWMAP_SET(map, igmp_group_ip4);
@@ -1450,6 +1467,7 @@ flow_wc_map(const struct flow *flow, struct flowmap *map)
         FLOWMAP_SET(map, nw_ttl);
         FLOWMAP_SET(map, tp_src);
         FLOWMAP_SET(map, tp_dst);
+        FLOWMAP_SET(map, udp_pyd);   /* CEP */
 
         if (OVS_UNLIKELY(flow->nw_proto == IPPROTO_ICMPV6)) {
             FLOWMAP_SET(map, nd_target);
@@ -1476,7 +1494,7 @@ void
 flow_wildcards_clear_non_packet_fields(struct flow_wildcards *wc)
 {
     /* Update this function whenever struct flow changes. */
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 36);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
 
     memset(&wc->masks.metadata, 0, sizeof wc->masks.metadata);
     memset(&wc->masks.regs, 0, sizeof wc->masks.regs);
@@ -1620,7 +1638,7 @@ flow_wildcards_set_xxreg_mask(struct flow_wildcards *wc, int idx,
 uint32_t
 miniflow_hash_5tuple(const struct miniflow *flow, uint32_t basis)
 {
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 36);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
     uint32_t hash = basis;
 
     if (flow) {
@@ -1667,7 +1685,7 @@ ASSERT_SEQUENTIAL(ipv6_src, ipv6_dst);
 uint32_t
 flow_hash_5tuple(const struct flow *flow, uint32_t basis)
 {
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 36);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
     uint32_t hash = basis;
 
     if (flow) {
@@ -2134,7 +2152,7 @@ flow_push_mpls(struct flow *flow, int n, ovs_be16 mpls_eth_type,
         flow->mpls_lse[0] = set_mpls_lse_values(ttl, tc, 1, htonl(label));
 
         /* Clear all L3 and L4 fields and dp_hash. */
-        BUILD_ASSERT(FLOW_WC_SEQ == 36);
+        BUILD_ASSERT(FLOW_WC_SEQ == 37);
         memset((char *) flow + FLOW_SEGMENT_2_ENDS_AT, 0,
                sizeof(struct flow) - FLOW_SEGMENT_2_ENDS_AT);
         flow->dp_hash = 0;
