@@ -24,6 +24,7 @@
 #include <string.h>
 #include "bitmap.h"
 #include "byte-order.h"
+
 #include "openvswitch/compiler.h"
 #include "openflow/nicira-ext.h"
 #include "openflow/openflow.h"
@@ -357,7 +358,7 @@ flowmap_set(struct flowmap *fm, size_t idx, unsigned int n_bits)
     size_t unit = idx / MAP_T_BITS;
 
     idx %= MAP_T_BITS;
-
+    
     fm->bits[unit] |= n_bits_mask << idx;
     /* The seemingly unnecessary bounds check on 'unit' is a workaround for a
      * false-positive array out of bounds error by GCC 4.9. */

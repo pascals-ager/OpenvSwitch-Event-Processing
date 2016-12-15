@@ -123,20 +123,20 @@ struct flow {
     ovs_be16 pad3;              /* Pad to 64 bits. */
 
     /* L4 (64-bit aligned) */
+    ovs_be64 udp_pyd;           /* 64-bit UDP payload extension CEP */
     ovs_be16 tp_src;            /* TCP/UDP/SCTP source port/ICMP type. */
-    ovs_be16 tp_dst;            /* TCP/UDP/SCTP destination port/ICMP code. */
-    ovs_be32 igmp_group_ip4;    /* IGMP group IPv4 address. */
-    ovs_be64 udp_pyd;           /* 64-bit UDP payload extension CEP */    
+    ovs_be16 tp_dst;            /* TCP/UDP/SCTP destination port/ICMP code. */ 
+    ovs_be32 igmp_group_ip4;    /* IGMP group IPv4 address. */        
                                 /* Keep last for BUILD_ASSERT_DECL below. */
 };
 BUILD_ASSERT_DECL(sizeof(struct flow) % sizeof(uint64_t) == 0);
 BUILD_ASSERT_DECL(sizeof(struct flow_tnl) % sizeof(uint64_t) == 0);
 
 #define FLOW_U64S (sizeof(struct flow) / sizeof(uint64_t))
-
+/*8 bytes added on to struct flow due to udp_pyd CEP 248->256*/
 /* Remember to update FLOW_WC_SEQ when changing 'struct flow'. */
 BUILD_ASSERT_DECL(offsetof(struct flow, igmp_group_ip4) + sizeof(uint32_t)
-                  == sizeof(struct flow_tnl) + 248
+                  == sizeof(struct flow_tnl) + 256
                   && FLOW_WC_SEQ == 37);
 
 /* Incremental points at which flow classification may be performed in

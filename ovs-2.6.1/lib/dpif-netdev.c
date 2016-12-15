@@ -4068,10 +4068,37 @@ handle_packet_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet,
     match.tun_md.valid = false;
     miniflow_expand(&key->mf, &match.flow);
 
+    const struct flow *fl = &match.flow;
+
     ofpbuf_clear(actions);
     ofpbuf_clear(put_actions);
 
     dpif_flow_hash(pmd->dp->dpif, &match.flow, sizeof match.flow, &ufid);
+    VLOG_DBG("VLOG Here I am bro!\n");
+    VLOG_DBG("VLOg tp_src %d\n",fl->tp_src);   
+    VLOG_DBG("VLOg tp_dst %d\n",fl->tp_dst); 
+    VLOG_DBG("VLOg nw_dst %"PRId32"\n",fl->nw_dst);  
+    VLOG_DBG("VLOg nw_frag %d\n",fl->nw_frag); 
+    VLOG_DBG("VLOg nw_tos %d\n",fl->nw_tos); 
+    VLOG_DBG("VLOg nw_ttl %d\n",fl->nw_ttl); 
+    VLOG_DBG("VLOg nw_proto %d\n",fl->nw_proto); 
+     VLOG_DBG("VLOg tcp_flags %"PRId16"\n",fl->tcp_flags);  
+      VLOG_DBG("VLOg pad3 %"PRId16"\n",fl->pad3);   
+    VLOG_DBG("VLOg udp_pyd %"PRId64"\n",fl->udp_pyd);  
+    VLOG_DBG("VLOg (HEX) udp_pyd %"PRIx64"\n",fl->udp_pyd);
+
+ const char *s = flow_to_string(fl);
+
+                    struct ds string = DS_EMPTY_INITIALIZER;
+                    ds_put_hex(&string,s,sizeof(struct flow));
+                    char *try = ds_steal_cstr(&string);
+                    VLOG_DBG("VLOg %s\n",try);
+                    
+                    ds_destroy(&string);
+                    free(try);                
+            
+
+  /*  CEP */
     error = dp_netdev_upcall(pmd, packet, &match.flow, &match.wc,
                              &ufid, DPIF_UC_MISS, NULL, actions,
                              put_actions);
@@ -4182,6 +4209,8 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
                 rules[i] = &netdev_flow->cr;
                 continue;
             }
+
+            VLOG_DBG("VLOG Am I here?");
 
             miss_cnt++;
             handle_packet_upcall(pmd, packets[i], &keys[i], &actions,
