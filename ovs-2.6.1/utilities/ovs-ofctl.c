@@ -66,7 +66,7 @@
 #include "unixctl.h"
 #include "util.h"
 
-VLOG_DEFINE_THIS_MODULE(ofctl);
+VLOG_DEFINE_THIS_MODULE(ofctl); /*CEP */
 
 /* --bundle: Use OpenFlow 1.3+ bundle for making the flow table change atomic.
  * NOTE: If OpenFlow 1.3 or higher is not selected with the '-O' option,
@@ -136,6 +136,7 @@ static bool recv_flow_stats_reply(struct vconn *, ovs_be32 send_xid,
 int
 main(int argc, char *argv[])
 {
+    VLOG_DBG("In ofctl main VLOG\n"); /*CEP*/
     struct ovs_cmdl_context ctx = { .argc = 0, };
     set_program_name(argv[0]);
     service_start(&argc, &argv);
@@ -215,6 +216,7 @@ parse_options(int argc, char *argv[])
         STREAM_SSL_LONG_OPTIONS,
         {NULL, 0, NULL, 0},
     };
+    VLOG_DBG("In ofctl parse_options VLOG\n"); /*CEP*/
     char *short_options = ovs_cmdl_long_options_to_short_options(long_options);
     uint32_t versions;
     enum ofputil_protocol version_protocols;
@@ -241,6 +243,7 @@ parse_options(int argc, char *argv[])
         int c;
 
         c = getopt_long(argc, argv, short_options, long_options, NULL);
+        VLOG_DBG("VLOG After getopt_long c - %d\n",c);/*CEP*/
         if (c == -1) {
             break;
         }
@@ -3109,7 +3112,7 @@ static void
 remap_match(struct match *match)
 {
     int i;
-
+    VLOG_DBG("In ofctl remap_match VLOG\n"); /*CEP*/
     if (!match->tun_md.valid) {
         return;
     }

@@ -695,6 +695,7 @@ void
 nxm_put__(struct ofpbuf *b, enum mf_field_id field, enum ofp_version version,
           const void *value, const void *mask, size_t n_bytes)
 {
+    VLOG_DBG("VLOG In nxm_put__\n"); /*CEP*/
     nx_put_header_len(b, field, version, !!mask, n_bytes);
     ofpbuf_put(b, value, n_bytes);
     if (mask) {
@@ -762,6 +763,15 @@ nxm_put_64m(struct ofpbuf *b, enum mf_field_id field, enum ofp_version version,
     nxm_put(b, field, version, &value, &mask, sizeof value);
 }
 
+/*CEP
+static void
+nxm_put_64(struct ofpbuf *b, enum mf_field_id field, enum ofp_version version,
+           ovs_be64 value)
+{
+    nxm_put__(b, field, version, &value, NULL, sizeof value);
+}
+*/
+
 static void
 nxm_put_128m(struct ofpbuf *b,
              enum mf_field_id field, enum ofp_version version,
@@ -804,6 +814,8 @@ static void
 nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
 {
     const struct flow *flow = &match->flow;
+
+    VLOG_DBG("VLOG In nxm_put_ip\n"); /*CEP*/
 
     if (flow->dl_type == htons(ETH_TYPE_IP)) {
         nxm_put_32m(b, MFF_IPV4_SRC, oxm,
@@ -852,10 +864,19 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
             nxm_put_16m(b, MFF_TCP_FLAGS, oxm,
                         flow->tcp_flags, match->wc.masks.tcp_flags);
         } else if (flow->nw_proto == IPPROTO_UDP) {
+            VLOG_DBG("VLOG flow tp_dst %d\n",flow->tp_dst); /*CEP*/
+            VLOG_DBG("VLOG match mask of tp_dst %d\n",match->wc.masks.tp_dst); /*CEP*/
+            VLOG_DBG("VLOG flow udp_pyd %"PRIu64"\n",flow->udp_pyd); /*CEP*/
+            VLOG_DBG("VLOG match mask of udp_pyd %"PRIu64"\n",match->wc.masks.udp_pyd); /*CEP*/
             nxm_put_16m(b, MFF_UDP_SRC, oxm,
                         flow->tp_src, match->wc.masks.tp_src);
             nxm_put_16m(b, MFF_UDP_DST, oxm,
                         flow->tp_dst, match->wc.masks.tp_dst);
+            if(match->wc.masks.udp_pyd){  
+            VLOG_DBG("VLOG Advith at this point.\n");
+                nxm_put_64m(b, MFF_UDP_PYD, oxm,
+                            flow->udp_pyd, match->wc.masks.udp_pyd);    /*CEP*/
+            }
         } else if (flow->nw_proto == IPPROTO_SCTP) {
             nxm_put_16m(b, MFF_SCTP_SRC, oxm, flow->tp_src,
                         match->wc.masks.tp_src);
@@ -918,6 +939,7 @@ nx_put_raw(struct ofpbuf *b, enum ofp_version oxm, const struct match *match,
     int i;
 
     BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
+    VLOG_DBG("VLOG Advith is in nx_put_raw \n");  /* CEP */
 
     /* Metadata. */
     if (match->wc.masks.dp_hash) {
@@ -999,6 +1021,7 @@ nx_put_raw(struct ofpbuf *b, enum ofp_version oxm, const struct match *match,
 
     /* L3. */
     if (is_ip_any(flow)) {
+        VLOG_DBG("VLOG nx_put_raw - in is_ip_any\n"); /*CEP*/
         nxm_put_ip(b, match, oxm);
     } else if (flow->dl_type == htons(ETH_TYPE_ARP) ||
                flow->dl_type == htons(ETH_TYPE_RARP)) {
@@ -1100,8 +1123,9 @@ int
 nx_put_match(struct ofpbuf *b, const struct match *match,
              ovs_be64 cookie, ovs_be64 cookie_mask)
 {
+    VLOG_DBG("VLOG Advith is in nx_put_match\n");  /* CEP */
     int match_len = nx_put_raw(b, 0, match, cookie, cookie_mask);
-
+    VLOG_DBG("VLOG nx_put_raw returns\n");  /* CEP */
     ofpbuf_put_zeros(b, PAD_SIZE(match_len, 8));
     return match_len;
 }
@@ -1125,6 +1149,8 @@ oxm_put_match(struct ofpbuf *b, const struct match *match,
     struct ofp11_match_header *omh;
     size_t start_len = b->size;
     ovs_be64 cookie = htonll(0), cookie_mask = htonll(0);
+
+    VLOG_DBG("Advith is in oxm_put_match VLOG\n");  /* CEP */
 
     ofpbuf_put_uninit(b, sizeof *omh);
     match_len = (nx_put_raw(b, version, match, cookie, cookie_mask)
@@ -2051,7 +2077,7 @@ nxm_field_by_mf_id(enum mf_field_id id, enum ofp_version version)
 {
     const struct nxm_field_index *nfi;
     const struct nxm_field *f;
-
+    VLOG_DBG("VLOG In nxm_field_by_mf_id mf_id: %d ofp_version: %d\n",id,version); /*CEP*/
     nxm_init();
 
     f = NULL;

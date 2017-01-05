@@ -47,11 +47,13 @@
 #include "openvswitch/ofp-util.h"
 #include "openvswitch/ofpbuf.h"
 #include "openvswitch/type-props.h"
+#include "openvswitch/vlog.h"
 #include "packets.h"
 #include "unaligned.h"
 #include "util.h"
 #include "uuid.h"
 
+VLOG_DEFINE_THIS_MODULE(ofp_print); /*CEP*/
 static void ofp_print_queue_name(struct ds *string, uint32_t port);
 static void ofp_print_error(struct ds *, enum ofperr);
 
@@ -1667,11 +1669,10 @@ ofp_print_flow_stats_reply(struct ds *string, const struct ofp_header *oh)
     for (;;) {
         struct ofputil_flow_stats fs;
         int retval;
-
         retval = ofputil_decode_flow_stats_reply(&fs, &b, true, &ofpacts);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(string, " ***parse error***");
+                ds_put_cstr(string, " ***parse error1***"); /*CEP*/
             }
             break;
         }
@@ -1755,7 +1756,7 @@ ofp_print_ofpst_port_reply(struct ds *string, const struct ofp_header *oh,
         retval = ofputil_decode_port_stats(&ps, &b);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(string, " ***parse error***");
+                ds_put_cstr(string, " ***parse error2***");
             }
             return;
         }
@@ -1933,7 +1934,7 @@ ofp_print_ofpst_queue_reply(struct ds *string, const struct ofp_header *oh,
         retval = ofputil_decode_queue_stats(&qs, &b);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(string, " ***parse error***");
+                ds_put_cstr(string, " ***parse error3***");
             }
             return;
         }
@@ -2577,7 +2578,7 @@ ofp_print_group_desc(struct ds *s, const struct ofp_header *oh)
         retval = ofputil_decode_group_desc_reply(&gd, &b, oh->version);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(s, " ***parse error***");
+                ds_put_cstr(s, " ***parse error4***");
             }
             break;
         }
@@ -2617,7 +2618,7 @@ ofp_print_group_stats(struct ds *s, const struct ofp_header *oh)
         retval = ofputil_decode_group_stats_reply(&b, &gs);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(s, " ***parse error***");
+                ds_put_cstr(s, " ***parse error5***");
             }
             break;
         }
@@ -3270,7 +3271,7 @@ ofp_print_nxst_ipfix_bridge_reply(struct ds *string, const struct ofp_header *oh
         retval = ofputil_pull_ipfix_stats(&is, &b);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(string, " ***parse error***");
+                ds_put_cstr(string, " ***parse error6***");
             }
             return;
         }
@@ -3303,7 +3304,7 @@ ofp_print_nxst_ipfix_flow_reply(struct ds *string, const struct ofp_header *oh)
         retval = ofputil_pull_ipfix_stats(&is, &b);
         if (retval) {
             if (retval != EOF) {
-                ds_put_cstr(string, " ***parse error***");
+                ds_put_cstr(string, " ***parse error7***");
             }
             return;
         }
@@ -3336,6 +3337,7 @@ ofp_to_string__(const struct ofp_header *oh, enum ofpraw raw,
                 struct ds *string, int verbosity)
 {
     const void *msg = oh;
+    //struct ds s = DS_EMPTY_INITIALIZER; /*CEP*/
 
     ofp_header_to_string__(oh, raw, string);
 
@@ -3524,6 +3526,8 @@ ofp_to_string__(const struct ofp_header *oh, enum ofpraw raw,
         break;
 
     case OFPTYPE_FLOW_STATS_REPLY:
+        
+        //ds_put_cstr(&s, " ***Ohh.. I am here second yyyyyy***"); /*CEP*/ 
         ofp_print_stats(string, oh);
         ofp_print_flow_stats_reply(string, oh);
         break;
@@ -3676,6 +3680,9 @@ ofp_to_string(const void *oh_, size_t len, int verbosity)
 
         error = ofpraw_decode(&raw, oh);
         if (!error) {
+            //struct ds s = DS_EMPTY_INITIALIZER; /*CEP*/
+            //ds_put_cstr(&s, " ***Ohh.. I am here first zzzzzzz***"); /*CEP*/ 
+            
             ofp_to_string__(oh, raw, &string, verbosity);
             if (verbosity >= 5) {
                 if (ds_last(&string) != '\n') {

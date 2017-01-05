@@ -229,6 +229,7 @@ enum ofp10_flow_wildcards {
     OFPFW10_NW_PROTO   = 1 << 5,  /* IP protocol. */
     OFPFW10_TP_SRC     = 1 << 6,  /* TCP/UDP source port. */
     OFPFW10_TP_DST     = 1 << 7,  /* TCP/UDP destination port. */
+    OFPFW10_UDP_PYD    = 1 << 8,  /* CEP */ 
 
     /* IP source address wildcard bit count.  0 is exact match, 1 ignores the
      * LSB, 2 ignores the 2 least-significant bits, ..., 32 and higher wildcard
@@ -282,7 +283,7 @@ struct ofp10_match {
     ovs_be32 nw_dst;           /* IP destination address. */
     ovs_be16 tp_src;           /* TCP/UDP source port. */
     ovs_be16 tp_dst;           /* TCP/UDP destination port. */
-    ovs_be64 udp_pyd; 
+    ovs_be64 udp_pyd;          /* CEP */
     
 };
 OFP_ASSERT(sizeof(struct ofp10_match) == 48);             /* 40->48 CEP */

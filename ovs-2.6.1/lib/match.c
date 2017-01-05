@@ -24,6 +24,9 @@
 #include "openvswitch/ofp-util.h"
 #include "packets.h"
 #include "tun-metadata.h"
+#include "openvswitch/vlog.h"
+
+VLOG_DEFINE_THIS_MODULE(match);
 
 /* Converts the flow in 'flow' into a match in 'match', with the given
  * 'wildcards'. */
@@ -655,9 +658,25 @@ match_set_tp_dst(struct match *match, ovs_be16 tp_dst)
 void
 match_set_tp_dst_masked(struct match *match, ovs_be16 port, ovs_be16 mask)
 {
+    VLOG_DBG("In VLOG match_set_tp_dst_masked\n"); 
     match->flow.tp_dst = port & mask;
     match->wc.masks.tp_dst = mask;
 }
+
+/*CEP*/
+void
+match_set_udp_pyd(struct match *match, ovs_be64 udp_pyd){
+    VLOG_DBG("In VLOG match_set_udp_pyd\n"); 
+    match_set_udp_pyd_masked(match, udp_pyd, OVS_BE64_MAX);
+}
+void
+match_set_udp_pyd_masked(struct match *match, ovs_be64 pyd, ovs_be64 mask){
+    VLOG_DBG("In VLOG match_set_udp_pyd_masked\n"); 
+    match->flow.udp_pyd = pyd & mask;
+    match->wc.masks.udp_pyd = mask;
+}
+
+/*CEP*/
 
 void
 match_set_tcp_flags(struct match *match, ovs_be16 flags)
@@ -1138,9 +1157,12 @@ match_format(const struct match *match, struct ds *s, int priority)
     }
 
     if (wc->masks.dl_type) {
+        VLOG_DBG("In dl_type VLOG\n"); /*CEP*/
         skip_type = true;
         if (f->dl_type == htons(ETH_TYPE_IP)) {
+            VLOG_DBG("In ETH_TYPE_IP VLOG\n"); /*CEP*/
             if (wc->masks.nw_proto) {
+                VLOG_DBG("In nw_proto VLOG\n"); /*CEP*/
                 skip_proto = true;
                 if (f->nw_proto == IPPROTO_ICMP) {
                     ds_put_format(s, "%sicmp%s,", colors.value, colors.end);
@@ -1149,6 +1171,12 @@ match_format(const struct match *match, struct ds *s, int priority)
                 } else if (f->nw_proto == IPPROTO_TCP) {
                     ds_put_format(s, "%stcp%s,", colors.value, colors.end);
                 } else if (f->nw_proto == IPPROTO_UDP) {
+                    VLOG_DBG("In IPPROTO_UDP VLOG\n"); /*CEP*/
+                      if(f->udp_pyd){
+                         VLOG_DBG("VLOG UDP_PYD is %"PRId64"\n",f->udp_pyd); 
+                          
+                          VLOG_DBG("VLOG MASK UDP_PYD is %"PRId64"\n",wc->masks.udp_pyd);
+                      } /*CEP*/
                     ds_put_format(s, "%sudp%s,", colors.value, colors.end);
                 } else if (f->nw_proto == IPPROTO_SCTP) {
                     ds_put_format(s, "%ssctp%s,", colors.value, colors.end);
@@ -1309,6 +1337,7 @@ match_format(const struct match *match, struct ds *s, int priority)
 
     switch (wc->masks.nw_frag) {
     case FLOW_NW_FRAG_ANY | FLOW_NW_FRAG_LATER:
+    VLOG_DBG("In FLOW_NW_FRAG_ANY | FLOW_NW_FRAG_LATER VLOG\n"); /*CEP*/
         ds_put_format(s, "%snw_frag=%s%s,", colors.param, colors.end,
                       f->nw_frag & FLOW_NW_FRAG_ANY
                       ? (f->nw_frag & FLOW_NW_FRAG_LATER ? "later" : "first")
@@ -1316,11 +1345,13 @@ match_format(const struct match *match, struct ds *s, int priority)
         break;
 
     case FLOW_NW_FRAG_ANY:
+    VLOG_DBG("In FLOW_NW_FRAG_ANY VLOG\n"); /*CEP*/
         ds_put_format(s, "%snw_frag=%s%s,", colors.param, colors.end,
                       f->nw_frag & FLOW_NW_FRAG_ANY ? "yes" : "no");
         break;
 
     case FLOW_NW_FRAG_LATER:
+        VLOG_DBG("In FLOW_NW_FRAG_LATER VLOG\n"); /*CEP*/
         ds_put_format(s, "%snw_frag=%s%s,", colors.param, colors.end,
                       f->nw_frag & FLOW_NW_FRAG_LATER ? "later" : "not_later");
         break;
@@ -1342,8 +1373,14 @@ match_format(const struct match *match, struct ds *s, int priority)
         format_eth_masked(s, "nd_sll", f->arp_sha, wc->masks.arp_sha);
         format_eth_masked(s, "nd_tll", f->arp_tha, wc->masks.arp_tha);
     } else {
+        VLOG_DBG("Trying to format_be64_masked VLOG\n");
+        //VLOG_DBG("VLOG In match.c  match_format flow tp_src-%d\nVLOG In match.c  match_format mask tp_src -%d\n",f->tp_src,wc->masks.tp_src); /*CEP*/
+        //VLOG_DBG("VLOG In match.c  match_format flow tp_dst-%d\nVLOG In match.c  match_format mask tp_dst -%d\n",f->tp_dst,wc->masks.tp_dst); /*CEP*/
         format_be16_masked(s, "tp_src", f->tp_src, wc->masks.tp_src);
-        format_be16_masked(s, "tp_dst", f->tp_dst, wc->masks.tp_dst);
+        format_be16_masked(s, "tp_dst", f->tp_dst, wc->masks.tp_dst); 
+        //VLOG_DBG("VLOG udp_pyd-%d\nVLOG udp_pyd mask -%d\n",f->udp_pyd,wc->masks.udp_pyd); /*CEP*/
+        format_be64_masked(s, "udp_pyd", f->udp_pyd, wc->masks.udp_pyd); /*CEP*/
+        VLOG_DBG("Trying to format_be64_masked VLOG\n");
     }
     if (is_ip_any(f) && f->nw_proto == IPPROTO_TCP && wc->masks.tcp_flags) {
         format_flags_masked(s, "tcp_flags", packet_tcp_flag_to_string,

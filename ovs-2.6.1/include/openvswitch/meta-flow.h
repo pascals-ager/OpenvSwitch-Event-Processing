@@ -1636,9 +1636,10 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: none.
+     * NXM: NXM_OF_UDP_PYD(111) since v2.6.
      * OXM: none.
      * OF1.0: exact match.
+     * OF1.1: exact match.
      */
     MFF_UDP_PYD,
 

@@ -39,7 +39,9 @@
 #include "simap.h"
 #include "socket-util.h"
 #include "util.h"
+#include "openvswitch/vlog.h"
 
+VLOG_DEFINE_THIS_MODULE(ofp_parse); /*CEP*/
 /* Parses 'str' as an 8-bit unsigned integer into '*valuep'.
  *
  * 'name' describes the value parsed in an error message, if any.
@@ -349,7 +351,7 @@ parse_ofp_str__(struct ofputil_flow_mod *fm, int command, char *string,
     if (fields & F_ACTIONS) {
         act_str = extract_actions(string);
         if (!act_str) {
-            return xstrdup("must specify an action");
+            return xstrdup("must specify an action!");
         }
     }
 
@@ -539,7 +541,7 @@ parse_ofp_str(struct ofputil_flow_mod *fm, int command, const char *str_,
 {
     char *string = xstrdup(str_);
     char *error;
-
+    VLOG_DBG("VLOG In parse_ofp_str\n"); /*CEP*/
     error = parse_ofp_str__(fm, command, string, usable_protocols);
     if (error) {
         fm->ofpacts = NULL;

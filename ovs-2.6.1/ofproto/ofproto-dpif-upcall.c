@@ -1028,7 +1028,7 @@ upcall_receive(struct upcall *upcall, const struct dpif_backer *backer,
                const ovs_u128 *ufid, const unsigned pmd_id)
 {
     int error;
-
+    VLOG_DBG("VLOG in upcall_receive");/*CEP*/
     error = xlate_lookup(backer, flow, &upcall->ofproto, &upcall->ipfix,
                          &upcall->sflow, NULL, &upcall->in_port);
     if (error) {
@@ -1188,7 +1188,7 @@ upcall_cb(const struct dp_packet *packet, const struct flow *flow, ovs_u128 *ufi
     int error;
 
     atomic_read_relaxed(&enable_megaflows, &megaflow);
-
+    VLOG_DBG("VLOG in upcall_cb"); /*CEP*/
     error = upcall_receive(&upcall, udpif->backer, packet, type, userdata,
                            flow, 0, ufid, pmd_id);
     if (error) {
@@ -1206,6 +1206,7 @@ upcall_cb(const struct dp_packet *packet, const struct flow *flow, ovs_u128 *ufi
     }
 
     if (OVS_UNLIKELY(!megaflow)) {
+        VLOG_DBG("VLOG in upcall_cb, missed megaflow"); /*CEP*/
         flow_wildcards_init_for_packet(wc, flow);
     }
 

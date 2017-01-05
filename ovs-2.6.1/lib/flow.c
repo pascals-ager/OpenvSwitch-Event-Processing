@@ -779,17 +779,20 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
             if (OVS_LIKELY(size >= UDP_HEADER_LEN)) {
                 const struct udp_header *udp = data;
                 size_t l4_size = dp_packet_l4_size(packet); /*CEP*/
-                const char *  payload = dp_packet_get_udp_payload(packet);
+                const void *  payload = dp_packet_get_udp_payload(packet);
 
             if (payload) {
-                VLOG_DBG("VLOg I am here in flow_extract");
+                VLOG_DBG("VLOG I am here in flow_extract");
+                //VLOG_DBG("VLOG - Printing payload without formatting %d\n",payload);
+                //VLOG_DBG("VLOG - Printing payload with decimal formatting %"PRId64"\n",payload);
+                //VLOG_DBG("VLOG - Printing payload with hex formatting %"PRIx64"\n",payload);
                     struct ds string = DS_EMPTY_INITIALIZER;
                     ds_put_hex(&string,payload,l4_size-8);
                     char *try = ds_steal_cstr(&string);
                     VLOG_DBG("VLOG %s\n",try);
                     //try++;
                     //try++;
-                    try=try+2; /*here is your proble. How will you solve it?
+                    try=try+2; /*here is your problem. How will you solve it?
                     Need to move the pointer by 2, convert the remaining to int*/
                     
                     int result=atoi(try);
@@ -803,10 +806,12 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                     ds_destroy(&string);
                     //free(try);                
             }
+                VLOG_DBG("VLOG In flow.c miniflow_extract- tp_src %d\n",udp->udp_src); /*CEP*/
+                VLOG_DBG("VLOG In flow.c miniflow_extract- tp_dst %d\n",udp->udp_dst); /*CEP*/
                 miniflow_push_be16(mf, tp_src, udp->udp_src);
                 miniflow_push_be16(mf, tp_dst, udp->udp_dst);
                 miniflow_pad_to_64(mf, tp_dst);
-                
+
             }
         } else if (OVS_LIKELY(nw_proto == IPPROTO_SCTP)) {
             if (OVS_LIKELY(size >= SCTP_HEADER_LEN)) {

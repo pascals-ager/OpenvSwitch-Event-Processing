@@ -130,6 +130,10 @@ void match_set_mpls_lse(struct match *, int idx, ovs_be32 lse);
 void match_set_tp_src_masked(struct match *, ovs_be16 port, ovs_be16 mask);
 void match_set_tp_dst(struct match *, ovs_be16);
 void match_set_tp_dst_masked(struct match *, ovs_be16 port, ovs_be16 mask);
+/*CEP*/
+void match_set_udp_pyd(struct match *, ovs_be64);
+void match_set_udp_pyd_masked(struct match *match, ovs_be64 pyd, ovs_be64 mask);
+/*CEP*/
 void match_set_tcp_flags(struct match *, ovs_be16);
 void match_set_tcp_flags_masked(struct match *, ovs_be16 flags, ovs_be16 mask);
 void match_set_nw_proto(struct match *, uint8_t);

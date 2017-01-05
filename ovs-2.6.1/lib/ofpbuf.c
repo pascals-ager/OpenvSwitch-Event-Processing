@@ -19,8 +19,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include "openvswitch/dynamic-string.h"
+#include "openvswitch/vlog.h"
 #include "netdev-dpdk.h"
 #include "util.h"
+
+VLOG_DEFINE_THIS_MODULE(ofpbuf);  /*CEP*/
 
 static void
 ofpbuf_init__(struct ofpbuf *b, size_t allocated, enum ofpbuf_source source)
@@ -386,7 +389,9 @@ void *
 ofpbuf_put(struct ofpbuf *b, const void *p, size_t size)
 {
     void *dst = ofpbuf_put_uninit(b, size);
+    //VLOG_DBG("VLOG in ofpbuf_put, ofpbuf_put_uninit success\n"); /*CEP*/
     memcpy(dst, p, size);
+    //VLOG_DBG("VLOG in ofpbuf_put, memcpy success\n"); /*CEP*/
     return dst;
 }
 
