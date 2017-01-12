@@ -4765,6 +4765,14 @@ add_flow_start(struct ofproto *ofproto, struct ofproto_flow_mod *ofm)
     const struct rule_actions *actions = rule_get_actions(new_rule);
     struct oftable *table = &ofproto->tables[new_rule->table_id];
     enum ofperr error;
+    /*CEP*/
+    //struct cls_rule cep_rule= new_rule->cr;
+    //struct minimatch cep_match= cls_rule->cep_rule;
+   // struct flowmap cep_map = new_rule->cr->match->flow->bits;
+    //VLOG("VLOG Flow map:\nVLOG: %llu", cep_map);
+    /*CEP*/
+
+    VLOG_DBG("VLOG In add_flow_start\n"); /*CEP*/
 
     /* Must check actions while holding ofproto_mutex to avoid a race. */
     error = ofproto_check_ofpacts(ofproto, actions->ofpacts,
@@ -5525,6 +5533,8 @@ handle_flow_mod(struct ofconn *ofconn, const struct ofp_header *oh)
     uint64_t ofpacts_stub[1024 / 8];
     struct ofpbuf ofpacts;
     enum ofperr error;
+
+    VLOG_DBG("VLOG In ofproto handle_flow_mod"); /*CEP*/
 
     error = reject_slave_controller(ofconn);
     if (error) {
@@ -8237,6 +8247,24 @@ ofproto_rule_insert__(struct ofproto *ofproto, struct rule *rule)
     OVS_REQUIRES(ofproto_mutex)
 {
     const struct rule_actions *actions = rule_get_actions(rule);
+    VLOG_DBG("VLOG In ofproto_rule_insert\n"); /*CEP*/
+    const struct miniflow *mf = rule->cr.match.flow;
+    
+    struct flow f;
+    miniflow_expand(mf,&f);
+
+
+    const struct minimask *mm = rule->cr.match.mask;
+    struct flow_wildcards fwc;
+
+    minimask_expand(mm,&fwc);
+
+    VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",f.udp_pyd); /*21617821137838080*/
+    VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd); /*18446744073709551615*/
+
+    
+    VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
+    VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/
 
     ovs_assert(rule->removed);
 

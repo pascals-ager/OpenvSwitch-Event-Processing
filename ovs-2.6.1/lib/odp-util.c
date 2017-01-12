@@ -4281,6 +4281,7 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
     size_t encap;
     const struct flow *flow = parms->flow;
     const struct flow *data = export_mask ? parms->mask : parms->flow;
+    VLOG_DBG("VLOG In odp_flow_key_from_flow__\n"); /*CEP*/
 
     nl_msg_put_u32(buf, OVS_KEY_ATTR_PRIORITY, data->skb_priority);
 

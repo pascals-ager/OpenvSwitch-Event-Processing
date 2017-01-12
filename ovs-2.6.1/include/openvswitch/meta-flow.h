@@ -1632,16 +1632,17 @@ enum OVS_PACKED_ENUM mf_field_id {
      * UDP payload
      *
      * Type: be64.
-     * Maskable: no.
+     * Maskable: bitwise.
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
      * NXM: NXM_OF_UDP_PYD(111) since v2.6.
-     * OXM: none.
+     * OXM: OXM_OF_UDP_PYD(44) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
     MFF_UDP_PYD,
+    
 
 /* ## ---- ## */
 /* ## SCTP ## */

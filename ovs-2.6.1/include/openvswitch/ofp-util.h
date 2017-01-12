@@ -1450,4 +1450,7 @@ enum ofperr ofputil_decode_table_status(const struct ofp_header *oh,
 struct ofpbuf *
 ofputil_encode_table_status(const struct ofputil_table_status *ts,
                             enum ofputil_protocol protocol);
+
+int 
+ofputil_dump_vlog(void); /*cep*/
 #endif /* ofp-util.h */

@@ -66,7 +66,7 @@
 #include "unixctl.h"
 #include "util.h"
 
-VLOG_DEFINE_THIS_MODULE(ofctl); /*CEP */
+VLOG_DEFINE_THIS_MODULE(ovs_ofctl); /*CEP */
 
 /* --bundle: Use OpenFlow 1.3+ bundle for making the flow table change atomic.
  * NOTE: If OpenFlow 1.3 or higher is not selected with the '-O' option,
@@ -136,7 +136,6 @@ static bool recv_flow_stats_reply(struct vconn *, ovs_be32 send_xid,
 int
 main(int argc, char *argv[])
 {
-    VLOG_DBG("In ofctl main VLOG\n"); /*CEP*/
     struct ovs_cmdl_context ctx = { .argc = 0, };
     set_program_name(argv[0]);
     service_start(&argc, &argv);
@@ -1472,7 +1471,10 @@ ofctl_flow_mod__(const char *remote, struct ofputil_flow_mod *fms,
     struct vconn *vconn;
     size_t i;
 
+    
+
     if (bundle) {
+
         bundle_flow_mod__(remote, fms, n_fms, usable_protocols);
         return;
     }
@@ -1520,6 +1522,7 @@ ofctl_flow_mod(int argc, char *argv[], uint16_t command)
         struct ofputil_flow_mod fm;
         char *error;
         enum ofputil_protocol usable_protocols;
+        
 
         error = parse_ofp_flow_mod_str(&fm, argc > 2 ? argv[2] : "", command,
                                        &usable_protocols);

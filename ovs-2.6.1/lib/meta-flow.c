@@ -329,9 +329,9 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
     case MFF_TCP_FLAGS:
         return !wc->masks.tcp_flags;
 
-    case MFF_UDP_PYD:
-        VLOG_DBG("In mf_is_wild VLOG");
-         return !wc->masks.udp_pyd; /*CEP*/
+    case MFF_UDP_PYD:  /*CEP*/
+         VLOG_DBG("VLOG In mf_is_wild\n"); /*CEP*/
+         return !wc->masks.udp_pyd; /*CEP*/ 
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -526,7 +526,7 @@ mf_is_value_valid(const struct mf_field *mf, const union mf_value *value)
         return !(value->be32 & ~htonl(CS_SUPPORTED_MASK));
     
      case MFF_UDP_PYD:
-        VLOG_DBG("In mf_is_value_valid VLOG\n");
+        VLOG_DBG("VLOG In mf_is_value_valid\n"); /*CEP*/
         return true;             /*CEP*/
     case MFF_N_IDS:
    
@@ -775,9 +775,9 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
         value->ipv6 = flow->nd_target;
         break;
       
-    case MFF_UDP_PYD:
-        VLOG_DBG("In mf_get_value VLOG\n");  /*CEP*/
-        value->be64 = flow->udp_pyd;
+    case MFF_UDP_PYD:  /*CEP*/
+        VLOG_DBG("VLOG In mf_get_value\n");  /*CEP*/
+        value->be64 = flow->udp_pyd; /*CEP*/
         break;
 
     case MFF_N_IDS:   
@@ -1041,8 +1041,8 @@ mf_set_value(const struct mf_field *mf,
     case MFF_ND_TARGET:
         match_set_nd_target(match, &value->ipv6);
         break;
-    case MFF_UDP_PYD:
-        VLOG_DBG("In mf_set_value VLOG\n");
+    case MFF_UDP_PYD:  /*CEP*/
+        VLOG_DBG("VLOG In mf_set_value\n"); /*CEP*/
         match_set_udp_pyd(match, value->be64); /*CEP*/
         break;
     case MFF_N_IDS:
@@ -1382,8 +1382,8 @@ mf_set_flow_value(const struct mf_field *mf,
 
     case MFF_N_IDS:
         break;
-    case MFF_UDP_PYD:
-        VLOG_DBG("In mf_set_flow_value VLOG\n");
+    case MFF_UDP_PYD: /*CEP*/
+        VLOG_DBG("IVLOG n mf_set_flow_value\n"); /*CEP*/
         flow->udp_pyd = value->be64; /*CEP*/
         break;        
     default:
@@ -1715,10 +1715,10 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         memset(&match->flow.nd_target, 0, sizeof match->flow.nd_target);
         break;
 
-    case MFF_UDP_PYD:
-        VLOG_DBG("In mf_set_wild VLOG\n"); /*CEP*/
-        match->wc.masks.udp_pyd = htons(0);
-        match->flow.udp_pyd = htons(0);
+    case MFF_UDP_PYD:  /*CEP*/
+        VLOG_DBG("VLOG In mf_set_wild\n"); /*CEP*/
+        match->wc.masks.udp_pyd = htons(0);  /*CEP*/ 
+        match->flow.udp_pyd = htons(0);      /*CEP*/
         break;
 
     case MFF_N_IDS:
@@ -1950,9 +1950,9 @@ mf_set(const struct mf_field *mf,
         match_set_tcp_flags_masked(match, value->be16, mask->be16);
         break;
 
-    case MFF_UDP_PYD:  
-        VLOG_DBG("In mf_set VLOG\n"); /*CEP*/
-        match_set_udp_pyd_masked(match, value->be64,OVS_BE64_MAX); 
+    case MFF_UDP_PYD:  /*CEP*/
+        VLOG_DBG("VLOG In mf_set\n"); /*CEP*/
+        match_set_udp_pyd_masked(match, value->be64, mask->be64); /*CEP*/ /*changed from OVS_BE64_MAX to mask->be64*/
         break; 
     case MFF_N_IDS:
     default:

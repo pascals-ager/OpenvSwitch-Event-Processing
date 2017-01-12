@@ -171,7 +171,7 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     match->flow.dl_type = ofputil_dl_type_from_openflow(ofmatch->dl_type);
     match->flow.tp_src = ofmatch->tp_src;
     match->flow.tp_dst = ofmatch->tp_dst;
-    match->flow.udp_pyd = ofmatch->udp_pyd; /*CEP*/
+    match->flow.udp_pyd = ofmatch->udp_pyd; /*CEP*/ /*maybe here?*/
     match->flow.dl_src = ofmatch->dl_src;
     match->flow.dl_dst = ofmatch->dl_dst;
     match->flow.nw_tos = ofmatch->nw_tos & IP_DSCP_MASK;
@@ -7308,7 +7308,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
     if (!(may_match & MAY_UDP_PYD)) {  /* CEP */
         VLOG_DBG("VLOG Point 5 - MAY_UDP_PYD"); /*CEP*/
         wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.udp_pyd = htons(0);
+        wc.masks.udp_pyd = htonll(0);
     }
     if (!(may_match & MAY_NW_PROTO)) {
         wc.masks.nw_proto = 0;
@@ -10673,5 +10673,13 @@ ofputil_decode_table_status(const struct ofp_header *oh,
         return OFPERR_OFPBRC_BAD_VERSION;
     }
 
+    return 0;
+}
+
+/*CEP*/
+int
+ofputil_dump_vlog(){
+
+    VLOG_DBG("VLOG In ofputil_dump_vlog \n");
     return 0;
 }

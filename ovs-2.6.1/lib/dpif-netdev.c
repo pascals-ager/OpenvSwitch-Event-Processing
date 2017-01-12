@@ -2004,9 +2004,11 @@ dp_netdev_pmd_lookup_flow(struct dp_netdev_pmd_thread *pmd,
     struct dpcls_rule *rule;
     odp_port_t in_port = u32_to_odp(MINIFLOW_GET_U32(&key->mf, in_port));
     struct dp_netdev_flow *netdev_flow = NULL;
+    VLOG_DBG("VLOG In dp_netdev_pmd_lookup_flow\n"); /*CEP*/
 
     cls = dp_netdev_pmd_lookup_dpcls(pmd, in_port);
     if (OVS_LIKELY(cls)) {
+        VLOG_DBG("VLOG In dp_netdev_pmd_lookup_flow found dpcls, next dpcls_lookup\n"); /*CEP*/
         dpcls_lookup(cls, key, &rule, 1, lookup_num_p);
         netdev_flow = dp_netdev_flow_cast(rule);
     }
@@ -2242,6 +2244,7 @@ dp_netdev_flow_add(struct dp_netdev_pmd_thread *pmd,
     struct netdev_flow_key mask;
     struct dpcls *cls;
     odp_port_t in_port = match->flow.in_port.odp_port;
+    VLOG_DBG("VLOG in dp_netdev_flow_add\n"); /*CEP*/
 
     netdev_flow_mask_init(&mask, match);
     /* Make sure wc does not have metadata. */
@@ -3795,6 +3798,9 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
     struct flow_tnl orig_tunnel;
     int err;
 
+
+    VLOG_DBG("VLOG In dp_netdev_upcall\n"); /*CEP*/
+    //const char * cmp = "0x3330";
     size_t l4_size = dp_packet_l4_size(packet_);
     const char *  payload = dp_packet_get_udp_payload(packet_);
 
@@ -3804,11 +3810,20 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
 
                     ds_put_hex(&string,payload,l4_size-8);
                     char *try = ds_steal_cstr(&string);
-                    VLOG_DBG("VLOG %s\n",try);
+                    VLOG_DBG("VLOG in dp_netdev_upcall- payload is %s\n",try);
                     ds_destroy(&string);
                     free(try);
+
+            if (!strcmp(try,"0x3330")) {
+            VLOG_DBG("VLOG in dp_netdev_upcall- string comparision succeded\n");
+            //dp_packet_delete(packet);
+            //n_dropped++;
+            //continue;            
                 
             }
+
+
+        }
 
 /* CEP */
   
@@ -3843,14 +3858,15 @@ dp_netdev_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet_,
         };
 
         ofpbuf_init(&key, 0);
-        odp_flow_key_from_flow(&odp_parms, &key);
+        VLOG_DBG("VLOG In dp_netdev_upcall - Will call odp_flow_key_from_flow\n"); /*CEP*/
+        odp_flow_key_from_flow(&odp_parms, &key);  /*So now we have the key in 'key'*/
         packet_str = ofp_packet_to_string(dp_packet_data(packet_),
                                           dp_packet_size(packet_));
 
         odp_flow_key_format(key.data, key.size, &ds);
 
-        //VLOG_DBG("%s: %s upcall:\n%s\nVLOG: packet_str %s", dp->name,
-                 //dpif_upcall_type_to_string(type), ds_cstr(&ds), packet_str);
+        VLOG_DBG("%s: %s upcall:\n%s\nVLOG: packet_str %s", dp->name,
+                 dpif_upcall_type_to_string(type), ds_cstr(&ds), packet_str);
 
         ofpbuf_uninit(&key);
         free(packet_str);
@@ -4009,6 +4025,7 @@ emc_processing(struct dp_netdev_pmd_thread *pmd, struct dp_packet_batch *packets
     size_t i, n_missed = 0, n_dropped = 0;
     struct dp_packet **packets = packets_->packets;
     int cnt = packets_->count;
+    VLOG_DBG("VLOG In emc_processing\n"); /*CEP*/
 
     for (i = 0; i < cnt; i++) {
         struct dp_netdev_flow *flow;
@@ -4040,6 +4057,7 @@ emc_processing(struct dp_netdev_pmd_thread *pmd, struct dp_packet_batch *packets
         } else {
             /* Exact match cache missed. Group missed packets together at
              * the beginning of the 'packets' array.  */
+            VLOG_DBG("VLOG In emc_processing but emc_lookup failed: n_missed: %zd\n",n_missed);
             packets[n_missed] = packet;
             /* 'key[n_missed]' contains the key of the current packet and it
              * must be returned to the caller. The next key should be extracted
@@ -4069,30 +4087,34 @@ handle_packet_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet,
     miniflow_expand(&key->mf, &match.flow);
 
     const struct flow *fl = &match.flow;
+    //const struct flow_wildcards *fc = &match.wc; /*CEP*/
+
 
     ofpbuf_clear(actions);
     ofpbuf_clear(put_actions);
 
     dpif_flow_hash(pmd->dp->dpif, &match.flow, sizeof match.flow, &ufid);
-    VLOG_DBG("VLOG Here I am bro!\n");
-    VLOG_DBG("VLOg tp_src %d\n",fl->tp_src);   
-    VLOG_DBG("VLOg tp_dst %d\n",fl->tp_dst); 
-    VLOG_DBG("VLOg nw_dst %"PRId32"\n",fl->nw_dst);  
-    VLOG_DBG("VLOg nw_frag %d\n",fl->nw_frag); 
-    VLOG_DBG("VLOg nw_tos %d\n",fl->nw_tos); 
-    VLOG_DBG("VLOg nw_ttl %d\n",fl->nw_ttl); 
-    VLOG_DBG("VLOg nw_proto %d\n",fl->nw_proto); 
-     VLOG_DBG("VLOg tcp_flags %"PRId16"\n",fl->tcp_flags);  
-      VLOG_DBG("VLOg pad3 %"PRId16"\n",fl->pad3);   
-    VLOG_DBG("VLOg udp_pyd %"PRId64"\n",fl->udp_pyd);  
-    VLOG_DBG("VLOg (HEX) udp_pyd %"PRIx64"\n",fl->udp_pyd);
+    VLOG_DBG("VLOG In handle_packet_upcall\n"); /*CEP*/
+    //VLOG_DBG("VLOG tp_src %d\n",fl->tp_src);   /*CEP*/
+    VLOG_DBG("VLOG tp_dst %d\n",fl->tp_dst);    /*CEP*/
+    //VLOG_DBG("VLOG tp_dst mask %d\n",fc->masks.tp_dst);    /*CEP*/
+    //VLOG_DBG("VLOG nw_dst %"PRId32"\n",fl->nw_dst);  /*CEP*/
+    //VLOG_DBG("VLOG nw_frag %d\n",fl->nw_frag);  /*CEP*/
+    //VLOG_DBG("VLOG nw_tos %d\n",fl->nw_tos); /*CEP*/
+    //VLOG_DBG("VLOG nw_ttl %d\n",fl->nw_ttl); /*CEP*/
+    //VLOG_DBG("VLOG nw_proto %d\n",fl->nw_proto); /*CEP*/
+    //VLOG_DBG("VLOG tcp_flags %"PRId16"\n",fl->tcp_flags);  /*CEP*/
+    //VLOG_DBG("VLOG pad3 %"PRId16"\n",fl->pad3);   /*CEP*/
+    VLOG_DBG("VLOG dpif_netdev udp_pyd %"PRId64"\n",fl->udp_pyd);  /*CEP*/
+   // VLOG_DBG("VLOG depif_netdev udp_pyd mask is %"PRId64"\n",fc->masks.udp_pyd);  /*CEP*/
+    //VLOG_DBG("VLOG (HEX) udp_pyd %"PRIx64"\n",fl->udp_pyd); /*CEP*/
 
- const char *s = flow_to_string(fl);
+    const char *s = flow_to_string(fl);
 
                     struct ds string = DS_EMPTY_INITIALIZER;
                     ds_put_hex(&string,s,sizeof(struct flow));
                     char *try = ds_steal_cstr(&string);
-                    VLOG_DBG("VLOg %s\n",try);
+                    //VLOG_DBG("VLOG %s\n",try);
                     
                     ds_destroy(&string);
                     free(try);                
@@ -4135,9 +4157,11 @@ handle_packet_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet,
          * mutex lock outside the loop, but that's an awful long time
          * to be locking everyone out of making flow installs.  If we
          * move to a per-core classifier, it would be reasonable. */
+        VLOG_DBG("VLOG in handle_packet_upcall, error!=ENOSPC\n"); /*CEP*/
         ovs_mutex_lock(&pmd->flow_mutex);
         netdev_flow = dp_netdev_pmd_lookup_flow(pmd, key, NULL);
         if (OVS_LIKELY(!netdev_flow)) {
+            VLOG_DBG("VLOG in handle_packet_upcall, !netdev_flow\n"); /*CEP*/
             netdev_flow = dp_netdev_flow_add(pmd, &match, &ufid,
                                              add_actions->data,
                                              add_actions->size);
@@ -4172,6 +4196,7 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
     int lookup_cnt = 0, add_lookup_cnt;
     bool any_miss;
     size_t i;
+    VLOG_DBG("VLOG In fast_path_processing\n"); /*CEP*/
 
     for (i = 0; i < cnt; i++) {
         /* Key length is needed in all the cases, hash computed on demand. */
@@ -4180,6 +4205,7 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
     /* Get the classifier for the in_port */
     cls = dp_netdev_pmd_lookup_dpcls(pmd, in_port);
     if (OVS_LIKELY(cls)) {
+        VLOG_DBG("VLOG In fast_path_processing - looking up in  classifier of in_port %"PRId32"\n",in_port); /*CEP*/
         any_miss = !dpcls_lookup(cls, keys, rules, cnt, &lookup_cnt);
     } else {
         any_miss = true;
@@ -4198,6 +4224,7 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
             if (OVS_LIKELY(rules[i])) {
                 continue;
             }
+            VLOG_DBG("VLOG In fast_path_processing - doing dp_netdev_pmd_lookup_flow\n"); /*CEP*/
 
             /* It's possible that an earlier slow path execution installed
              * a rule covering this flow.  In this case, it's a lot cheaper
@@ -4205,13 +4232,13 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
             netdev_flow = dp_netdev_pmd_lookup_flow(pmd, &keys[i],
                                                     &add_lookup_cnt);
             if (netdev_flow) {
+                VLOG_DBG("VLOG In fast_path_processing - dp_netdev_pmd_lookup_flow succeeded\n"); /*CEP*/
                 lookup_cnt += add_lookup_cnt;
                 rules[i] = &netdev_flow->cr;
                 continue;
             }
 
-            VLOG_DBG("VLOG Am I here?");
-
+            
             miss_cnt++;
             handle_packet_upcall(pmd, packets[i], &keys[i], &actions,
                                  &put_actions, &lost_cnt, now);
@@ -4274,11 +4301,14 @@ dp_netdev_input__(struct dp_netdev_pmd_thread *pmd,
     long long now = time_msec();
     size_t newcnt, n_batches, i;
     odp_port_t in_port;
+    VLOG_DBG("VLOG In dp_netdev_input__");/*CEP*/
 
     n_batches = 0;
     newcnt = emc_processing(pmd, packets, keys, batches, &n_batches,
                             md_is_valid, port_no);
     if (OVS_UNLIKELY(newcnt)) {
+    VLOG_DBG("VLOG In dp_netdev_input__ emc_processing  didnt return newcnt\n");/*CEP*/
+
         packets->count = newcnt;
         /* Get ingress port from first packet's metadata. */
         in_port = packets->packets[0]->md.in_port.odp_port;
@@ -5091,6 +5121,8 @@ dpcls_lookup(struct dpcls *cls, const struct netdev_flow_key keys[],
      * in batches of 16 elements.  N_MAPS will contain the number of these
      * 16-elements batches.  i.e. for 'cnt' = 32, N_MAPS will be 2.  The batch
      * size 16 was experimentally found faster than 8 or 32. */
+
+    VLOG_DBG("VLOG In dpcls_lookup\n"); /*CEP*/
     typedef uint16_t map_type;
 #define MAP_BITS (sizeof(map_type) * CHAR_BIT)
 

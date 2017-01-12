@@ -783,7 +783,7 @@ ofp_print_flow_mod(struct ds *s, const struct ofp_header *oh, int verbosity)
     enum ofperr error;
     enum ofpraw raw;
     enum ofputil_protocol protocol;
-
+    ofputil_dump_vlog();
     protocol = ofputil_protocol_from_ofp_version(oh->version);
     protocol = ofputil_protocol_set_tid(protocol, true);
 

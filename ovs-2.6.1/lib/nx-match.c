@@ -864,18 +864,22 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
             nxm_put_16m(b, MFF_TCP_FLAGS, oxm,
                         flow->tcp_flags, match->wc.masks.tcp_flags);
         } else if (flow->nw_proto == IPPROTO_UDP) {
-            VLOG_DBG("VLOG flow tp_dst %d\n",flow->tp_dst); /*CEP*/
-            VLOG_DBG("VLOG match mask of tp_dst %d\n",match->wc.masks.tp_dst); /*CEP*/
-            VLOG_DBG("VLOG flow udp_pyd %"PRIu64"\n",flow->udp_pyd); /*CEP*/
-            VLOG_DBG("VLOG match mask of udp_pyd %"PRIu64"\n",match->wc.masks.udp_pyd); /*CEP*/
+
             nxm_put_16m(b, MFF_UDP_SRC, oxm,
                         flow->tp_src, match->wc.masks.tp_src);
             nxm_put_16m(b, MFF_UDP_DST, oxm,
                         flow->tp_dst, match->wc.masks.tp_dst);
             if(match->wc.masks.udp_pyd){  
-            VLOG_DBG("VLOG Advith at this point.\n");
+            VLOG_DBG("VLOG flow->tp_dst at this point: %"PRIu16"\n",flow->tp_dst);  /*37926*/
+            VLOG_DBG("VLOG htons(flow->tp_dst) at this point: %"PRIu16"\n",htons(flow->tp_dst)); /*9876*/
+            VLOG_DBG("VLOG match mask of tp_dst: %"PRIu16"\n",match->wc.masks.tp_dst); /*65535*/
+            
+            VLOG_DBG("VLOG flow->udp_pyd at this point: %"PRIu64"\n",flow->udp_pyd); /*2161727821137838080*/
+            VLOG_DBG("VLOG htonll(flow->udp_pyd) at this point: %"PRIu64"\n",htonll(flow->udp_pyd)); /*30*/
+            VLOG_DBG("VLOG match mask of udp_pyd: %"PRIu64"\n",match->wc.masks.udp_pyd); /*18446744073709551615*/
+
                 nxm_put_64m(b, MFF_UDP_PYD, oxm,
-                            flow->udp_pyd, match->wc.masks.udp_pyd);    /*CEP*/
+                            flow->udp_pyd, match->wc.masks.udp_pyd);    /*CEP*/ /*13104 is decimal value of hex 3330*/
             }
         } else if (flow->nw_proto == IPPROTO_SCTP) {
             nxm_put_16m(b, MFF_SCTP_SRC, oxm, flow->tp_src,

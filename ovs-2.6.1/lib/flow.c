@@ -782,7 +782,7 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                 const void *  payload = dp_packet_get_udp_payload(packet);
 
             if (payload) {
-                VLOG_DBG("VLOG I am here in flow_extract");
+                VLOG_DBG("VLOG In miniflow_extract"); /*CEP*/
                 //VLOG_DBG("VLOG - Printing payload without formatting %d\n",payload);
                 //VLOG_DBG("VLOG - Printing payload with decimal formatting %"PRId64"\n",payload);
                 //VLOG_DBG("VLOG - Printing payload with hex formatting %"PRIx64"\n",payload);
@@ -793,16 +793,18 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                     //try++;
                     //try++;
                     try=try+2; /*here is your problem. How will you solve it?
-                    Need to move the pointer by 2, convert the remaining to int*/
+                    //Need to move the pointer by 2, convert the remaining to int*/
                     
-                    int result=atoi(try);
-                    VLOG_DBG("VLOG %d\n",result);
+                    uint64_t result=atoi(try);
+                    VLOG_DBG("VLOG %"PRId64"\n",result);
+                    uint64_t test = 21617821137838080;
+                    //result = 2;
                     /*works only for 8 bytes.
                     1234 in hex is 31 32 33 34, with each digit taking
                     a byte. So effectively payloads greater than 9999
                     arent supported.*/
-                    miniflow_push_be64(mf, udp_pyd, result);
-                    VLOG_DBG("VLOG _ Did something go wrong?");
+                    miniflow_push_be64(mf, udp_pyd, test); /*changed result to payload.*/
+                    VLOG_DBG("VLOG  Did something go wrong?");
                     ds_destroy(&string);
                     //free(try);                
             }
