@@ -782,36 +782,39 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                 const void *  payload = dp_packet_get_udp_payload(packet);
 
             if (payload) {
-                VLOG_DBG("VLOG In miniflow_extract"); /*CEP*/
-                //VLOG_DBG("VLOG - Printing payload without formatting %d\n",payload);
-                //VLOG_DBG("VLOG - Printing payload with decimal formatting %"PRId64"\n",payload);
-                //VLOG_DBG("VLOG - Printing payload with hex formatting %"PRIx64"\n",payload);
                     struct ds string = DS_EMPTY_INITIALIZER;
                     ds_put_hex(&string,payload,l4_size-8);
-                    char *try = ds_steal_cstr(&string);
-                    VLOG_DBG("VLOG  string try is: %s\n",try);
-                    //try++;
-                    //try++;
-                    try=try+2; /*here is your problem. How will you solve it?
-                    //Need to move the pointer by 2, convert the remaining to int*/
-                    
-                    uint64_t result=atoi(try);
-                    VLOG_DBG("VLOG int result is: %"PRId64"\n",result);
-                    uint64_t check = 2161727821137838080;
-                    uint64_t mate  = 2233785415175766016;
-                    //result = 2;
-                    /*works only for 8 bytes.
-                    1234 in hex is 31 32 33 34, with each digit taking
-                    a byte. So effectively payloads greater than 9999
-                    arent supported.*/
-                    miniflow_push_be64(mf, udp_pyd, check); /*changed result to payload.*/
-                    miniflow_push_be64(mf, udp_pyd1, mate);
-                    //VLOG_DBG("VLOG  Did something go wrong?");
+                    char *stream = ds_steal_cstr(&string);
+
+                    //uint64_t check = 2161727821137838080;   /*30*/
+                    //uint64_t mate  = 2233785415175766016;  /*31*/
+
+                    int i,j,counter=0;    
+                    const char seperator[2] = "c";
+                    char *token;
+                    char tmp[100];
+                    uint64_t event[2]={0};
+  
+  
+                    for(i=0,j=0;stream[i]!='\0';i++){
+                        if(i%2!=0 && stream[i]!='x'){
+                        tmp[j++]=stream[i];
+                            }
+                        }
+    
+                    token=strtok(tmp,seperator);
+                    while( token != NULL && counter < 2 ){     
+                        event[counter]=atoi(token);
+                        token = strtok(NULL, seperator);
+                        counter ++;
+                    }
+                    VLOG_DBG("NEW %"PRId64" - %"PRId64"\n",event[0],event[1]); /*CEP*/
+
+                    miniflow_push_be64(mf, udp_pyd, htonll(event[0])); 
+                    miniflow_push_be64(mf, udp_pyd1, htonll(event[1]));
                     ds_destroy(&string);
-                    //free(try);                
+                                 
             }
-                VLOG_DBG("VLOG In flow.c miniflow_extract- tp_src %d\n",udp->udp_src); /*CEP*/
-                VLOG_DBG("VLOG In flow.c miniflow_extract- tp_dst %d\n",udp->udp_dst); /*CEP*/
                 miniflow_push_be16(mf, tp_src, udp->udp_src);
                 miniflow_push_be16(mf, tp_dst, udp->udp_dst);
                 miniflow_pad_to_64(mf, tp_dst);
