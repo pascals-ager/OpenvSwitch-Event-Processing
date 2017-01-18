@@ -4050,6 +4050,8 @@ emc_processing(struct dp_netdev_pmd_thread *pmd, struct dp_packet_batch *packets
         key->len = 0; /* Not computed yet. */
         key->hash = dpif_netdev_packet_get_rss_hash(packet, &key->mf);
 
+        VLOG_DBG("VLOG In emc_processing key->hash is %"PRIu32"\n",key->hash); /*CEP*/
+
         flow = emc_lookup(flow_cache, key);
         if (OVS_LIKELY(flow)) {
             dp_netdev_queue_batches(packet, flow, &key->mf, batches,
@@ -4096,7 +4098,7 @@ handle_packet_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet,
     dpif_flow_hash(pmd->dp->dpif, &match.flow, sizeof match.flow, &ufid);
     VLOG_DBG("VLOG In handle_packet_upcall\n"); /*CEP*/
     //VLOG_DBG("VLOG tp_src %d\n",fl->tp_src);   /*CEP*/
-    VLOG_DBG("VLOG tp_dst %d\n",fl->tp_dst);    /*CEP*/
+    VLOG_DBG("VLOG handle_packet_upcall tp_dst %d\n",fl->tp_dst);    /*CEP*/
     //VLOG_DBG("VLOG tp_dst mask %d\n",fc->masks.tp_dst);    /*CEP*/
     //VLOG_DBG("VLOG nw_dst %"PRId32"\n",fl->nw_dst);  /*CEP*/
     //VLOG_DBG("VLOG nw_frag %d\n",fl->nw_frag);  /*CEP*/
@@ -4105,7 +4107,7 @@ handle_packet_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet,
     //VLOG_DBG("VLOG nw_proto %d\n",fl->nw_proto); /*CEP*/
     //VLOG_DBG("VLOG tcp_flags %"PRId16"\n",fl->tcp_flags);  /*CEP*/
     //VLOG_DBG("VLOG pad3 %"PRId16"\n",fl->pad3);   /*CEP*/
-    VLOG_DBG("VLOG dpif_netdev udp_pyd %"PRId64"\n",fl->udp_pyd);  /*CEP*/
+    VLOG_DBG("VLOG handle_packet_upcall udp_pyd %"PRId64"\n",fl->udp_pyd);  /*CEP*/
    // VLOG_DBG("VLOG depif_netdev udp_pyd mask is %"PRId64"\n",fc->masks.udp_pyd);  /*CEP*/
     //VLOG_DBG("VLOG (HEX) udp_pyd %"PRIx64"\n",fl->udp_pyd); /*CEP*/
 
@@ -4201,6 +4203,14 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
     for (i = 0; i < cnt; i++) {
         /* Key length is needed in all the cases, hash computed on demand. */
         keys[i].len = netdev_flow_key_size(miniflow_n_values(&keys[i].mf));
+
+    const struct miniflow *mff = &keys[i].mf;
+    struct flow f;
+    miniflow_expand(mff,&f);
+    VLOG_DBG("VLOG In fast_path_processing udp_pyd in key miniflow is %"PRIu64"\n",f.udp_pyd); /*21617821137838080*/    
+    VLOG_DBG("VLOG In fast_path_processing tp_dst in key miniflow is %"PRIu16"\n",f.tp_dst);  /*37926*/    
+    VLOG_DBG("VLOG In fast_path_processing key len is %"PRIu32"\n",keys[i].len); /*CEP*/
+
     }
     /* Get the classifier for the in_port */
     cls = dp_netdev_pmd_lookup_dpcls(pmd, in_port);

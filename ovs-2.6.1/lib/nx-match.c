@@ -881,6 +881,18 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
                 nxm_put_64m(b, MFF_UDP_PYD, oxm,
                             flow->udp_pyd, match->wc.masks.udp_pyd);    /*CEP*/ /*13104 is decimal value of hex 3330*/
             }
+            if(match->wc.masks.udp_pyd1){  
+            VLOG_DBG("VLOG flow->tp_dst at this point: %"PRIu16"\n",flow->tp_dst);  /*37926*/
+            VLOG_DBG("VLOG htons(flow->tp_dst) at this point: %"PRIu16"\n",htons(flow->tp_dst)); /*9876*/
+            VLOG_DBG("VLOG match mask of tp_dst: %"PRIu16"\n",match->wc.masks.tp_dst); /*65535*/
+            
+            VLOG_DBG("VLOG flow->udp_pyd1 at this point: %"PRIu64"\n",flow->udp_pyd1); /*2161727821137838080*/
+            VLOG_DBG("VLOG htonll(flow->udp_pyd1) at this point: %"PRIu64"\n",htonll(flow->udp_pyd1)); /*30*/
+            VLOG_DBG("VLOG match mask of udp_pyd1: %"PRIu64"\n",match->wc.masks.udp_pyd1); /*18446744073709551615*/
+
+                nxm_put_64m(b, MFF_UDP_PYD1, oxm,
+                            flow->udp_pyd1, match->wc.masks.udp_pyd1);    /*CEP*/ /*13104 is decimal value of hex 3330*/
+            }
         } else if (flow->nw_proto == IPPROTO_SCTP) {
             nxm_put_16m(b, MFF_SCTP_SRC, oxm, flow->tp_src,
                         match->wc.masks.tp_src);
@@ -942,7 +954,7 @@ nx_put_raw(struct ofpbuf *b, enum ofp_version oxm, const struct match *match,
     int match_len;
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 38);
     VLOG_DBG("VLOG Advith is in nx_put_raw \n");  /* CEP */
 
     /* Metadata. */

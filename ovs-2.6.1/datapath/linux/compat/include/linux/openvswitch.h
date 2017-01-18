@@ -338,6 +338,10 @@ enum ovs_key_attr {
 	OVS_KEY_ATTR_IPV6,      /* struct ovs_key_ipv6 */
 	OVS_KEY_ATTR_TCP,       /* struct ovs_key_tcp */
 	OVS_KEY_ATTR_UDP,       /* struct ovs_key_udp */
+#ifndef __KERNEL__
+	/* Only used within userspace datapath*/	
+	OVS_KEY_ATTR_UDPPYD,	/* struct ovs_key_pyd */
+#endif	
 	OVS_KEY_ATTR_ICMP,      /* struct ovs_key_icmp */
 	OVS_KEY_ATTR_ICMPV6,    /* struct ovs_key_icmpv6 */
 	OVS_KEY_ATTR_ARP,       /* struct ovs_key_arp */
@@ -441,6 +445,11 @@ struct ovs_key_tcp {
 struct ovs_key_udp {
 	__be16 udp_src;
 	__be16 udp_dst;
+};
+
+struct ovs_key_pyd {
+	__be64 udp_pyd;
+	__be64 udp_pyd1;
 };
 
 struct ovs_key_sctp {

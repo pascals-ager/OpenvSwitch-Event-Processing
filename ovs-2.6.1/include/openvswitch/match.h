@@ -133,6 +133,8 @@ void match_set_tp_dst_masked(struct match *, ovs_be16 port, ovs_be16 mask);
 /*CEP*/
 void match_set_udp_pyd(struct match *, ovs_be64);
 void match_set_udp_pyd_masked(struct match *match, ovs_be64 pyd, ovs_be64 mask);
+void match_set_udp_pyd1(struct match *, ovs_be64);
+void match_set_udp_pyd1_masked(struct match *match, ovs_be64 pyd1, ovs_be64 mask);
 /*CEP*/
 void match_set_tcp_flags(struct match *, ovs_be16);
 void match_set_tcp_flags_masked(struct match *, ovs_be16 flags, ovs_be16 mask);

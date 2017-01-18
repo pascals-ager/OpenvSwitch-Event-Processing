@@ -33,6 +33,9 @@
 #include "flow.h"
 #include "unaligned.h"
 #include "util.h"
+#include "openvswitch/vlog.h"
+
+VLOG_DEFINE_THIS_MODULE(odp_execute);
 
 /* Masked copy of an ethernet address. 'src' is already properly masked. */
 static void
@@ -280,6 +283,11 @@ odp_execute_set_action(struct dp_packet *packet, const struct nlattr *a)
                                 udp_key->udp_dst);
         }
         break;
+    
+    case OVS_KEY_ATTR_UDPPYD:
+        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+         break;    
+    
 
     case OVS_KEY_ATTR_SCTP:
         if (OVS_LIKELY(dp_packet_get_sctp_payload(packet))) {
@@ -387,6 +395,11 @@ odp_execute_masked_set_action(struct dp_packet *packet,
         odp_set_udp(packet, nl_attr_get(a),
                     get_mask(a, struct ovs_key_udp));
         break;
+
+    case OVS_KEY_ATTR_UDPPYD:
+    VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/
+        /*CEP*/ /*Add later*/
+         break;    
 
     case OVS_KEY_ATTR_SCTP:
         odp_set_sctp(packet, nl_attr_get(a),

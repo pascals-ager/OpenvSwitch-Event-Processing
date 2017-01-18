@@ -230,6 +230,7 @@ enum ofp10_flow_wildcards {
     OFPFW10_TP_SRC     = 1 << 6,  /* TCP/UDP source port. */
     OFPFW10_TP_DST     = 1 << 7,  /* TCP/UDP destination port. */
     OFPFW10_UDP_PYD    = 1 << 8,  /* CEP */ 
+    OFPFW10_UDP_PYD1    = 1 << 9,  /* CEP */ 
 
     /* IP source address wildcard bit count.  0 is exact match, 1 ignores the
      * LSB, 2 ignores the 2 least-significant bits, ..., 32 and higher wildcard
@@ -284,9 +285,10 @@ struct ofp10_match {
     ovs_be16 tp_src;           /* TCP/UDP source port. */
     ovs_be16 tp_dst;           /* TCP/UDP destination port. */
     ovs_be64 udp_pyd;          /* CEP */
+    ovs_be64 udp_pyd1;          /* CEP */
     
 };
-OFP_ASSERT(sizeof(struct ofp10_match) == 48);             /* 40->48 CEP */
+OFP_ASSERT(sizeof(struct ofp10_match) == 56);             /* 40->48->56 CEP */
 
 enum ofp10_flow_mod_flags {
     OFPFF10_EMERG       = 1 << 2 /* Part of "emergency flow cache". */
@@ -313,7 +315,7 @@ struct ofp10_flow_mod {
     /* Followed by OpenFlow actions whose length is inferred from the length
      * field in the OpenFlow header. */
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_mod) == 72);        /* 64->72 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_mod) == 80);        /* 64->72->80 CEP */
 
 /* Flow removed (datapath -> controller). */
 struct ofp10_flow_removed {
@@ -332,7 +334,7 @@ struct ofp10_flow_removed {
     ovs_be64 packet_count;
     ovs_be64 byte_count;
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_removed) == 88);    /* 80->88 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_removed) == 96);    /* 80->88->96CEP */
 
 /* Stats request of type OFPST_AGGREGATE or OFPST_FLOW. */
 struct ofp10_flow_stats_request {
@@ -346,7 +348,7 @@ struct ofp10_flow_stats_request {
     uint8_t pad1[4];
                          
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_stats_request) == 56);     /* 44->56->60->64->52 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_stats_request) == 64);     /* 44->56->60->64->52->56->64 CEP */
 
 /* Body of reply to OFPST_FLOW request. */
 struct ofp10_flow_stats {
@@ -371,7 +373,7 @@ struct ofp10_flow_stats {
       
     /* Followed by OpenFlow actions whose length is inferred from 'length'. */
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_stats) == 104);       /* 88->104 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_stats) == 112);       /* 88->104->112 CEP */
 
 /* Body of reply to OFPST_TABLE request. */
 struct ofp10_table_stats {

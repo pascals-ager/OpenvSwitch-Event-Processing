@@ -156,6 +156,7 @@ ovs_key_attr_to_string(enum ovs_key_attr attr, char *namebuf, size_t bufsize)
     case OVS_KEY_ATTR_TCP: return "tcp";
     case OVS_KEY_ATTR_TCP_FLAGS: return "tcp_flags";
     case OVS_KEY_ATTR_UDP: return "udp";
+    case OVS_KEY_ATTR_UDPPYD: return "pyd";
     case OVS_KEY_ATTR_SCTP: return "sctp";
     case OVS_KEY_ATTR_ICMP: return "icmp";
     case OVS_KEY_ATTR_ICMPV6: return "icmpv6";
@@ -1775,7 +1776,7 @@ static const struct attr_len_tbl ovs_tun_key_attr_lens[OVS_TUNNEL_KEY_ATTR_MAX +
     [OVS_TUNNEL_KEY_ATTR_IPV6_SRC]      = { .len = 16 },
     [OVS_TUNNEL_KEY_ATTR_IPV6_DST]      = { .len = 16 },
 };
-
+/*CEP*/
 static const struct attr_len_tbl ovs_flow_key_attr_lens[OVS_KEY_ATTR_MAX + 1] = {
     [OVS_KEY_ATTR_ENCAP]     = { .len = ATTR_LEN_NESTED },
     [OVS_KEY_ATTR_PRIORITY]  = { .len = 4 },
@@ -1795,6 +1796,7 @@ static const struct attr_len_tbl ovs_flow_key_attr_lens[OVS_KEY_ATTR_MAX + 1] = 
     [OVS_KEY_ATTR_TCP]       = { .len = sizeof(struct ovs_key_tcp) },
     [OVS_KEY_ATTR_TCP_FLAGS] = { .len = 2 },
     [OVS_KEY_ATTR_UDP]       = { .len = sizeof(struct ovs_key_udp) },
+    [OVS_KEY_ATTR_UDPPYD]    = { .len = sizeof(struct ovs_key_pyd)},
     [OVS_KEY_ATTR_SCTP]      = { .len = sizeof(struct ovs_key_sctp) },
     [OVS_KEY_ATTR_ICMP]      = { .len = sizeof(struct ovs_key_icmp) },
     [OVS_KEY_ATTR_ICMPV6]    = { .len = sizeof(struct ovs_key_icmpv6) },
@@ -2878,6 +2880,11 @@ format_odp_key_attr(const struct nlattr *a, const struct nlattr *ma,
         ds_chomp(ds, ',');
         break;
     }
+
+    case OVS_KEY_ATTR_UDPPYD:
+        VLOG_DBG("VLOG In format_odp_key_attr\n");/*CEP*/ /*Add later*/
+         break;  
+
     case OVS_KEY_ATTR_TCP_FLAGS:
         if (!is_exact) {
             format_flags_masked(ds, NULL, packet_tcp_flag_to_string,
@@ -4037,6 +4044,7 @@ parse_odp_key_mask_attr(const char *s, const struct simap *port_names,
 {
     ovs_u128 ufid;
     int len;
+    VLOG_DBG("VLOG In parse_odp_key_mask_attr\n"); /*CEP*/
 
     /* Skip UFID. */
     len = odp_ufid_from_string(s, &ufid);
@@ -4272,6 +4280,7 @@ union ovs_key_tp {
 
 static void get_tp_key(const struct flow *, union ovs_key_tp *);
 static void put_tp_key(const union ovs_key_tp *, struct flow *);
+static void get_pyd_key(const struct flow *, struct ovs_key_pyd *); /*cep*/
 
 static void
 odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
@@ -4402,10 +4411,23 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
             }
         } else if (flow->nw_proto == IPPROTO_UDP) {
             union ovs_key_tp *udp_key;
-
             udp_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_UDP,
                                                sizeof *udp_key);
+                                                        
             get_tp_key(data, udp_key);
+            
+            if(flow->udp_pyd || flow->udp_pyd1 ){
+                VLOG_DBG("VLOG udp_pyd in flow: %"PRIu64"\n",flow->udp_pyd); /*CEP*/
+                VLOG_DBG("VLOG udp_pyd1 in flow: %"PRIu64"\n",flow->udp_pyd1); /*CEP*/
+                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); /*CEP*/
+                struct ovs_key_pyd *pyd_key;  /* CEP */
+                pyd_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_UDPPYD,
+                                               sizeof *pyd_key);   /* CEP */ 
+                get_pyd_key(data, pyd_key); /* CEP */
+            }
+            
+
+            
         } else if (flow->nw_proto == IPPROTO_SCTP) {
             union ovs_key_tp *sctp_key;
 
@@ -4779,6 +4801,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
     const void *check_start = NULL;
     size_t check_len = 0;
     enum ovs_key_attr expected_bit = 0xff;
+    VLOG_DBG("VLOG In parse_l2_5_onward\n");
 
     if (eth_type_mpls(src_flow->dl_type)) {
         if (!is_mask || present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_MPLS)) {
@@ -5855,6 +5878,16 @@ put_tp_key(const union ovs_key_tp *tp, struct flow *flow)
     flow->tp_dst = tp->tcp.tcp_dst;
 }
 
+/*CEP*/
+static void
+get_pyd_key(const struct flow *flow, struct ovs_key_pyd *pyd)
+{
+    pyd->udp_pyd = flow->udp_pyd;
+    pyd->udp_pyd1 = flow->udp_pyd1;
+}
+/*CEP*/
+
+
 static void
 commit_set_port_action(const struct flow *flow, struct flow *base_flow,
                        struct ofpbuf *odp_actions, struct flow_wildcards *wc,
@@ -5862,6 +5895,7 @@ commit_set_port_action(const struct flow *flow, struct flow *base_flow,
 {
     enum ovs_key_attr key_type;
     union ovs_key_tp key, mask, base;
+    VLOG_DBG("VLOG In commit_set_port_action\n"); /*CEP*/
 
     /* Check if 'flow' really has an L3 header. */
     if (!flow->nw_proto) {

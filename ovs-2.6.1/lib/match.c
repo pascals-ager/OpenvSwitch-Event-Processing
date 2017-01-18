@@ -678,6 +678,20 @@ match_set_udp_pyd_masked(struct match *match, ovs_be64 pyd, ovs_be64 mask){
     match->wc.masks.udp_pyd = mask;
     VLOG_DBG("VLOG the flow payload is %"PRId64"/n",match->flow.udp_pyd);
 }
+void
+match_set_udp_pyd1(struct match *match, ovs_be64 udp_pyd1){
+    //VLOG_DBG("In VLOG match_set_udp_pyd\n"); 
+    match_set_udp_pyd1_masked(match, udp_pyd1, OVS_BE64_MAX);
+}
+void
+match_set_udp_pyd1_masked(struct match *match, ovs_be64 pyd1, ovs_be64 mask){
+    VLOG_DBG("VLOG In match_set_udp_pyd1_masked\n"); 
+    VLOG_DBG("VLOG the payload1 is %"PRId64"/n",pyd1);
+    VLOG_DBG("VLOG the mask is %"PRId64"/n",mask);
+    match->flow.udp_pyd1 = pyd1 & mask;
+    match->wc.masks.udp_pyd1 = mask;
+    VLOG_DBG("VLOG the flow payload 1 is %"PRId64"/n",match->flow.udp_pyd1);
+}
 
 /*CEP*/
 
@@ -1097,7 +1111,8 @@ match_format(const struct match *match, struct ds *s, int priority)
 
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 38);
+    VLOG_DBG("VLOG In match_format\n");/*CEP*/
 
     if (priority != OFP_DEFAULT_PRIORITY) {
         ds_put_format(s, "%spriority=%s%d,",
@@ -1383,7 +1398,8 @@ match_format(const struct match *match, struct ds *s, int priority)
         format_be16_masked(s, "tp_dst", f->tp_dst, wc->masks.tp_dst); 
         //VLOG_DBG("VLOG udp_pyd-%d\nVLOG udp_pyd mask -%d\n",f->udp_pyd,wc->masks.udp_pyd); /*CEP*/
         format_be64_masked(s, "udp_pyd", f->udp_pyd, wc->masks.udp_pyd); /*CEP*/
-        //VLOG_DBG("Trying to format_be64_masked VLOG\n");
+        format_be64_masked(s, "udp_pyd1", f->udp_pyd1, wc->masks.udp_pyd1); /*CEP*/
+        VLOG_DBG("VLOG In after format_be64_masked\n"); /*CEP*/
     }
     if (is_ip_any(f) && f->nw_proto == IPPROTO_TCP && wc->masks.tcp_flags) {
         format_flags_masked(s, "tcp_flags", packet_tcp_flag_to_string,

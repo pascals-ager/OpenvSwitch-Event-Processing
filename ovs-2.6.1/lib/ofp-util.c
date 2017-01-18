@@ -102,7 +102,7 @@ ofputil_netmask_to_wcbits(ovs_be32 netmask)
 void
 ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
 {
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 37);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 38);
 
     /* Initialize most of wc. */
     flow_wildcards_init_catchall(wc);
@@ -133,6 +133,10 @@ ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
     if (!(ofpfw & OFPFW10_UDP_PYD)) {
         wc->masks.udp_pyd = OVS_BE64_MAX;
     } /*CEP*/
+
+    if (!(ofpfw & OFPFW10_UDP_PYD1)) {
+        wc->masks.udp_pyd1 = OVS_BE64_MAX;
+    } /*CEP*/    
 
     if (!(ofpfw & OFPFW10_DL_SRC)) {
         WC_MASK_FIELD(wc, dl_src);
@@ -172,6 +176,7 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     match->flow.tp_src = ofmatch->tp_src;
     match->flow.tp_dst = ofmatch->tp_dst;
     match->flow.udp_pyd = ofmatch->udp_pyd; /*CEP*/ /*maybe here?*/
+    match->flow.udp_pyd1 = ofmatch->udp_pyd1;
     match->flow.dl_src = ofmatch->dl_src;
     match->flow.dl_dst = ofmatch->dl_dst;
     match->flow.nw_tos = ofmatch->nw_tos & IP_DSCP_MASK;
@@ -240,6 +245,9 @@ ofputil_match_to_ofp10_match(const struct match *match,
     if (!wc->masks.udp_pyd) {
         ofpfw |= OFPFW10_UDP_PYD;
     } /*CEP*/
+    if (!wc->masks.udp_pyd1) {
+        ofpfw |= OFPFW10_UDP_PYD1;
+    } /*CEP*/    
     if (eth_addr_is_zero(wc->masks.dl_src)) {
         ofpfw |= OFPFW10_DL_SRC;
     }
@@ -282,6 +290,7 @@ ofputil_match_to_ofp10_match(const struct match *match,
     ofmatch->tp_src = match->flow.tp_src;
     ofmatch->tp_dst = match->flow.tp_dst;
     ofmatch->udp_pyd = match->flow.udp_pyd; /*CEP*/
+    ofmatch->udp_pyd1 = match->flow.udp_pyd1; /*CEP*/
     memset(ofmatch->pad1, '\0', sizeof ofmatch->pad1);
     memset(ofmatch->pad2, '\0', sizeof ofmatch->pad2);
 }
@@ -6190,6 +6199,7 @@ static const struct ofp10_wc_map ofp10_wc_map[] = {
     { OFPFW10_TP_SRC,      MFF_TCP_SRC },
     { OFPFW10_TP_DST,      MFF_TCP_DST },
     { OFPFW10_UDP_PYD,     MFF_UDP_PYD },
+    { OFPFW10_UDP_PYD1,    MFF_UDP_PYD1 },
     { OFPFW10_NW_SRC_MASK, MFF_IPV4_SRC },
     { OFPFW10_NW_DST_MASK, MFF_IPV4_DST },
     { OFPFW10_DL_VLAN_PCP, MFF_VLAN_PCP },
@@ -7248,6 +7258,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         MAY_ND_TARGET   = 1 << 7, /* nd_target */
         MAY_MPLS        = 1 << 8, /* mpls label and tc */
         MAY_UDP_PYD     = 1 << 9,  /*CEP*/
+        MAY_UDP_PYD1     = 1 << 10,  /*CEP*/
     } may_match;
 
     struct flow_wildcards wc;
@@ -7258,17 +7269,26 @@ ofputil_normalize_match__(struct match *match, bool may_log)
 
     /* Figure out what fields may be matched. */
     if (match->flow.dl_type == htons(ETH_TYPE_IP)) {
-        VLOG_DBG("VLOG Point XXX"); /*CEP*/
+        
         may_match = MAY_NW_PROTO | MAY_IPVx | MAY_NW_ADDR;
         if (match->flow.nw_proto == IPPROTO_TCP ||
             match->flow.nw_proto == IPPROTO_SCTP ||
             match->flow.nw_proto == IPPROTO_ICMP) {
-            VLOG_DBG("VLOG Point 1"); /*CEP*/
+           
             may_match |= MAY_TP_ADDR;
         } else if(match->flow.nw_proto == IPPROTO_UDP) {       /*CEP*/
             VLOG_DBG("VLOG Point 2"); /*CEP*/
-            VLOG_DBG("VLOG %"PRId64"\n",match->flow.udp_pyd); 
-            may_match |= MAY_UDP_PYD | MAY_TP_ADDR;  /*CEP*/
+            may_match |= MAY_TP_ADDR;
+            if(match->flow.udp_pyd){
+                VLOG_DBG("VLOG %"PRId64"\n",match->flow.udp_pyd);
+                 may_match |= MAY_UDP_PYD | MAY_TP_ADDR; 
+            }
+            if(match->flow.udp_pyd1) {
+                    VLOG_DBG("VLOG %"PRId64"\n",match->flow.udp_pyd1); 
+                     may_match |= MAY_UDP_PYD1 | MAY_TP_ADDR;
+                }
+            
+           
         }
     } else if (match->flow.dl_type == htons(ETH_TYPE_IPV6)) {
         VLOG_DBG("VLOG Point YYY"); /*CEP*/
@@ -7307,8 +7327,13 @@ ofputil_normalize_match__(struct match *match, bool may_log)
     }
     if (!(may_match & MAY_UDP_PYD)) {  /* CEP */
         VLOG_DBG("VLOG Point 5 - MAY_UDP_PYD"); /*CEP*/
-        wc.masks.tp_src = wc.masks.tp_dst = htons(0);
+        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.udp_pyd = htonll(0);
+    }
+    if (!(may_match & MAY_UDP_PYD1)) {  /* CEP */
+        VLOG_DBG("VLOG Point 6 - MAY_UDP_PYD1"); /*CEP*/
+        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
+        wc.masks.udp_pyd1 = htonll(0);
     }
     if (!(may_match & MAY_NW_PROTO)) {
         wc.masks.nw_proto = 0;
@@ -7336,7 +7361,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
 
     /* Log any changes. */
     if (!flow_wildcards_equal(&wc, &match->wc)) {
-        VLOG_DBG("VLOG Point 5 - flow_wildcards_equals"); /*CEP*/
+        VLOG_DBG("VLOG Point 7 - flow_wildcards_equals"); /*CEP*/
         bool log = may_log && !VLOG_DROP_INFO(&bad_ofmsg_rl);
         char *pre = log ? match_to_string(match, OFP_DEFAULT_PRIORITY) : NULL;
 
