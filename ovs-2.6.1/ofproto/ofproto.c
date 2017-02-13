@@ -7805,6 +7805,12 @@ static void
 handle_openflow(struct ofconn *ofconn, const struct ofpbuf *ofp_msg)
     OVS_EXCLUDED(ofproto_mutex)
 {
+    struct ds string = DS_EMPTY_INITIALIZER;
+                    ds_put_hex(&string, ofp_msg->data, MIN(ofp_msg->size, 200));
+                    char *buffer = ds_steal_cstr(&string);
+                    VLOG_DBG("VLOG In handle_openflow, the message is %s\n",buffer);  /*CEP Trying to print the msg*/
+                    ds_destroy(&string);
+                    free(buffer);
     enum ofperr error = handle_openflow__(ofconn, ofp_msg);
 
     if (error) {
@@ -8260,9 +8266,9 @@ ofproto_rule_insert__(struct ofproto *ofproto, struct rule *rule)
     minimask_expand(mm,&fwc);
 
     VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",f.udp_pyd); /*21617821137838080*/
-    VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd); /*18446744073709551615*/
+    VLOG_DBG("VLOG At this point udp_pyd mask in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd); /*18446744073709551615*/
      VLOG_DBG("VLOG At this point udp_pyd1 in minimatch is %"PRIu64"\n",f.udp_pyd1); /*21617821137838080*/
-    VLOG_DBG("VLOG At this point udp_pyd1 in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd1); /*18446744073709551615*/
+    VLOG_DBG("VLOG At this point udp_pyd1 mask in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd1); /*18446744073709551615*/
     
     VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
     VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/

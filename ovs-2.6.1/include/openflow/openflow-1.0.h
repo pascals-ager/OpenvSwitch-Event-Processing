@@ -229,8 +229,8 @@ enum ofp10_flow_wildcards {
     OFPFW10_NW_PROTO   = 1 << 5,  /* IP protocol. */
     OFPFW10_TP_SRC     = 1 << 6,  /* TCP/UDP source port. */
     OFPFW10_TP_DST     = 1 << 7,  /* TCP/UDP destination port. */
-    OFPFW10_UDP_PYD    = 1 << 8,  /* CEP */ 
-    OFPFW10_UDP_PYD1    = 1 << 9,  /* CEP */ 
+    OFPFW10_UDP_PYD    = 1 << 22,  /* CEP */ /*from 8 to 22*/
+    OFPFW10_UDP_PYD1    = 1 << 23,  /* CEP */ /* from 9 to 23*/
 
     /* IP source address wildcard bit count.  0 is exact match, 1 ignores the
      * LSB, 2 ignores the 2 least-significant bits, ..., 32 and higher wildcard
@@ -253,7 +253,7 @@ enum ofp10_flow_wildcards {
     OFPFW10_NW_TOS = 1 << 21, /* IP ToS (DSCP field, 6 bits). */
 
     /* Wildcard all fields. */
-    OFPFW10_ALL = ((1 << 22) - 1)
+    OFPFW10_ALL = ((1 << 24) - 1)  /* from 22 to 24 */
 };
 
 /* The wildcards for ICMP type and code fields use the transport source

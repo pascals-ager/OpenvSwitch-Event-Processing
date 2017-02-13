@@ -163,10 +163,14 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
                                struct match *match)
 {
     uint32_t ofpfw = ntohl(ofmatch->wildcards) & OFPFW10_ALL;
+    VLOG_DBG("VLOG At this point in ofp_util unsigned ofmatch wildcards is %"PRIu32"\n",ofmatch->wildcards);
+    VLOG_DBG("VLOG At this point in ofp_util signed ofmatch wildcards is %"PRId32"\n",ofmatch->wildcards);
 
     /* Initialize match->wc. */
     memset(&match->flow, 0, sizeof match->flow);
     ofputil_wildcard_from_ofpfw10(ofpfw, &match->wc);
+
+    VLOG_DBG("VLOG At this point in ofp_util udp_pyd in ofmatch is %"PRIu64"\n",ofmatch->udp_pyd);
 
     /* Initialize most of match->flow. */
     match->flow.nw_src = ofmatch->nw_src;
@@ -181,6 +185,12 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     match->flow.dl_dst = ofmatch->dl_dst;
     match->flow.nw_tos = ofmatch->nw_tos & IP_DSCP_MASK;
     match->flow.nw_proto = ofmatch->nw_proto;
+
+    VLOG_DBG("VLOG At this point in ofp_util udp_pyd in match is %"PRIu64"\n",match->flow.udp_pyd);
+    VLOG_DBG("VLOG At this point in ofp_util udp_pyd1 in match is %"PRIu64"\n",match->flow.udp_pyd1);
+
+    VLOG_DBG("VLOG At this point in ofp_util udp_pyd mask in match is %"PRIu64"\n",match->wc.masks.udp_pyd);
+    VLOG_DBG("VLOG At this point in ofp_util udp_pyd1 mask in match is %"PRIu64"\n",match->wc.masks.udp_pyd1);
 
     /* Translate VLANs. */
     if (!(ofpfw & OFPFW10_DL_VLAN) &&
@@ -208,6 +218,8 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
 
     /* Clean up. */
     match_zero_wildcarded_fields(match);
+    VLOG_DBG("VLOG After zero wildcard ofp_util udp_pyd in match is %"PRIu64"\n",match->flow.udp_pyd);
+    VLOG_DBG("VLOG After zero wildcard ofp_util udp_pyd1 in match is %"PRIu64"\n",match->flow.udp_pyd1);
 }
 
 /* Convert 'match' into the OpenFlow 1.0 match structure 'ofmatch'. */
