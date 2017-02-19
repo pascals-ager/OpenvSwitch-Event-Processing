@@ -1652,14 +1652,125 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_UDP_PYD(112) since v2.6.
-     * OXM: OXM_OF_UDP_PYD(45) since OF1.2 and v2.6.
+     * NXM: NXM_OF_UDP_PYD1(112) since v2.6.
+     * OXM: OXM_OF_UDP_PYD1(45) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
     MFF_UDP_PYD1,
-    
 
+    /* "e_attr1".
+     *
+     * Event Attribute1.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_ATTR1(113) since v2.6.
+     * OXM: OXM_OF_EVNT_ATTR1(46) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_ATTR1,
+
+    /* "e_attr2".
+     *
+     * Event Attribute2.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_ATTR2(114) since v2.6.
+     * OXM: OXM_OF_EVNT_ATTR2(47) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_ATTR2,
+
+     /* "e_val1".
+     *
+     * Event Value1.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_VAL1(115) since v2.6.
+     * OXM: OXM_OF_EVNT_VAL1(48) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_VAL1,
+
+    /* "e_val2".
+     *
+     * Event Value2.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_VAL2(116) since v2.6.
+     * OXM: OXM_OF_EVNT_VAL2(49) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_VAL2,
+
+    /* "e_type".
+     *
+     * Event Type.
+     *
+     * Type: be16.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_TYP(117) since v2.6.
+     * OXM: OXM_OF_EVNT_TYP(50) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */    
+    MFF_EVNT_TYP,
+
+    /* "e_op1".
+     *
+     * Event Operator1.
+     *
+     * Type: be16.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_OP1(118) since v2.6.
+     * OXM: OXM_OF_EVNT_OP1(51) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_OP1,
+
+    /* "e_op2".
+     *
+     * Event Operator2.
+     *
+     * Type: be16.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_OP1(119) since v2.6.
+     * OXM: OXM_OF_EVNT_OP1(52) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_OP2,
+    
 /* ## ---- ## */
 /* ## SCTP ## */
 /* ## ---- ## */
@@ -1948,6 +2059,7 @@ enum OVS_PACKED_ENUM mf_string {
     MFS_FRAG,                   /* no, yes, first, later, not_later */
     MFS_TNL_FLAGS,              /* FLOW_TNL_F_* flags */
     MFS_TCP_FLAGS,              /* TCP_* flags */
+    //MFS_STRING,                 /* Operator */
 };
 
 struct mf_field {
