@@ -335,6 +335,28 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
     case MFF_UDP_PYD1:  /*CEP*/
          VLOG_DBG("VLOG In mf_is_wild\n"); /*CEP*/
          return !wc->masks.udp_pyd1; /*CEP*/ 
+
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+           return 0;
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+           return 0;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           return 0; 
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           return 0;
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        return 0;                                      
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        return 0;
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        return 0;        
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -534,6 +556,27 @@ mf_is_value_valid(const struct mf_field *mf, const union mf_value *value)
      case MFF_UDP_PYD1:
         VLOG_DBG("VLOG In mf_is_value_valid\n"); /*CEP*/
         return true;             /*CEP*/
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+           return true;
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+           return true;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           return true;                       
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           return true;
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        return true;
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        return true;
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        return true;                                      
     case MFF_N_IDS:
    
     default:
@@ -789,7 +832,27 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
         VLOG_DBG("VLOG In mf_get_value\n");  /*CEP*/
         value->be64 = flow->udp_pyd1; /*CEP*/
         break;
-
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+           break;
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+           break;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           break; 
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           break;  
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        break;                                                
     case MFF_N_IDS:   
     default:
         OVS_NOT_REACHED();
@@ -1058,7 +1121,28 @@ mf_set_value(const struct mf_field *mf,
     case MFF_UDP_PYD1:  /*CEP*/
         VLOG_DBG("VLOG In mf_set_value\n"); /*CEP*/
         match_set_udp_pyd1(match, value->be64); /*CEP*/
-        break;    
+        break;
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+        break;        
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+        break;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           break;
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           break;
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        break;                
     case MFF_N_IDS:
     
     default:
@@ -1403,7 +1487,28 @@ mf_set_flow_value(const struct mf_field *mf,
     case MFF_UDP_PYD1: /*CEP*/
         VLOG_DBG("In VLOG n mf_set_flow_value\n"); /*CEP*/
         flow->udp_pyd1 = value->be64; /*CEP*/
-        break;         
+        break;
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+        break;
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+        break; 
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           break;  
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           break;
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        break; 
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        break;                                                           
     default:
         OVS_NOT_REACHED();
     }
@@ -1743,7 +1848,27 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         match->wc.masks.udp_pyd1 = htons(0);  /*CEP*/ 
         match->flow.udp_pyd1 = htons(0);      /*CEP*/
         break;
-
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+           break;
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+           break;  
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           break;  
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           break;
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        break;                                                           
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -1980,7 +2105,28 @@ mf_set(const struct mf_field *mf,
     case MFF_UDP_PYD1:  /*CEP*/
         VLOG_DBG("VLOG In mf_set\n"); /*CEP*/
         match_set_udp_pyd1_masked(match, value->be64, mask->be64); /*CEP*/ /*changed from OVS_BE64_MAX to mask->be64*/
-        break; 
+        break;
+    case MFF_EVNT_ATTR1:
+           /*CEP*/
+        break;
+    case MFF_EVNT_ATTR2:
+           /*CEP*/
+        break;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           break;  
+    case MFF_EVNT_VAL2:
+           /*CEP*/
+           break;
+    case MFF_EVNT_TYP:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP1:
+           /*CEP*/
+        break;
+    case MFF_EVNT_OP2:
+           /*CEP*/
+        break;                                                             
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -2128,6 +2274,25 @@ mf_get(const struct mf_field *mf, const struct match *match,
     mf_get_mask(mf, &match->wc, mask);
 }
 
+/*
+static char *
+mf_from_character_string(const struct mf_field *mf, const char *s,
+                        uint8_t *valuep, uint8_t *maskp)
+{
+    
+   
+    int i;
+
+    for (i = mf->n_bytes - 1; i >= 0; i--) {
+        valuep[i] = (uint8_t) *s;
+        s++;
+    }
+    memset(maskp, 0xff, mf->n_bytes);
+    return NULL;
+
+
+}   *//*CEP*/
+
 static char *
 mf_from_integer_string(const struct mf_field *mf, const char *s,
                        uint8_t *valuep, uint8_t *maskp)
@@ -2135,6 +2300,8 @@ mf_from_integer_string(const struct mf_field *mf, const char *s,
     char *tail;
     const char *err_str = "";
     int err;
+
+    VLOG_DBG("VLOG in meta-flow mf_from_integer_string Point 1\n");
 
     err = parse_int_string(s, valuep, mf->n_bytes, &tail);
     if (err || (*tail != '\0' && *tail != '/')) {
@@ -2356,6 +2523,9 @@ mf_parse(const struct mf_field *mf, const char *s,
         error = mf_from_integer_string(mf, s,
                                        (uint8_t *) value, (uint8_t *) mask);
         break;
+    /*case MFS_STRING:
+        error = mf_from_character_string(mf, s, (uint8_t *) value, (uint8_t *) mask);
+        break;  */                                          
 
     case MFS_CT_STATE:
         ovs_assert(mf->n_bytes == sizeof(ovs_be32));
@@ -2429,6 +2599,7 @@ static void
 mf_format_integer_string(const struct mf_field *mf, const uint8_t *valuep,
                          const uint8_t *maskp, struct ds *s)
 {
+    VLOG_DBG("VLOG In meta-flow mf_format_integer_string Point 2\n");
     if (mf->string == MFS_HEXADECIMAL) {
         ds_put_hex(s, valuep, mf->n_bytes);
     } else {
@@ -2450,6 +2621,32 @@ mf_format_integer_string(const struct mf_field *mf, const uint8_t *valuep,
         ds_put_hex(s, maskp, mf->n_bytes);
     }
 }
+
+
+/*
+static void 
+mf_format_character_string(const struct mf_field *mf, const uint8_t *valuep,
+                            const uint8_t *maskp, struct ds *s)
+{
+     
+     char string[9];
+     int i;
+    ovs_assert(mf->n_bytes <= 8);
+    for( i = 0; i < mf->n_bytes; i++) {
+        string[i]=(char) valuep[i];
+
+    }
+    string[i]= '\0';
+    ds_put_format(s, "%s", string);
+    
+
+    if (maskp) {
+
+        ds_put_char(s, '/');
+        ds_put_hex(s, maskp, mf->n_bytes);
+    }
+}
+*/
 
 static void
 mf_format_frag_string(uint8_t value, uint8_t mask, struct ds *s)
@@ -2524,6 +2721,10 @@ mf_format(const struct mf_field *mf,
     case MFS_HEXADECIMAL:
         mf_format_integer_string(mf, (uint8_t *) value, (uint8_t *) mask, s);
         break;
+
+    /*case MFS_STRING:
+        mf_format_character_string(mf, (uint8_t *) value, (uint8_t *) mask, s);
+        break; */   
 
     case MFS_CT_STATE:
         mf_format_ct_state_string(value->be32,
