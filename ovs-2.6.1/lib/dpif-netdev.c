@@ -4108,7 +4108,9 @@ handle_packet_upcall(struct dp_netdev_pmd_thread *pmd, struct dp_packet *packet,
     //VLOG_DBG("VLOG tcp_flags %"PRId16"\n",fl->tcp_flags);  /*CEP*/
     //VLOG_DBG("VLOG pad3 %"PRId16"\n",fl->pad3);   /*CEP*/
     VLOG_DBG("VLOG handle_packet_upcall udp_pyd %"PRId64"\n",fl->udp_pyd);  /*CEP*/
-   // VLOG_DBG("VLOG depif_netdev udp_pyd mask is %"PRId64"\n",fc->masks.udp_pyd);  /*CEP*/
+    VLOG_DBG("VLOG handle_packet_upcall udp_pyd1 %"PRId64"\n",fl->udp_pyd1);  /*CEP*/
+    //VLOG_DBG("VLOG handle_packet_upcall udp_pyd mask is %"PRId64"\n",fc->masks.udp_pyd);  /*CEP*/
+     //VLOG_DBG("VLOG handle_packet_upcall udp_pyd1 mask is %"PRId64"\n",fc->masks.udp_pyd1);  /*CEP*/
     //VLOG_DBG("VLOG (HEX) udp_pyd %"PRIx64"\n",fl->udp_pyd); /*CEP*/
 
     const char *s = flow_to_string(fl);
@@ -4208,6 +4210,7 @@ fast_path_processing(struct dp_netdev_pmd_thread *pmd,
     struct flow f;
     miniflow_expand(mff,&f);
     VLOG_DBG("VLOG In fast_path_processing udp_pyd in key miniflow is %"PRIu64"\n",f.udp_pyd); /*21617821137838080*/    
+    VLOG_DBG("VLOG In fast_path_processing udp_pyd1 in key miniflow is %"PRIu64"\n",f.udp_pyd1); /*21617821137838080*/  
     VLOG_DBG("VLOG In fast_path_processing tp_dst in key miniflow is %"PRIu16"\n",f.tp_dst);  /*37926*/    
     VLOG_DBG("VLOG In fast_path_processing key len is %"PRIu32"\n",keys[i].len); /*CEP*/
 

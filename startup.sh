@@ -17,13 +17,13 @@ export DB_SOCK=/usr/local/var/run/openvswitch/db.sock
 ovs-vsctl --no-wait init
 ovs-vswitchd --pidfile --detach
 
-ovs-vsctl -- --bootstrap set-ssl /usr/src/cep/sc-privkey.pem \
-  /usr/src/cep/sc-cert.pem \
-  /usr/local/var/lib/openvswitch/pki/controllerca/cacert.pem
+#ovs-vsctl -- --bootstrap set-ssl /usr/src/cep/sc-privkey.pem \
+ # /usr/src/cep/sc-cert.pem \
+  #/usr/local/var/lib/openvswitch/pki/controllerca/cacert.pem
 
 ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 
-ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
+#ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
 
 ovs-vsctl set bridge br0 protocols=OpenFlow10
 cd ..

@@ -1393,10 +1393,11 @@ match_format(const struct match *match, struct ds *s, int priority)
     } else {
         //VLOG_DBG("Trying to format_be64_masked VLOG\n"); /*CEP*/
         //VLOG_DBG("VLOG In match.c  match_format flow tp_src-%d\nVLOG In match.c  match_format mask tp_src -%d\n",f->tp_src,wc->masks.tp_src); /*CEP*/
-        //VLOG_DBG("VLOG In match.c  match_format flow tp_dst-%d\nVLOG In match.c  match_format mask tp_dst -%d\n",f->tp_dst,wc->masks.tp_dst); /*CEP*/
+        VLOG_DBG("VLOG In match.c  match_format flow tp_dst-%d\nVLOG In match.c  match_format mask tp_dst -%d\n",f->tp_dst,wc->masks.tp_dst); /*CEP*/
         format_be16_masked(s, "tp_src", f->tp_src, wc->masks.tp_src);
         format_be16_masked(s, "tp_dst", f->tp_dst, wc->masks.tp_dst); 
-        //VLOG_DBG("VLOG udp_pyd-%d\nVLOG udp_pyd mask -%d\n",f->udp_pyd,wc->masks.udp_pyd); /*CEP*/
+        VLOG_DBG("VLOG udp_pyd-%"PRIu64"\nVLOG udp_pyd mask -%"PRIu64"\n",f->udp_pyd,wc->masks.udp_pyd); /*CEP*/
+        VLOG_DBG("VLOG udp_pyd1 -%"PRIu64"\nVLOG udp_pyd1 mask -%"PRIu64"\n",f->udp_pyd1,wc->masks.udp_pyd1); /*CEP*/
         format_be64_masked(s, "udp_pyd", f->udp_pyd, wc->masks.udp_pyd); /*CEP*/
         format_be64_masked(s, "udp_pyd1", f->udp_pyd1, wc->masks.udp_pyd1); /*CEP*/
         VLOG_DBG("VLOG In after format_be64_masked\n"); /*CEP*/
