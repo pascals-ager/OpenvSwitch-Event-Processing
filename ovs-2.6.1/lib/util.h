@@ -27,8 +27,11 @@
 #include "compiler.h"
 #include "util.h"
 #include "openvswitch/util.h"
+#include "zlog.h"
 
 extern char *program_name;
+
+zlog_category_t *cat;
 
 #define __ARRAY_SIZE_NOCHECK(ARRAY) (sizeof(ARRAY) / sizeof((ARRAY)[0]))
 #ifdef __GNUC__

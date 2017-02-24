@@ -1627,38 +1627,6 @@ enum OVS_PACKED_ENUM mf_field_id {
      */
     MFF_UDP_DST,
 
-    /* "udp_pyd".
-     *
-     * UDP payload.
-     *
-     * Type: be64.
-     * Maskable: bitwise.
-     * Formatting: decimal.
-     * Prerequisites: UDP.
-     * Access: read-only.
-     * NXM: NXM_OF_UDP_PYD(111) since v2.6.
-     * OXM: OXM_OF_UDP_PYD(44) since OF1.2 and v2.6.
-     * OF1.0: exact match.
-     * OF1.1: exact match.
-     */
-    MFF_UDP_PYD,
-
-    /* "udp_pyd1".
-     *
-     * UDP payload1.
-     *
-     * Type: be64.
-     * Maskable: bitwise.
-     * Formatting: decimal.
-     * Prerequisites: UDP.
-     * Access: read-only.
-     * NXM: NXM_OF_UDP_PYD1(112) since v2.6.
-     * OXM: OXM_OF_UDP_PYD1(45) since OF1.2 and v2.6.
-     * OF1.0: exact match.
-     * OF1.1: exact match.
-     */
-    MFF_UDP_PYD1,
-
     /* "e_attr1".
      *
      * Event Attribute1.
@@ -1668,8 +1636,8 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_ATTR1(113) since v2.6.
-     * OXM: OXM_OF_EVNT_ATTR1(46) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_ATTR1(111) since v2.6.
+     * OXM: OXM_OF_EVNT_ATTR1(44) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
@@ -1684,8 +1652,8 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_ATTR2(114) since v2.6.
-     * OXM: OXM_OF_EVNT_ATTR2(47) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_ATTR2(112) since v2.6.
+     * OXM: OXM_OF_EVNT_ATTR2(45) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
@@ -1700,8 +1668,8 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_VAL1(115) since v2.6.
-     * OXM: OXM_OF_EVNT_VAL1(48) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_VAL1(113) since v2.6.
+     * OXM: OXM_OF_EVNT_VAL1(46) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
@@ -1716,8 +1684,8 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_VAL2(116) since v2.6.
-     * OXM: OXM_OF_EVNT_VAL2(49) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_VAL2(114) since v2.6.
+     * OXM: OXM_OF_EVNT_VAL2(47) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
@@ -1732,8 +1700,8 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_TYP(117) since v2.6.
-     * OXM: OXM_OF_EVNT_TYP(50) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_TYP(115) since v2.6.
+     * OXM: OXM_OF_EVNT_TYP(48) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */    
@@ -1748,8 +1716,8 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_OP1(118) since v2.6.
-     * OXM: OXM_OF_EVNT_OP1(51) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_OP1(116) since v2.6.
+     * OXM: OXM_OF_EVNT_OP1(49) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
@@ -1764,13 +1732,45 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_OP1(119) since v2.6.
-     * OXM: OXM_OF_EVNT_OP1(52) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_OP1(117) since v2.6.
+     * OXM: OXM_OF_EVNT_OP1(50) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */
     MFF_EVNT_OP2,
-    
+
+    /* "udp_pyd".
+     *
+     * UDP payload.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_UDP_PYD(118) since v2.6.
+     * OXM: OXM_OF_UDP_PYD(51) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_UDP_PYD,
+
+    /* "udp_pyd1".
+     *
+     * UDP payload1.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_UDP_PYD1(119) since v2.6.
+     * OXM: OXM_OF_UDP_PYD1(52) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_UDP_PYD1,
+   
 /* ## ---- ## */
 /* ## SCTP ## */
 /* ## ---- ## */

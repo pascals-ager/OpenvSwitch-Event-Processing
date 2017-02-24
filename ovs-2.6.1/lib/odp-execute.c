@@ -286,7 +286,19 @@ odp_execute_set_action(struct dp_packet *packet, const struct nlattr *a)
     
     case OVS_KEY_ATTR_UDPPYD:
         VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
-         break;    
+         break;
+    case OVS_KEY_ATTR_EVNT:
+        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+         break;
+    case OVS_KEY_ATTR_EVNT_TYP:
+        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+         break;
+    case OVS_KEY_ATTR_EVNT_FIRST_OP:
+        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+         break;
+    case OVS_KEY_ATTR_EVNT_SEC_OP:
+        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+         break;                                       
     
 
     case OVS_KEY_ATTR_SCTP:
@@ -399,7 +411,19 @@ odp_execute_masked_set_action(struct dp_packet *packet,
     case OVS_KEY_ATTR_UDPPYD:
     VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/
         /*CEP*/ /*Add later*/
-         break;    
+         break;
+    case OVS_KEY_ATTR_EVNT:
+        VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
+         break;
+    case OVS_KEY_ATTR_EVNT_TYP:
+        VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
+         break;
+    case OVS_KEY_ATTR_EVNT_FIRST_OP:
+        VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
+         break;
+    case OVS_KEY_ATTR_EVNT_SEC_OP:
+        VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
+         break;              
 
     case OVS_KEY_ATTR_SCTP:
         odp_set_sctp(packet, nl_attr_get(a),

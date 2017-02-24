@@ -9,6 +9,7 @@ lib_LTLIBRARIES += lib/libopenvswitch.la
 
 lib_libopenvswitch_la_LIBADD = $(SSL_LIBS)
 lib_libopenvswitch_la_LIBADD += $(CAPNG_LDADD)
+lib_libopenvswitch_la_LIBADD += -lzlog
 
 if WIN32
 lib_libopenvswitch_la_LIBADD += ${PTHREAD_LIBS}
@@ -18,6 +19,8 @@ lib_libopenvswitch_la_LDFLAGS = \
         -version-info $(LT_CURRENT):$(LT_REVISION):$(LT_AGE) \
         -Wl,--version-script=$(top_builddir)/lib/libopenvswitch.sym \
         $(AM_LDFLAGS)
+
+lib_libopenvswitch_la_LDFLAGS += -L/usr/local/lib $(AM_LDFLAGS)
 
 lib_libopenvswitch_la_SOURCES = \
 	lib/aes128.c \

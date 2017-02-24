@@ -23,7 +23,7 @@
 /* This sequence number should be incremented whenever anything involving flows
  * or the wildcarding of flows changes.  This will cause build assertion
  * failures in places which likely need to be updated. */
-#define FLOW_WC_SEQ 38
+#define FLOW_WC_SEQ 43
 
 /* Number of Open vSwitch extension 32-bit registers. */
 #define FLOW_N_REGS 16
@@ -125,6 +125,14 @@ struct flow {
     /* L4 (64-bit aligned) */
     ovs_be64 udp_pyd;           /* 64-bit UDP payload extension CEP */
     ovs_be64 udp_pyd1;          /* 64-bit UDP payload extension CEP */
+    ovs_be64 e_attr1;
+    ovs_be64 e_attr2;
+    ovs_be64 e_val1;
+    ovs_be64 e_val2;
+    ovs_be16 e_type;
+    ovs_be16 e_op1;
+    ovs_be16 e_op2;
+    ovs_be16 pad4; 
     ovs_be16 tp_src;            /* TCP/UDP/SCTP source port/ICMP type. */
     ovs_be16 tp_dst;            /* TCP/UDP/SCTP destination port/ICMP code. */ 
     ovs_be32 igmp_group_ip4;    /* IGMP group IPv4 address. */        
@@ -134,11 +142,11 @@ BUILD_ASSERT_DECL(sizeof(struct flow) % sizeof(uint64_t) == 0);
 BUILD_ASSERT_DECL(sizeof(struct flow_tnl) % sizeof(uint64_t) == 0);
 
 #define FLOW_U64S (sizeof(struct flow) / sizeof(uint64_t))
-/*8 bytes added on to struct flow due to udp_pyd CEP 248->256->264*/
+/*8 bytes added on to struct flow due to udp_pyd CEP 248->256->264->304*/
 /* Remember to update FLOW_WC_SEQ when changing 'struct flow'. */
 BUILD_ASSERT_DECL(offsetof(struct flow, igmp_group_ip4) + sizeof(uint32_t)
-                  == sizeof(struct flow_tnl) + 264
-                  && FLOW_WC_SEQ == 38);
+                  == sizeof(struct flow_tnl) + 304
+                  && FLOW_WC_SEQ == 43);
 
 /* Incremental points at which flow classification may be performed in
  * segments.
