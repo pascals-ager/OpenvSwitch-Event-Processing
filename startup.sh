@@ -23,7 +23,7 @@ ovs-vswitchd --pidfile --detach
 
 ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 
-#ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
+ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
 
 ovs-vsctl set bridge br0 protocols=OpenFlow10
 cd ..
