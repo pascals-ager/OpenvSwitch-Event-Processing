@@ -41,6 +41,16 @@ struct dp_packet;
 struct pkt_metadata;
 struct match;
 
+
+#ifndef ATTR_PARAM
+#define ATTR_PARAM 3
+#endif
+
+#ifndef ATTR_DELIMITER
+#define ATTR_DELIMITER "2c"
+#endif
+/*CEP*/
+
 /* Some flow fields are mutually exclusive or only appear within the flow
  * pipeline.  IPv6 headers are bigger than IPv4 and MPLS, and IPv6 ND packets
  * are bigger than TCP,UDP and IGMP packets. */
@@ -63,6 +73,11 @@ extern const uint8_t flow_segment_u64s[];
 #define FLOW_U64_SIZE(FIELD)                                            \
     DIV_ROUND_UP(FLOW_U64_OFFREM(FIELD) + MEMBER_SIZEOF(struct flow, FIELD), \
                  sizeof(uint64_t))
+
+int flow_parse_str(const char *, const char * );
+int flow_extract_str(const char *, int, char *);
+void flow_strip_hex(char * , char c);
+void flow_string_convert(char *);
 
 void flow_extract(struct dp_packet *, struct flow *);
 

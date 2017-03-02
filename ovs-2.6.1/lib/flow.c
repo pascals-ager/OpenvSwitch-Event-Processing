@@ -316,6 +316,70 @@ BUILD_MESSAGE("FLOW_WC_SEQ changed: miniflow_extract() will have runtime "
 #define miniflow_push_macs(MF, FIELD, VALUEP)                       \
     miniflow_push_macs_(MF, offsetof(struct flow, FIELD), VALUEP)
 
+
+int flow_parse_str(const char * tmp, const char *token){
+    if(strstr(tmp,token)){
+      int len = strstr(tmp,token) - tmp;
+      return len;
+    }
+    return 0;
+} 
+
+
+int flow_extract_str( const char *temp, int length, char * p){
+   if(length){
+       int i;
+       VLOG_DBG("VLOG temp string here is %s",temp);
+    for (i=0;i<length;i++,temp++){
+        VLOG_DBG("VLOG Iterator i - %d, temp value - %c\n",i,*temp);
+       *p = *temp;
+       VLOG_DBG("VLOG value of *p - %c\n",*p);
+        p++; 
+        }
+    }
+    else{ 
+        int i= strlen(temp);
+        while(i != 0){        
+            *p = *temp; 
+            p++;     
+            temp++;
+            i --;
+        }
+    }
+    return 1;
+ }  
+
+
+void flow_strip_hex(char * str, char c){
+     int i = 0;
+         char *pr = str,  *pw = str;
+    while (*pr) {
+        *pw = *pr++;
+        if((i++%2)==0){pw += (*pw != c);}
+        else pw++;
+    }
+    *pw = '\0';
+ }
+
+
+void flow_string_convert(char *str){
+    char s[10];
+    int num = 0;
+    char *pr = str, *pm=str, *pw=s;
+    char *ps = (char*)malloc(2* sizeof(char*));
+    while (*pr){
+    memcpy(ps,pr,2);
+    num = (int) strtol(ps, NULL, 16);
+    VLOG_DBG("VLOG num here is %d",num);
+    sprintf(pw, "%d", num);
+    pr+=2;
+    pw+=2;
+    }
+    strcpy(pm,s);
+    free(ps);
+    return;
+}
+
 /* Pulls the MPLS headers at '*datap' and returns the count of them. */
 static inline int
 parse_mpls(const void **datap, size_t *sizep)
@@ -785,11 +849,49 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                     struct ds string = DS_EMPTY_INITIALIZER;
                     ds_put_hex(&string,payload,l4_size-8);
                     char *stream = ds_steal_cstr(&string);
+                    int i=0; 
+                    stream += 2;
+                    char * data[ATTR_PARAM];
+                    uint64_t event[ATTR_PARAM]={0};
+
+                    for(i = 0; i < ATTR_PARAM; i++){
+                        data[i]=(char *)calloc(8, sizeof(char *));
+                    }
+
+                    char **p = data;  
+
+                     for(i=0;i<ATTR_PARAM;i++){                        
+                        int length = flow_parse_str(stream,ATTR_DELIMITER);
+                        //VLOG_DBG("VLOG length here is %d",length); 
+                        if(flow_extract_str(stream, length, *p)){
+                        stream += length +2;
+                        ++p;
+                        }
+                        else break;
+                        if(i){
+                            //VLOG_DBG("VLOG data[%d] is %s",i, data[i]); 
+                            flow_strip_hex(data[i],'3');
+                            sscanf(data[i],"%"PRIu64"",&event[i]);
+                            }
+                        else{
+                             //VLOG_DBG("VLOG data[0] is %s",data[i]);   
+                             flow_string_convert(data[i]);
+                             sscanf(data[i],"%"PRIu64"",&event[i]);
+                        }
+                        
+                        VLOG_DBG("VLOG event[%d] %"PRIu64"\n",i,event[i]);
+
+                        }
+
+                    for(i = 0; i < ATTR_PARAM; i++){
+                        free(data[i]);
+                    }
+                                                    
 
                     //uint64_t check = 2161727821137838080;   /*30*/
                     //uint64_t mate  = 2233785415175766016;  /*31*/
-
-                    int i,j,counter=0;    
+/*
+                       
                     const char seperator[2] = "c";
                     char *token;
                     char tmp[100];
@@ -808,17 +910,19 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                         token = strtok(NULL, seperator);
                         counter ++;
                     }
-                    VLOG_DBG("NEW %"PRId64" - %"PRId64"\n",event[0],event[1]); /*CEP*/
+                */
+                    //VLOG_DBG("NEW %"PRId64" - %"PRId64"\n",event[0],event[1]); /*CEP*/
 
-                    miniflow_push_be64(mf, udp_pyd, htonll(event[0])); 
-                    miniflow_push_be64(mf, udp_pyd1, htonll(event[1]));                    
-                    miniflow_push_be64(mf, e_attr1, htonll(event[0]));
-                    miniflow_push_be64(mf, e_attr2, htonll(event[1]));
-                    miniflow_push_be64(mf, e_val1, htonll(event[0])); 
-                    miniflow_push_be64(mf, e_val2, htonll(event[1])); 
-                    miniflow_push_be16(mf, e_type, htons(65));
-                    miniflow_push_be16(mf, e_op1, htons(60));
-                    miniflow_push_be16(mf, e_op2, htons(62))                                                                                                 
+                    //miniflow_push_be64(mf, udp_pyd, htonll(event[0])); 
+                    //miniflow_push_be64(mf, udp_pyd1, htonll(event[1])); 
+                    miniflow_push_be16(mf, e_type, htons(event[0]));                   
+                    miniflow_push_be64(mf, e_attr1, htonll(event[1]));
+                    miniflow_push_be64(mf, e_attr2, htonll(event[2]));
+                    //miniflow_push_be64(mf, e_val1, htonll(event[0])); 
+                    //miniflow_push_be64(mf, e_val2, htonll(event[1])); 
+                    //miniflow_push_be16(mf, e_type, htons(event[0]));
+                    //miniflow_push_be16(mf, e_op1, htons(60));
+                    //miniflow_push_be16(mf, e_op2, htons(62))                                                                                                 
 
                     ds_destroy(&string);            
             }

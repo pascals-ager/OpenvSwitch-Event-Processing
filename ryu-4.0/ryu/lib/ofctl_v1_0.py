@@ -262,10 +262,10 @@ def to_match(dp, attrs):
             wildcards &= ~ofp.OFPFW_EVNT_OP2
             LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_OP2 - %d wildcards - %d', ofp.OFPFW_EVNT_OP2, wildcards) #CEP  
         elif key == 'e_type':
-            '''strval = ""
+            strval = ""
             for k in value:
-                strval += str(ord(k))'''
-            e_type = ord(value) #int(strval)
+                strval += format(ord(k),"d")
+            e_type = int(strval)
             wildcards &= ~ofp.OFPFW_EVNT_TYP
             LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_TYP - %d wildcards - %d', ofp.OFPFW_EVNT_TYP, wildcards) #CEP  
     
