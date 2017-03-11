@@ -156,11 +156,8 @@ ovs_key_attr_to_string(enum ovs_key_attr attr, char *namebuf, size_t bufsize)
     case OVS_KEY_ATTR_TCP: return "tcp";
     case OVS_KEY_ATTR_TCP_FLAGS: return "tcp_flags";
     case OVS_KEY_ATTR_UDP: return "udp";
-    case OVS_KEY_ATTR_UDPPYD: return "pyd";
     case OVS_KEY_ATTR_EVNT: return "eattr";
     case OVS_KEY_ATTR_EVNT_TYP: return "etype";
-    case OVS_KEY_ATTR_EVNT_FIRST_OP: return "efop";
-    case OVS_KEY_ATTR_EVNT_SEC_OP: return "esop";
     case OVS_KEY_ATTR_SCTP: return "sctp";
     case OVS_KEY_ATTR_ICMP: return "icmp";
     case OVS_KEY_ATTR_ICMPV6: return "icmpv6";
@@ -1800,11 +1797,8 @@ static const struct attr_len_tbl ovs_flow_key_attr_lens[OVS_KEY_ATTR_MAX + 1] = 
     [OVS_KEY_ATTR_TCP]       = { .len = sizeof(struct ovs_key_tcp) },
     [OVS_KEY_ATTR_TCP_FLAGS] = { .len = 2 },
     [OVS_KEY_ATTR_UDP]       = { .len = sizeof(struct ovs_key_udp) },
-    [OVS_KEY_ATTR_UDPPYD]    = { .len = sizeof(struct ovs_key_pyd)},
     [OVS_KEY_ATTR_EVNT  ]    = { .len = sizeof(struct ovs_key_eattr)},
     [OVS_KEY_ATTR_EVNT_TYP  ]    = { .len = sizeof(struct ovs_key_etype)},
-    [OVS_KEY_ATTR_EVNT_FIRST_OP  ]    = { .len = sizeof(struct ovs_key_efop)},
-    [OVS_KEY_ATTR_EVNT_SEC_OP  ]    = { .len = sizeof(struct ovs_key_esop)},
     [OVS_KEY_ATTR_SCTP]      = { .len = sizeof(struct ovs_key_sctp) },
     [OVS_KEY_ATTR_ICMP]      = { .len = sizeof(struct ovs_key_icmp) },
     [OVS_KEY_ATTR_ICMPV6]    = { .len = sizeof(struct ovs_key_icmpv6) },
@@ -2889,9 +2883,7 @@ format_odp_key_attr(const struct nlattr *a, const struct nlattr *ma,
         break;
     }
 
-    case OVS_KEY_ATTR_UDPPYD:
-        VLOG_DBG("VLOG In format_odp_key_attr\n");/*CEP*/ /*Add later*/
-         break;
+
     case OVS_KEY_ATTR_EVNT:{
         const struct ovs_key_eattr  *key = nl_attr_get(a);
         const struct ovs_key_eattr *mask = ma ? nl_attr_get(ma) : NULL;
@@ -2903,15 +2895,15 @@ format_odp_key_attr(const struct nlattr *a, const struct nlattr *ma,
         VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
          break;
      }
-    case OVS_KEY_ATTR_EVNT_TYP:
+    case OVS_KEY_ATTR_EVNT_TYP:{
+        const struct ovs_key_etype  *key = nl_attr_get(a);
+        const struct ovs_key_etype *mask = ma ? nl_attr_get(ma) : NULL;
+
+        format_be64(ds, "etype", key->e_type, MASK(mask, e_type), verbose);
+        ds_chomp(ds, ',');
         VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
          break;
-    case OVS_KEY_ATTR_EVNT_FIRST_OP:
-        VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
-         break;
-    case OVS_KEY_ATTR_EVNT_SEC_OP:
-        VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
-         break;            
+    }
 
     case OVS_KEY_ATTR_TCP_FLAGS:
         if (!is_exact) {
@@ -4448,16 +4440,6 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
                                                         
             get_tp_key(data, udp_key);
             
-            /*)
-            if(flow->udp_pyd || flow->udp_pyd1 ){
-                VLOG_DBG("VLOG udp_pyd in flow: %"PRIu64"\n",flow->udp_pyd); 
-                VLOG_DBG("VLOG udp_pyd1 in flow: %"PRIu64"\n",flow->udp_pyd1); 
-                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); 
-                struct ovs_key_pyd *pyd_key;  
-                pyd_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_UDPPYD,
-                                               sizeof *pyd_key);   
-                get_pyd_key(data, pyd_key); 
-            } */
             if(flow->e_attr1 || flow->e_attr2 ){
                 VLOG_DBG("VLOG e_attr1 in flow: %"PRIu64"\n",flow->e_attr1); /*CEP*/
                 VLOG_DBG("VLOG e_attr2 in flow: %"PRIu64"\n",flow->e_attr2); /*CEP*/
@@ -4468,32 +4450,13 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
                 get_eattr_key(data, eattr_key); /* CEP */
             }
             if(flow->e_type){
-                VLOG_DBG("VLOG e_type in flow: %"PRIu16"\n",flow->e_type); /*CEP*/
+                VLOG_DBG("VLOG e_type in flow: %"PRIu64"\n",flow->e_type); /*CEP*/
                 VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); /*CEP*/
                 struct ovs_key_etype *etype_key;  /* CEP */
                 etype_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_EVNT_TYP,
                                                sizeof *etype_key);   /* CEP */ 
                 get_etype_key(data, etype_key); /* CEP */
-            }
-          /*
-            if(flow->e_op1 && flow->e_val1 ){
-                VLOG_DBG("VLOG e_op1 in flow: %"PRIu16"\n",flow->e_op1); 
-                VLOG_DBG("VLOG e_val1 in flow: %"PRIu64"\n",flow->e_val1); 
-                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); 
-                struct ovs_key_efop *efop_key;  
-                efop_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_EVNT_FIRST_OP,
-                                               sizeof *efop_key);   
-                get_efop_key(data, efop_key); 
-            }
-            if(flow->e_op2 && flow->e_val2 ){
-                VLOG_DBG("VLOG e_op2 in flow: %"PRIu16"\n",flow->e_op2); 
-                VLOG_DBG("VLOG e_val2 in flow: %"PRIu64"\n",flow->e_val2); 
-                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); 
-                struct ovs_key_esop *esop_key;  
-                esop_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_EVNT_SEC_OP,
-                                               sizeof *esop_key);   
-                get_esop_key(data, esop_key); 
-            }     */                             
+            }                         
 
             
         } else if (flow->nw_proto == IPPROTO_SCTP) {
@@ -5946,14 +5909,7 @@ put_tp_key(const union ovs_key_tp *tp, struct flow *flow)
     flow->tp_dst = tp->tcp.tcp_dst;
 }
 
-/*CEP*/
-/*static void
-get_pyd_key(const struct flow *flow, struct ovs_key_pyd *pyd)
-{
-    pyd->udp_pyd = flow->udp_pyd;
-    pyd->udp_pyd1 = flow->udp_pyd1;
-}
-*/
+
 static void
 get_eattr_key(const struct flow *flow, struct ovs_key_eattr *eattr)
 {
@@ -5966,22 +5922,6 @@ get_etype_key(const struct flow *flow, struct ovs_key_etype *etype)
 {
     etype->e_type = flow->e_type;
 }
-
-/*static void
-get_efop_key(const struct flow *flow, struct ovs_key_efop *efop)
-{
-    efop->e_op1 = flow->e_op1;
-    efop->e_val1 = flow->e_val1;
-}
-
-static void
-get_esop_key(const struct flow *flow, struct ovs_key_esop *esop)
-{
-    esop->e_op2 = flow->e_op2;
-    esop->e_val2 = flow->e_val2;
-}
-*/
-
 
 
 

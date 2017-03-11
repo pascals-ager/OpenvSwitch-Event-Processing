@@ -896,77 +896,16 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
                             flow->e_attr2, match->wc.masks.e_attr2);   
             }
 
-
-            if(match->wc.masks.udp_pyd){  
-            VLOG_DBG("VLOG flow->tp_dst at this point: %"PRIu16"\n",flow->tp_dst);  /*37926*/
-            VLOG_DBG("VLOG htons(flow->tp_dst) at this point: %"PRIu16"\n",htons(flow->tp_dst)); /*9876*/
-            VLOG_DBG("VLOG match mask of tp_dst: %"PRIu16"\n",match->wc.masks.tp_dst); /*65535*/
-            
-            VLOG_DBG("VLOG flow->udp_pyd at this point: %"PRIu64"\n",flow->udp_pyd); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->udp_pyd) at this point: %"PRIu64"\n",htonll(flow->udp_pyd)); /*30*/
-            VLOG_DBG("VLOG match mask of udp_pyd: %"PRIu64"\n",match->wc.masks.udp_pyd); /*18446744073709551615*/
-
-               nxm_put_64m(b, MFF_UDP_PYD, oxm,
-                        flow->udp_pyd, match->wc.masks.udp_pyd);    /*CEP*/ /*13104 is decimal value of hex 3330*/
-            }
-
-            if(match->wc.masks.udp_pyd1){  
-            VLOG_DBG("VLOG flow->tp_dst at this point: %"PRIu16"\n",flow->tp_dst);  /*37926*/
-            VLOG_DBG("VLOG htons(flow->tp_dst) at this point: %"PRIu16"\n",htons(flow->tp_dst)); /*9876*/
-            VLOG_DBG("VLOG match mask of tp_dst: %"PRIu16"\n",match->wc.masks.tp_dst); /*65535*/
-            
-            VLOG_DBG("VLOG flow->udp_pyd1 at this point: %"PRIu64"\n",flow->udp_pyd1); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->udp_pyd1) at this point: %"PRIu64"\n",htonll(flow->udp_pyd1)); /*30*/
-            VLOG_DBG("VLOG match mask of udp_pyd1: %"PRIu64"\n",match->wc.masks.udp_pyd1); /*18446744073709551615*/
-
-                nxm_put_64m(b, MFF_UDP_PYD1, oxm,
-                          flow->udp_pyd1, match->wc.masks.udp_pyd1);    /*CEP*/ /*13104 is decimal value of hex 3330*/
-            }
-
-            if(match->wc.masks.e_val1){            
-            VLOG_DBG("VLOG flow->e_val1 at this point: %"PRIu64"\n",flow->e_val1); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->e_val1) at this point: %"PRIu64"\n",htonll(flow->e_val1)); /*30*/
-            VLOG_DBG("VLOG match mask of e_val1: %"PRIu64"\n",match->wc.masks.e_val1); /*18446744073709551615*/
-
-                nxm_put_64m(b, MFF_EVNT_VAL1, oxm,
-                            flow->e_val1, match->wc.masks.e_val1);    
-            }
-
-            if(match->wc.masks.e_val2){              
-            VLOG_DBG("VLOG flow->e_attr2 at this point: %"PRIu64"\n",flow->e_val2); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->e_val2) at this point: %"PRIu64"\n",htonll(flow->e_val2)); /*30*/
-            VLOG_DBG("VLOG match mask of e_val2: %"PRIu64"\n",match->wc.masks.e_val2); /*18446744073709551615*/
-
-                nxm_put_64m(b, MFF_EVNT_VAL2, oxm,                     /*MFF_EVNT_VAL1  to MFF_EVNT_VAL2*/
-                            flow->e_val2, match->wc.masks.e_val2);    /* So long lives this. And this gives nightmares to thee.*/
-            }
-
             if(match->wc.masks.e_type){            
-            VLOG_DBG("VLOG flow->e_type at this point: %"PRIu16"\n",flow->e_type); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->e_type) at this point: %"PRIu16"\n",htonl(flow->e_type)); /*30*/
-            VLOG_DBG("VLOG match mask of e_type: %"PRIu16"\n",match->wc.masks.e_type); /*18446744073709551615*/
+            VLOG_DBG("VLOG flow->e_type at this point: %"PRIu64"\n",flow->e_type); /*2161727821137838080*/
+            VLOG_DBG("VLOG htonll(flow->e_type) at this point: %"PRIu64"\n",htonll(flow->e_type)); /*30*/
+            VLOG_DBG("VLOG match mask of e_type: %"PRIu64"\n",match->wc.masks.e_type); /*18446744073709551615*/
 
-                nxm_put_16m(b, MFF_EVNT_TYP, oxm,
+                nxm_put_64m(b, MFF_EVNT_TYP, oxm,
                             flow->e_type, match->wc.masks.e_type);   
             }
 
-            if(match->wc.masks.e_op1){              
-            VLOG_DBG("VLOG flow->e_op1 at this point: %"PRIu16"\n",flow->e_op1); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->e_op1) at this point: %"PRIu16"\n",htons(flow->e_op1)); /*30*/
-            VLOG_DBG("VLOG match mask of e_op1: %"PRIu16"\n",match->wc.masks.e_op1); /*18446744073709551615*/
-
-                nxm_put_16m(b, MFF_EVNT_OP1, oxm,
-                            flow->e_op1, match->wc.masks.e_op1);    
-            } 
-
-            if(match->wc.masks.e_op2){            
-            VLOG_DBG("VLOG flow->e_op2 at this point: %"PRIu16"\n",flow->e_op2); /*2161727821137838080*/
-            VLOG_DBG("VLOG htonll(flow->e_op2) at this point: %"PRIu16"\n",htons(flow->e_op2)); /*30*/
-            VLOG_DBG("VLOG match mask of e_op2: %"PRIu16"\n",match->wc.masks.e_op2); /*18446744073709551615*/
-
-                nxm_put_16m(b, MFF_EVNT_OP2, oxm,
-                            flow->e_op2, match->wc.masks.e_op2);    
-            }                                                
+                                             
 
 }
          else if (flow->nw_proto == IPPROTO_SCTP) {
@@ -1030,7 +969,7 @@ nx_put_raw(struct ofpbuf *b, enum ofp_version oxm, const struct match *match,
     int match_len;
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 43);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
     VLOG_DBG("VLOG Advith is in nx_put_raw \n");  /* CEP */
 
     /* Metadata. */

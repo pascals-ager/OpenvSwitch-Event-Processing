@@ -155,15 +155,10 @@ def to_match(dp, attrs):
     nw_dst = 0
     tp_src = 0
     tp_dst = 0
-    udp_pyd = 0
-    udp_pyd1 = 0
     e_attr1 = 0
     e_attr2 = 0
-    e_val1 = 0
-    e_val2 = 0
     e_type = 0
-    e_op1 = 0
-    e_op2 = 0
+
 
 
     for key, value in attrs.items():
@@ -229,14 +224,6 @@ def to_match(dp, attrs):
             tp_dst = int(value)
             wildcards &= ~ofp.OFPFW_TP_DST
             LOG.debug('VLOG In to_match point -12  OFPFW_TP_DST - %d wildcards - %d', ofp.OFPFW_TP_DST, wildcards) #CEP
-        elif key == 'udp_pyd':
-            udp_pyd = int(value)
-            wildcards &= ~ofp.OFPFW_UDP_PYD
-            LOG.debug('VLOG In to_match point -13  OFPFW_UDP_PYD - %d wildcards - %d', ofp.OFPFW_UDP_PYD, wildcards) #CEP
-        elif key == 'udp_pyd1':
-            udp_pyd1 = int(value)
-            wildcards &= ~ofp.OFPFW_UDP_PYD1
-            LOG.debug('VLOG In to_match point -14  OFPFW_UDP_PYD1 - %d wildcards - %d', ofp.OFPFW_UDP_PYD1, wildcards) #CEP  
         elif key == 'e_attr1':
             e_attr1 = int(value)
             wildcards &= ~ofp.OFPFW_EVNT_ATTR1
@@ -245,22 +232,6 @@ def to_match(dp, attrs):
             e_attr2 = int(value)
             wildcards &= ~ofp.OFPFW_EVNT_ATTR2
             LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_ATTR2 - %d wildcards - %d', ofp.OFPFW_EVNT_ATTR2, wildcards) #CEP  
-        elif key == 'e_val1':
-            e_val1 = int(value)
-            wildcards &= ~ofp.OFPFW_EVNT_VAL1
-            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_VAL1 - %d wildcards - %d', ofp.OFPFW_EVNT_VAL1, wildcards) #CEP  
-        elif key == 'e_val2':
-            e_val2 = int(value)
-            wildcards &= ~ofp.OFPFW_EVNT_VAL2
-            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_VAL2 - %d wildcards - %d', ofp.OFPFW_EVNT_VAL2, wildcards) #CEP  
-        elif key == 'e_op1':
-            e_op1 = ord(value)
-            wildcards &= ~ofp.OFPFW_EVNT_OP1
-            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_OP1 - %d wildcards - %d', ofp.OFPFW_EVNT_OP1  , wildcards) #CEP  
-        elif key == 'e_op2':
-            e_op2 = ord(value)
-            wildcards &= ~ofp.OFPFW_EVNT_OP2
-            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_OP2 - %d wildcards - %d', ofp.OFPFW_EVNT_OP2, wildcards) #CEP  
         elif key == 'e_type':
             strval = ""
             for k in value:
@@ -272,10 +243,10 @@ def to_match(dp, attrs):
         else:
             LOG.error("unknown match name %s, %s, %d", key, value, len(key))
             
-    LOG.debug('VLOG In ofctl_v1_0 to_match point -15  udp_pyd - %d udp_pyd1 - %d', udp_pyd, udp_pyd1) #CEP          
+    LOG.debug('VLOG In ofctl_v1_0 to_match point -15  e_attr1 - %d e_attr2 - %d e_type - %d', e_attr1, e_attr2, e_type) #CEP          
     match = dp.ofproto_parser.OFPMatch(
         wildcards, in_port, dl_src, dl_dst, dl_vlan, dl_vlan_pcp,
-        dl_type, nw_tos, nw_proto, nw_src, nw_dst, tp_src, tp_dst, udp_pyd, udp_pyd1, e_attr1, e_attr2, e_val1, e_val2, e_type, e_op1, e_op2)
+        dl_type, nw_tos, nw_proto, nw_src, nw_dst, tp_src, tp_dst, e_attr1, e_attr2, e_type)
 
     return match
 
@@ -320,29 +291,11 @@ def match_to_str(m):
     if ~m.wildcards & ofproto_v1_0.OFPFW_TP_DST:
         match['tp_dst'] = m.tp_dst
 
-    if ~m.wildcards & ofproto_v1_0.OFPFW_UDP_PYD:
-        match['udp_pyd'] = m.udp_pyd
-
-    if ~m.wildcards & ofproto_v1_0.OFPFW_UDP_PYD1:
-        match['udp_pyd1'] = m.udp_pyd1
-
     if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_ATTR1:
         match['e_attr1'] = m.e_attr1
 
     if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_ATTR2:
-        match['e_attr2'] = m.e_attr2
-
-    if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_VAL1:
-        match['e_val1'] = m.e_val1
-
-    if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_VAL2:
-        match['e_val2'] = m.e_val2
-
-    if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_OP1:
-        match['e_op1'] = m.e_op1
-
-    if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_OP2:
-        match['e_op2'] = m.e_op2                               
+        match['e_attr2'] = m.e_attr2                         
 
     if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_TYP:
         match['e_type'] = m.e_type 
@@ -621,7 +574,7 @@ def mod_flow_entry(dp, flow, cmd):
 
 def delete_flow_entry(dp):
     match = dp.ofproto_parser.OFPMatch(
-        dp.ofproto.OFPFW_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) #from 12 to 21 zeromasks
+        dp.ofproto.OFPFW_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) #from 12 to 21 to 15 zeromasks
 
     flow_mod = dp.ofproto_parser.OFPFlowMod(
         datapath=dp, match=match, cookie=0,

@@ -329,12 +329,6 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
     case MFF_TCP_FLAGS:
         return !wc->masks.tcp_flags;
 
-    case MFF_UDP_PYD:  /*CEP*/
-         VLOG_DBG("VLOG In mf_is_wild\n"); /*CEP*/
-         return !wc->masks.udp_pyd; /*CEP*/ 
-    case MFF_UDP_PYD1:  /*CEP*/
-         VLOG_DBG("VLOG In mf_is_wild\n"); /*CEP*/
-         return !wc->masks.udp_pyd1; /*CEP*/ 
 
     case MFF_EVNT_ATTR1:
            /*CEP*/
@@ -342,21 +336,10 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
     case MFF_EVNT_ATTR2:
            /*CEP*/
            return !wc->masks.e_attr2;
-    case MFF_EVNT_VAL1:
-           /*CEP*/
-           return !wc->masks.e_val1; 
-    case MFF_EVNT_VAL2:
-           /*CEP*/
-           return !wc->masks.e_val2;
     case MFF_EVNT_TYP:
            /*CEP*/
-        return !wc->masks.e_type;                                      
-    case MFF_EVNT_OP1:
-           /*CEP*/
-        return !wc->masks.e_op1;
-    case MFF_EVNT_OP2:
-           /*CEP*/
-        return !wc->masks.e_op2;        
+        return !wc->masks.e_type;                                
+       
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -550,33 +533,17 @@ mf_is_value_valid(const struct mf_field *mf, const union mf_value *value)
     case MFF_CT_STATE:
         return !(value->be32 & ~htonl(CS_SUPPORTED_MASK));
     
-     case MFF_UDP_PYD:
-        VLOG_DBG("VLOG In mf_is_value_valid\n"); /*CEP*/
-        return true;             /*CEP*/
-     case MFF_UDP_PYD1:
-        VLOG_DBG("VLOG In mf_is_value_valid\n"); /*CEP*/
-        return true;             /*CEP*/
+           /*CEP*/
     case MFF_EVNT_ATTR1:
            /*CEP*/
            return true;
     case MFF_EVNT_ATTR2:
            /*CEP*/
            return true;
-    case MFF_EVNT_VAL1:
-           /*CEP*/
-           return true;                       
-    case MFF_EVNT_VAL2:
-           /*CEP*/
-           return true;
     case MFF_EVNT_TYP:
            /*CEP*/
         return true;
-    case MFF_EVNT_OP1:
-           /*CEP*/
-        return true;
-    case MFF_EVNT_OP2:
-           /*CEP*/
-        return true;                                      
+                                   
     case MFF_N_IDS:
    
     default:
@@ -824,14 +791,7 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
         value->ipv6 = flow->nd_target;
         break;
       
-    case MFF_UDP_PYD:  /*CEP*/
-        VLOG_DBG("VLOG In mf_get_value\n");  /*CEP*/
-        value->be64 = flow->udp_pyd; /*CEP*/
-        break;
-    case MFF_UDP_PYD1:  /*CEP*/
-        VLOG_DBG("VLOG In mf_get_value\n");  /*CEP*/
-        value->be64 = flow->udp_pyd1; /*CEP*/
-        break;
+
     case MFF_EVNT_ATTR1:
            /*CEP*/
         value->be64 = flow->e_attr1;
@@ -840,26 +800,10 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
            /*CEP*/
         value->be64 = flow->e_attr2;
            break;
-    case MFF_EVNT_VAL1:
-           /*CEP*/
-        value->be64 = flow->e_val1;
-           break; 
-    case MFF_EVNT_VAL2:
-           /*CEP*/
-        value->be64 = flow->e_val2;
-           break;  
     case MFF_EVNT_TYP:
            /*CEP*/
-        value->be16 = flow->e_type;
-        break;
-    case MFF_EVNT_OP1:
-           /*CEP*/
-        value->be16 = flow->e_op1;
-        break;
-    case MFF_EVNT_OP2:
-           /*CEP*/
-        value->be16 = flow->e_op2;
-        break;                                                
+        value->be64 = flow->e_type;
+        break;                                             
     case MFF_N_IDS:   
     default:
         OVS_NOT_REACHED();
@@ -1121,14 +1065,7 @@ mf_set_value(const struct mf_field *mf,
     case MFF_ND_TARGET:
         match_set_nd_target(match, &value->ipv6);
         break;
-    case MFF_UDP_PYD:  
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_UDP_PYD\n"); /*CEP*/
-        match_set_udp_pyd(match, value->be64); /*CEP*/
-        break;
-    case MFF_UDP_PYD1:  
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_UDP_PYD1\n"); /*CEP*/
-        match_set_udp_pyd1(match, value->be64); /*CEP*/
-        break;
+
     case MFF_EVNT_ATTR1:
         dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_ATTR1\n"); /*CEP*/
         match_set_event_attr1(match, value->be64); 
@@ -1138,27 +1075,11 @@ mf_set_value(const struct mf_field *mf,
         dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_ATTR2\n"); /*CEP*/
         match_set_event_attr2(match, value->be64);
         break;
-    case MFF_EVNT_VAL1:
-           /*CEP*/
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_VAL1\n"); /*CEP*/
-        match_set_event_val1(match, value->be64);
-           break;
-    case MFF_EVNT_VAL2:
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_VAL2\n"); /*CEP*/
-        match_set_event_val2(match, value->be64);    /* The quark that incinerated a Supernova*/
-           break;
     case MFF_EVNT_TYP:
         dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_TYP\n"); /*CEP*/
-        match_set_event_type(match, value->be16);
+        match_set_event_type(match, value->be64);
         break;
-    case MFF_EVNT_OP1:
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_OP1\n"); /*CEP*/
-        match_set_event_op1(match, value->be16);
-        break;
-    case MFF_EVNT_OP2:
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_OP2\n"); /*CEP*/
-        match_set_event_op2(match, value->be16);
-        break;                
+             
     case MFF_N_IDS:
     
     default:
@@ -1496,14 +1417,7 @@ mf_set_flow_value(const struct mf_field *mf,
 
     case MFF_N_IDS:
         break;
-    case MFF_UDP_PYD: /*CEP*/
-        VLOG_DBG("In VLOG n mf_set_flow_value\n"); /*CEP*/
-        flow->udp_pyd = value->be64; /*CEP*/
-        break;
-    case MFF_UDP_PYD1: /*CEP*/
-        VLOG_DBG("In VLOG n mf_set_flow_value\n"); /*CEP*/
-        flow->udp_pyd1 = value->be64; /*CEP*/
-        break;
+
     case MFF_EVNT_ATTR1:
            /*CEP*/
         flow->e_attr1 = value->be64;    
@@ -1512,26 +1426,11 @@ mf_set_flow_value(const struct mf_field *mf,
            /*CEP*/
         flow->e_attr2 = value->be64;
         break; 
-    case MFF_EVNT_VAL1:
-        flow->e_val1 = value->be64;
-           /*CEP*/
-           break;  
-    case MFF_EVNT_VAL2:
-           /*CEP*/
-        flow->e_val2 = value->be64;
-           break;
     case MFF_EVNT_TYP:
-        flow->e_type = value->be16;
+        flow->e_type = value->be64;
            /*CEP*/
         break;
-    case MFF_EVNT_OP1:
-        flow->e_op1 = value->be16;
-           /*CEP*/
-        break; 
-    case MFF_EVNT_OP2:
-           /*CEP*/
-        flow->e_op2 = value->be16;
-        break;                                                           
+                                                         
     default:
         OVS_NOT_REACHED();
     }
@@ -1861,16 +1760,7 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         memset(&match->flow.nd_target, 0, sizeof match->flow.nd_target);
         break;
 
-    case MFF_UDP_PYD:  /*CEP*/
-        VLOG_DBG("VLOG In mf_set_wild\n"); /*CEP*/
-        match->wc.masks.udp_pyd = htons(0);  /*CEP*/ 
-        match->flow.udp_pyd = htons(0);      /*CEP*/
-        break;
-    case MFF_UDP_PYD1:  /*CEP*/
-        VLOG_DBG("VLOG In mf_set_wild\n"); /*CEP*/
-        match->wc.masks.udp_pyd1 = htons(0);  /*CEP*/ 
-        match->flow.udp_pyd1 = htons(0);      /*CEP*/
-        break;
+
     case MFF_EVNT_ATTR1:
            /*CEP*/
         match->wc.masks.e_attr1 = htons(0);  /*CEP*/ 
@@ -1881,31 +1771,12 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         match->wc.masks.e_attr2 = htons(0);  /*CEP*/ 
         match->flow.e_attr2 = htons(0);      /*CEP*/    
            break;  
-    case MFF_EVNT_VAL1:
-           /*CEP*/
-        match->wc.masks.e_val1 = htons(0);  /*CEP*/ 
-        match->flow.e_val1 = htons(0);      /*CEP*/    
-           break;  
-    case MFF_EVNT_VAL2:
-           /*CEP*/
-        match->wc.masks.e_val2 = htons(0);  /*CEP*/ 
-        match->flow.e_val2 = htons(0);      /*CEP*/
-           break;
     case MFF_EVNT_TYP:
            /*CEP*/
-        match->wc.masks.e_type = htons(0);  /*CEP*/ 
-        match->flow.e_type = htons(0);      /*CEP*/    
+        match->wc.masks.e_type = htonll(0);  /*CEP*/ 
+        match->flow.e_type = htonll(0);      /*CEP*/    
         break;
-    case MFF_EVNT_OP1:
-           /*CEP*/
-        match->wc.masks.e_op1 = htons(0);  /*CEP*/ 
-        match->flow.e_op1 = htons(0);      /*CEP*/    
-        break;
-    case MFF_EVNT_OP2:
-           /*CEP*/
-        match->wc.masks.e_op2 = htons(0);  /*CEP*/ 
-        match->flow.e_op2 = htons(0);      /*CEP*/      
-        break;                                                           
+                                                        
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();
@@ -2137,14 +2008,6 @@ mf_set(const struct mf_field *mf,
         match_set_tcp_flags_masked(match, value->be16, mask->be16);
         break;
 
-    case MFF_UDP_PYD:  /*CEP*/
-        dzlog_info("DZLOG In meta-flow mf_set MFF_UDP_PYD\n"); /*CEP*/
-        match_set_udp_pyd_masked(match, value->be64, mask->be64); /*CEP*/ /*changed from OVS_BE64_MAX to mask->be64*/
-        break; 
-    case MFF_UDP_PYD1:  /*CEP*/
-        dzlog_info("DZLOG In meta-flow mf_set MFF_UDP_PYD1\n"); /*CEP*/
-        match_set_udp_pyd1_masked(match, value->be64, mask->be64); /*CEP*/ /*changed from OVS_BE64_MAX to mask->be64*/
-        break;
     case MFF_EVNT_ATTR1:
         dzlog_info("DZLOG In meta-flow mf_set MFF_EVNT_ATTR1\n"); /*CEP*/
         match_set_event_attr1_masked(match, value->be64, mask->be64);
@@ -2153,26 +2016,11 @@ mf_set(const struct mf_field *mf,
         dzlog_info("DZLOG In meta-flow mf_set MFF_EVNT_ATTR2\n"); /*CEP*/
         match_set_event_attr2_masked(match, value->be64, mask->be64);
         break;
-    case MFF_EVNT_VAL1:
-           /*CEP*/
-        match_set_event_val1_masked(match, value->be64, mask->be64);
-           break;  
-    case MFF_EVNT_VAL2:
-           /*CEP*/
-        match_set_event_val2_masked(match, value->be64, mask->be64);
-           break;
     case MFF_EVNT_TYP:
            /*CEP*/
-        match_set_event_type_masked(match, value->be16, mask->be16);
+        match_set_event_type_masked(match, value->be64, mask->be64);
         break;
-    case MFF_EVNT_OP1:
-           /*CEP*/
-         match_set_event_op1_masked(match, value->be16, mask->be16);
-        break;
-    case MFF_EVNT_OP2:
-           /*CEP*/
-        match_set_event_op2_masked(match, value->be16, mask->be16);
-        break;                                                             
+                                                            
     case MFF_N_IDS:
     default:
         OVS_NOT_REACHED();

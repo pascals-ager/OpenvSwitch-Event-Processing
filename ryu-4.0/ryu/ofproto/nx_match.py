@@ -76,15 +76,9 @@ class Flow(ofproto_parser.StringifyMixin):
         self.dl_type = 0
         self.tp_dst = 0
         self.tp_src = 0
-        self.udp_pyd = 0
-        self.udp_pyd1 = 0
         self.e_attr1 = 0
         self.e_attr2 = 0
-        self.e_val1 = 0
-        self.e_val2 = 0
-        self.e_type = 0        
-        self.e_op1 = 0
-        self.e_op2 = 0       
+        self.e_type = 0           
         self.nw_tos = 0
         self.vlan_tci = 0
         self.nw_ttl = 0
@@ -111,15 +105,9 @@ class FlowWildcards(ofproto_parser.StringifyMixin):
         self.dl_dst_mask = 0
         self.tp_src_mask = 0
         self.tp_dst_mask = 0
-        self.udp_pyd_mask = 0
-        self.udp_pyd1_mask = 0
         self.e_attr1_mask = 0
         self.e_attr2_mask = 0
-        self.e_val1_mask = 0
-        self.e_val2_mask = 0
-        self.e_type_mask = 0         
-        self.e_op1_mask = 0
-        self.e_op2_mask = 0                       
+        self.e_type_mask = 0                           
         self.nw_src_mask = 0
         self.nw_dst_mask = 0
         self.tun_id_mask = 0
@@ -212,24 +200,6 @@ class ClsRule(ofproto_parser.StringifyMixin):
         self.wc.tp_dst_mask = mask
         self.flow.tp_dst = tp_dst & mask
     #CEP    
-    def set_udp_pyd(self, udp_pyd):
-        LOG.debug('VLOG in point 1') #CEP
-        self.set_udp_pyd_masked(udp_pyd, UINT64_MAX)
-
-    def set_udp_pyd_masked(self, udp_pyd, mask):
-        LOG.debug('VLOG in point 2') #CEP
-        self.wc.udp_pyd_mask = mask
-        self.flow.udp_pyd = udp_pyd & mask    
-
-    def set_udp_pyd1(self, udp_pyd1):
-        LOG.debug('VLOG in point 3') #CEP
-        self.set_udp_pyd1_masked(udp_pyd1, UINT64_MAX)
-
-    def set_udp_pyd1_masked(self, udp_pyd1, mask):
-        LOG.debug('VLOG in point 4') #CEP
-        self.wc.udp_pyd1_mask = mask
-        self.flow.udp_pyd1 = udp_pyd1 & mask
-
     def set_e_attr1(self, e_attr1):
         LOG.debug('VLOG in point 51') #CEP
         self.set_e_attr1_masked(e_attr1, UINT64_MAX)
@@ -247,42 +217,7 @@ class ClsRule(ofproto_parser.StringifyMixin):
         LOG.debug('VLOG in point 81') #CEP
         self.wc.e_attr2_mask = mask
         self.flow.e_attr2 = e_attr2 & mask
-
-    def set_e_val1(self, e_val1):
-        LOG.debug('VLOG in point 91') #CEP
-        self.set_e_val1_masked(e_val1, UINT64_MAX)
-
-    def set_e_val1_masked(self, e_val1, mask):
-        LOG.debug('VLOG in point 61') #CEP
-        self.wc.e_val1_mask = mask
-        self.flow.e_val1 = e_val1 & mask
-
-    def set_e_val2(self, e_val2):
-        LOG.debug('VLOG in point 101') #CEP
-        self.set_e_val2_masked(e_val2, UINT64_MAX)
-
-    def set_e_val2_masked(self, e_val2, mask):
-        LOG.debug('VLOG in point 111') #CEP
-        self.wc.e_val2_mask = mask
-        self.flow.e_val2 = e_val2 & mask
-
-    def set_e_op1(self, e_op1):
-        LOG.debug('VLOG in point 121') #CEP
-        self.set_e_op1_masked(e_op1, UINT64_MAX)
-
-    def set_e_op1_masked(self, e_op1, mask):
-        LOG.debug('VLOG in point 131') #CEP
-        self.wc.e_op1_mask = mask
-        self.flow.e_op1 = e_op1 & mask
-
-    def set_e_op2(self, e_op2):
-        LOG.debug('VLOG in point 141') #CEP
-        self.set_e_op2_masked(e_op2, UINT64_MAX)
-
-    def set_e_op2_masked(self, e_op2, mask):
-        LOG.debug('VLOG in point 151') #CEP
-        self.wc.e_op2_mask = mask
-        self.flow.e_op2 = e_op2 & mask        
+     
 
     def set_e_type(self, e_type):
         LOG.debug('VLOG in point 161') #CEP
@@ -486,13 +421,7 @@ class ClsRule(ofproto_parser.StringifyMixin):
 
         #CEP    
 
-        if self.flow.udp_pyd != 0:
-            LOG.debug('VLOG in point 5')
-            wildcards &= ~ofproto_v1_0.OFPFW_UDP_PYD    
 
-        if self.flow.udp_pyd1 != 0:
-            LOG.debug('VLOG in point 6')
-            wildcards &= ~ofproto_v1_0.OFPFW_UDP_PYD1
 
         if self.flow.e_attr1 != 0:
             LOG.debug('VLOG in point 52')
@@ -502,22 +431,6 @@ class ClsRule(ofproto_parser.StringifyMixin):
             LOG.debug('VLOG in point 53')
             wildcards &= ~ofproto_v1_0.OFPFW_EVNT_ATTR2
 
-        if self.flow.e_val1 != 0:
-            LOG.debug('VLOG in point 54')
-            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_VAL1 
-
-        if self.flow.e_val2 != 0:
-            LOG.debug('VLOG in point 55')
-            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_VAL2   
-
-        if self.flow.e_op1 != 0:
-            LOG.debug('VLOG in point 56')
-            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_OP1   
-
-        if self.flow.e_op2 != 0:
-            LOG.debug('VLOG in point 57')
-            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_OP2  
-
         if self.flow.e_type != 0:
             LOG.debug('VLOG in point 58')
             wildcards &= ~ofproto_v1_0.OFPFW_EVNT_TYP                                                                                  
@@ -526,9 +439,8 @@ class ClsRule(ofproto_parser.StringifyMixin):
                 self.flow.dl_dst, self.flow.dl_vlan, self.flow.dl_vlan_pcp,
                 self.flow.dl_type, self.flow.nw_tos & IP_DSCP_MASK,
                 self.flow.nw_proto, self.flow.nw_src, self.flow.nw_dst,
-                self.flow.tp_src, self.flow.tp_dst,self. flow.udp_pyd, self.flow.udp_pyd1,
-                self.flow.e_attr1, self.flow.e_attr2, self.flow.e_val1, self.flow.e_val2,
-                self.flow.e_type, self.flow.e_op1, self.flow.e_op2)
+                self.flow.tp_src, self.flow.tp_dst, self.flow.e_attr1, 
+                self.flow.e_attr2, self.flow.e_type)
 
 
 def _set_nxm_headers(nxm_headers):
@@ -876,32 +788,6 @@ class MFTPDST(MFField):
 
 #CEP
 @_register_make
-@_set_nxm_headers([ofproto_v1_0.NXM_OF_UDP_PYD])
-class MFUDPPYD(MFField):
-    @classmethod
-    def make(cls, header):
-        LOG.debug('VLOG in point 7')
-        return cls(header, MF_PACK_STRING_BE64)
-
-    def put(self, buf, offset, rule):
-        LOG.debug('VLOG in point 8')
-        return self.putm(buf, offset, rule.flow.udp_pyd, rule.wc.udp_pyd_mask)
-
-
-@_register_make
-@_set_nxm_headers([ofproto_v1_0.NXM_OF_UDP_PYD1])
-class MFUDPPYD1(MFField):
-    @classmethod
-    def make(cls, header):
-        LOG.debug('VLOG in point 9')
-        return cls(header, MF_PACK_STRING_BE64)
-
-    def put(self, buf, offset, rule):
-        LOG.debug('VLOG in point 10')
-        return self.putm(buf, offset, rule.flow.udp_pyd1, rule.wc.udp_pyd1_mask)
-
-
-@_register_make
 @_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_ATTR1])
 class MFEVNTATTR1(MFField):
     @classmethod
@@ -926,53 +812,6 @@ class MFEVNTATTR2(MFField):
         LOG.debug('VLOG in point 103')
         return self.putm(buf, offset, rule.flow.e_attr2, rule.wc.e_attr2_mask)
 
-@_register_make
-@_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_VAL1])
-class MFEVNTVAL1(MFField):
-    @classmethod
-    def make(cls, header):
-        LOG.debug('VLOG in point 74')
-        return cls(header, MF_PACK_STRING_BE64)
-
-    def put(self, buf, offset, rule):
-        LOG.debug('VLOG in point 84')
-        return self.putm(buf, offset, rule.flow.e_val1, rule.wc.e_val1_mask)
-
-@_register_make
-@_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_VAL2])
-class MFEVNTVAL2(MFField):
-    @classmethod
-    def make(cls, header):
-        LOG.debug('VLOG in point 94')
-        return cls(header, MF_PACK_STRING_BE64)
-
-    def put(self, buf, offset, rule):
-        LOG.debug('VLOG in point 104')
-        return self.putm(buf, offset, rule.flow.e_val2, rule.wc.e_val2_mask) 
-
-@_register_make
-@_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_OP1])
-class MFEVNTOP1(MFField):
-    @classmethod
-    def make(cls, header):
-        LOG.debug('VLOG in point 75')
-        return cls(header, MF_PACK_STRING_BE16)
-
-    def put(self, buf, offset, rule):
-        LOG.debug('VLOG in point 85')
-        return self.putm(buf, offset, rule.flow.e_op1, rule.wc.e_op1_mask)
-
-@_register_make
-@_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_OP2])
-class MFEVNTOP2(MFField):
-    @classmethod
-    def make(cls, header):
-        LOG.debug('VLOG in point 95')
-        return cls(header, MF_PACK_STRING_BE16)
-
-    def put(self, buf, offset, rule):
-        LOG.debug('VLOG in point 105')
-        return self.putm(buf, offset, rule.flow.e_op2, rule.wc.e_op2_mask) 
 
 @_register_make
 @_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_TYP])
@@ -1289,24 +1128,6 @@ def serialize_nxm_match(rule, buf, offset):
 
 
     #CEP        
-    if rule.flow.udp_pyd != 0:
-        LOG.debug('VLOG in point 11')
-        if rule.flow.nw_proto == 17 and rule.wc.udp_pyd_mask == UINT64_MAX:
-            header = ofproto_v1_0.NXM_OF_UDP_PYD
-        else:
-            header = 0
-        if header != 0:
-            offset += nxm_put(buf, offset, header, rule)                
-
-    if rule.flow.udp_pyd1 != 0:
-        LOG.debug('VLOG in point 12')
-        if rule.flow.nw_proto == 17 and rule.wc.udp_pyd1_mask == UINT64_MAX:
-            header = ofproto_v1_0.NXM_OF_UDP_PYD1
-        else:
-            header = 0
-        if header != 0: 
-            offset += nxm_put(buf, offset, header, rule) 
-
     if rule.flow.e_attr1 != 0:
         LOG.debug('VLOG in point 111')
         if rule.flow.nw_proto == 17 and rule.wc.e_attr1_mask == UINT64_MAX:
@@ -1325,24 +1146,6 @@ def serialize_nxm_match(rule, buf, offset):
         if header != 0: 
             offset += nxm_put(buf, offset, header, rule)
 
-    if rule.flow.e_val1 != 0:
-        LOG.debug('VLOG in point 113')
-        if rule.flow.nw_proto == 17 and rule.wc.e_val1_mask == UINT64_MAX:
-            header = ofproto_v1_0.NXM_OF_EVNT_VAL1
-        else:
-            header = 0
-        if header != 0: 
-            offset += nxm_put(buf, offset, header, rule)
-
-    if rule.flow.e_val2 != 0:
-        LOG.debug('VLOG in point 114')
-        if rule.flow.nw_proto == 17 and rule.wc.e_val2_mask == UINT64_MAX:
-            header = ofproto_v1_0.NXM_OF_EVNT_VAL2
-        else:
-            header = 0
-        if header != 0: 
-            offset += nxm_put(buf, offset, header, rule)
-
     if rule.flow.e_type != 0:
         LOG.debug('VLOG in point 117')
         if rule.flow.nw_proto == 17 and rule.wc.e_type_mask == UINT16_MAX:
@@ -1352,23 +1155,6 @@ def serialize_nxm_match(rule, buf, offset):
         if header != 0: 
             offset += nxm_put(buf, offset, header, rule)              
 
-    if rule.flow.e_op1 != 0:
-        LOG.debug('VLOG in point 115')
-        if rule.flow.nw_proto == 17 and rule.wc.e_op1_mask == UINT16_MAX:
-            header = ofproto_v1_0.NXM_OF_EVNT_OP1
-        else:
-            header = 0
-        if header != 0: 
-            offset += nxm_put(buf, offset, header, rule)
-
-    if rule.flow.e_op2 != 0:
-        LOG.debug('VLOG in point 116')
-        if rule.flow.nw_proto == 17 and rule.wc.e_op2_mask == UINT16_MAX:
-            header = ofproto_v1_0.NXM_OF_EVNT_OP2
-        else:
-            header = 0
-        if header != 0: 
-            offset += nxm_put(buf, offset, header, rule)
 
 
 

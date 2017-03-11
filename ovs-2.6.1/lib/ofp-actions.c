@@ -2011,6 +2011,7 @@ decode_OFPAT_RAW_SET_TP_DST(ovs_be16 port,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
+    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_TP_DST\n");
     ofpact_put_SET_L4_DST_PORT(out)->port = ntohs(port);
     return 0;
 }
@@ -2021,7 +2022,7 @@ encode_SET_L4_port(const struct ofpact_l4_port *l4_port,
                    enum mf_field_id field, struct ofpbuf *out)
 {
     uint16_t port = l4_port->port;
-
+    dzlog_info("DZLOG In encode_SET_L4_port\n");
     if (ofp_version >= OFP12_VERSION && field != MFF_N_IDS) {
         put_set_field(out, ofp_version, field, port);
     } else {
@@ -2047,6 +2048,7 @@ encode_SET_L4_DST_PORT(const struct ofpact_l4_port *l4_port,
                        enum ofp_version ofp_version,
                        struct ofpbuf *out)
 {
+    dzlog_info("DZLOG In encode_SET_L4_port\n");
     uint8_t proto = l4_port->flow_ip_proto;
     enum mf_field_id field = (proto == IPPROTO_TCP ? MFF_TCP_DST
                               : proto == IPPROTO_UDP ? MFF_UDP_DST

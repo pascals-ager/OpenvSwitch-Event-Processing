@@ -573,8 +573,8 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
 
     minimask_expand(mm,&fwc);
 
-    VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",f.udp_pyd); /*21617821137838080*/
-    VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd); /*18446744073709551615*/
+    VLOG_DBG("VLOG At this point e_attr1 in minimatch is %"PRIu64"\n",f.e_attr1); /*21617821137838080*/
+    VLOG_DBG("VLOG At this point e_attr2 in minimatch is %"PRIu64"\n",fwc.masks.e_attr2); /*18446744073709551615*/
 
     
     VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/

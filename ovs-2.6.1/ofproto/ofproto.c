@@ -8265,10 +8265,7 @@ ofproto_rule_insert__(struct ofproto *ofproto, struct rule *rule)
 
     minimask_expand(mm,&fwc);
 
-    VLOG_DBG("VLOG At this point udp_pyd in minimatch is %"PRIu64"\n",f.udp_pyd); /*21617821137838080*/
-    VLOG_DBG("VLOG At this point udp_pyd mask in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd); /*18446744073709551615*/
-     VLOG_DBG("VLOG At this point udp_pyd1 in minimatch is %"PRIu64"\n",f.udp_pyd1); /*21617821137838080*/
-    VLOG_DBG("VLOG At this point udp_pyd1 mask in minimatch is %"PRIu64"\n",fwc.masks.udp_pyd1); /*18446744073709551615*/
+
     
     VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
     VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/

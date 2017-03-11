@@ -664,35 +664,7 @@ match_set_tp_dst_masked(struct match *match, ovs_be16 port, ovs_be16 mask)
 }
 
 /*CEP*/
-void
-match_set_udp_pyd(struct match *match, ovs_be64 udp_pyd){
-    dzlog_info("DZLOG In match_set_udp_pyd");
-    match_set_udp_pyd_masked(match, udp_pyd, OVS_BE64_MAX);
-}
-void
-match_set_udp_pyd_masked(struct match *match, ovs_be64 pyd, ovs_be64 mask){
-    dzlog_info("DZLOG In match_set_udp_pyd_masked\n"); 
-    dzlog_info("DZLOG the payload is %"PRId64"",pyd);
-    dzlog_info("DZLOG the mask is %"PRId64"",mask);
-    match->flow.udp_pyd = pyd & mask;
-    match->wc.masks.udp_pyd = mask;
-    dzlog_info("DZLOG the flow payload is %"PRId64"/n",match->flow.udp_pyd);
-}
-void
-match_set_udp_pyd1(struct match *match, ovs_be64 udp_pyd1){
-    //VLOG_DBG("In VLOG match_set_udp_pyd\n"); 
-    dzlog_info("DZLOG In match_set_udp_pyd1");
-    match_set_udp_pyd1_masked(match, udp_pyd1, OVS_BE64_MAX);
-}
-void
-match_set_udp_pyd1_masked(struct match *match, ovs_be64 pyd1, ovs_be64 mask){
-    VLOG_DBG("VLOG In match_set_udp_pyd1_masked\n"); 
-    VLOG_DBG("VLOG the payload1 is %"PRIu64"/n",pyd1);
-    VLOG_DBG("VLOG the mask is %"PRIu64"/n",mask);
-    match->flow.udp_pyd1 = pyd1 & mask;
-    match->wc.masks.udp_pyd1 = mask;
-    VLOG_DBG("VLOG the flow payload 1 is %"PRIu64"/n",match->flow.udp_pyd1);
-}
+
 
 void
 match_set_event_attr1(struct match *match, ovs_be64 e_attr1){
@@ -718,56 +690,18 @@ match_set_event_attr2_masked(struct match *match, ovs_be64 e_attr2, ovs_be64 mas
     match->flow.e_attr2 = e_attr2 & mask;   /* Source of Proustian existentialism */
     match->wc.masks.e_attr2 = mask;         
 }
-void
-match_set_event_val1(struct match *match, ovs_be64 e_val1){
 
-    match_set_event_val1_masked(match, e_val1, OVS_BE64_MAX);
-}
 void
-match_set_event_val1_masked(struct match *match, ovs_be64 e_val1, ovs_be64 mask){
-    match->flow.e_val1 = e_val1 & mask;
-    match->wc.masks.e_val1 = mask;
-}
-void
-match_set_event_val2(struct match *match, ovs_be64 e_val2){
+match_set_event_type(struct match *match, ovs_be64 e_type){
 
-    match_set_event_val2_masked(match, e_val2, OVS_BE64_MAX);
+    match_set_event_type_masked(match, e_type, OVS_BE64_MAX);
 }
 void
-match_set_event_val2_masked(struct match *match, ovs_be64 e_val2, ovs_be64 mask){
-    match->flow.e_val2 = e_val2 & mask;
-    match->wc.masks.e_val2 = mask;
-}
-void
-match_set_event_type(struct match *match, ovs_be16 e_type){
-
-    match_set_event_type_masked(match, e_type, OVS_BE16_MAX);
-}
-void
-match_set_event_type_masked(struct match *match, ovs_be16 e_type, ovs_be16 mask){
+match_set_event_type_masked(struct match *match, ovs_be64 e_type, ovs_be64 mask){
     match->flow.e_type = e_type & mask;
     match->wc.masks.e_type = mask;
 }
-void
-match_set_event_op1(struct match *match, ovs_be16 e_op1){
 
-    match_set_event_op1_masked(match, e_op1, OVS_BE16_MAX);
-}
-void
-match_set_event_op1_masked(struct match *match, ovs_be16 e_op1, ovs_be16 mask){
-    match->flow.e_op1 = e_op1 & mask;
-    match->wc.masks.e_op1 = mask;
-}
-void
-match_set_event_op2(struct match *match, ovs_be16 e_op1){
-
-    match_set_event_op2_masked(match, e_op1, OVS_BE16_MAX);
-}
-void
-match_set_event_op2_masked(struct match *match, ovs_be16 e_op2, ovs_be16 mask){
-    match->flow.e_op2 = e_op2 & mask;
-    match->wc.masks.e_op2 = mask;
-}
 /*CEP*/
 
 void
@@ -1186,7 +1120,7 @@ match_format(const struct match *match, struct ds *s, int priority)
 
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 43);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
     VLOG_DBG("VLOG In match_format\n");/*CEP*/
 
     if (priority != OFP_DEFAULT_PRIORITY) {
@@ -1471,17 +1405,9 @@ match_format(const struct match *match, struct ds *s, int priority)
         VLOG_DBG("VLOG In match.c  match_format flow tp_dst-%d\nVLOG In match.c  match_format mask tp_dst -%d\n",f->tp_dst,wc->masks.tp_dst); /*CEP*/
         format_be16_masked(s, "tp_src", f->tp_src, wc->masks.tp_src);
         format_be16_masked(s, "tp_dst", f->tp_dst, wc->masks.tp_dst); 
-        VLOG_DBG("VLOG udp_pyd-%"PRIu64"\nVLOG udp_pyd mask -%"PRIu64"\n",f->udp_pyd,wc->masks.udp_pyd); /*CEP*/
-        VLOG_DBG("VLOG udp_pyd1 -%"PRIu64"\nVLOG udp_pyd1 mask -%"PRIu64"\n",f->udp_pyd1,wc->masks.udp_pyd1); /*CEP*/
-        format_be64_masked(s, "udp_pyd", f->udp_pyd, wc->masks.udp_pyd); /*CEP*/
-        format_be64_masked(s, "udp_pyd1", f->udp_pyd1, wc->masks.udp_pyd1); /*CEP*/
-        format_be16_masked(s, "e_type", f->e_type, wc->masks.e_type); /*CEP*/
+        format_be64_masked(s, "e_type", f->e_type, wc->masks.e_type); /*CEP*/
         format_be64_masked(s, "e_attr1", f->e_attr1, wc->masks.e_attr1); /*CEP*/
-        format_be64_masked(s, "e_attr2", f->e_attr2, wc->masks.e_attr2); /*CEP*/
-        format_be64_masked(s, "e_val1", f->e_val1, wc->masks.e_val1); /*CEP*/
-        format_be64_masked(s, "e_val2", f->e_val2, wc->masks.e_val2);        
-        format_be16_masked(s, "e_op1", f->e_op1, wc->masks.e_op1); /*CEP*/
-        format_be16_masked(s, "e_op2", f->e_op2, wc->masks.e_op2);        
+        format_be64_masked(s, "e_attr2", f->e_attr2, wc->masks.e_attr2); /*CEP*/       
         VLOG_DBG("VLOG In after format_be64_masked\n"); /*CEP*/
     }
     if (is_ip_any(f) && f->nw_proto == IPPROTO_TCP && wc->masks.tcp_flags) {

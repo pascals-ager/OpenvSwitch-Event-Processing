@@ -131,24 +131,12 @@ void match_set_tp_src_masked(struct match *, ovs_be16 port, ovs_be16 mask);
 void match_set_tp_dst(struct match *, ovs_be16);
 void match_set_tp_dst_masked(struct match *, ovs_be16 port, ovs_be16 mask);
 /*CEP*/
-void match_set_udp_pyd(struct match *, ovs_be64);
-void match_set_udp_pyd_masked(struct match *match, ovs_be64 pyd, ovs_be64 mask);
-void match_set_udp_pyd1(struct match *, ovs_be64);
-void match_set_udp_pyd1_masked(struct match *match, ovs_be64 pyd1, ovs_be64 mask);
 void match_set_event_attr1(struct match *, ovs_be64);
 void match_set_event_attr1_masked(struct match *match, ovs_be64 e_attr1, ovs_be64 mask);
 void match_set_event_attr2(struct match *, ovs_be64);
 void match_set_event_attr2_masked(struct match *match, ovs_be64 e_attr2, ovs_be64 mask);
-void match_set_event_val1(struct match *, ovs_be64);
-void match_set_event_val1_masked(struct match *match, ovs_be64 e_val1, ovs_be64 mask);
-void match_set_event_val2(struct match *, ovs_be64);
-void match_set_event_val2_masked(struct match *match, ovs_be64 e_val2, ovs_be64 mask);
-void match_set_event_type(struct match *, ovs_be16);
-void match_set_event_type_masked(struct match *match, ovs_be16 e_type, ovs_be16 mask);
-void match_set_event_op1(struct match *, ovs_be16);
-void match_set_event_op1_masked(struct match *match, ovs_be16 e_op1, ovs_be16 mask);
-void match_set_event_op2(struct match *, ovs_be16);
-void match_set_event_op2_masked(struct match *match, ovs_be16 e_op2, ovs_be16 mask);
+void match_set_event_type(struct match *, ovs_be64);
+void match_set_event_type_masked(struct match *match, ovs_be64 e_type, ovs_be64 mask);
 /*CEP*/
 void match_set_tcp_flags(struct match *, ovs_be16);
 void match_set_tcp_flags_masked(struct match *, ovs_be16 flags, ovs_be16 mask);

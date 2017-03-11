@@ -229,15 +229,9 @@ enum ofp10_flow_wildcards {
     OFPFW10_NW_PROTO   = 1 << 5,  /* IP protocol. */
     OFPFW10_TP_SRC     = 1 << 6,  /* TCP/UDP source port. */
     OFPFW10_TP_DST     = 1 << 7,  /* TCP/UDP destination port. */
-    OFPFW10_UDP_PYD    = 1 << 29,  /* CEP */ /*from 8 to 22*/
-    OFPFW10_UDP_PYD1   = 1 << 29,  /* CEP */ /* from 9 to 23*/
     OFPFW10_EVNT_ATTR1 = 1 << 22,
     OFPFW10_EVNT_ATTR2 = 1 << 23,
-    OFPFW10_EVNT_VAL1  = 1 << 24,
-    OFPFW10_EVNT_VAL2  = 1 << 25,
-    OFPFW10_EVNT_TYP   = 1 << 26,
-    OFPFW10_EVNT_OP1   = 1 << 27,
-    OFPFW10_EVNT_OP2   = 1 << 28,
+    OFPFW10_EVNT_TYP   = 1 << 24,
 
     /* IP source address wildcard bit count.  0 is exact match, 1 ignores the
      * LSB, 2 ignores the 2 least-significant bits, ..., 32 and higher wildcard
@@ -260,7 +254,7 @@ enum ofp10_flow_wildcards {
     OFPFW10_NW_TOS = 1 << 21, /* IP ToS (DSCP field, 6 bits). */
 
     /* Wildcard all fields. */
-    OFPFW10_ALL = ((1 << 30) - 1)  /* from 22 to 24 to 31 to 30 */
+    OFPFW10_ALL = ((1 << 25) - 1)  /* from 22 to 24 to 31 to 30 */
 };
 
 /* The wildcards for ICMP type and code fields use the transport source
@@ -291,18 +285,11 @@ struct ofp10_match {
     ovs_be32 nw_dst;           /* IP destination address. */
     ovs_be16 tp_src;           /* TCP/UDP source port. */
     ovs_be16 tp_dst;           /* TCP/UDP destination port. */
-    ovs_be64 udp_pyd;          /* CEP */
-    ovs_be64 udp_pyd1;          /* CEP */
     ovs_be64 e_attr1;
     ovs_be64 e_attr2;
-    ovs_be64 e_val1;
-    ovs_be64 e_val2;
-    ovs_be16 e_type;
-    ovs_be16 e_op1;
-    ovs_be16 e_op2;
-    uint8_t pad3[2];
+    ovs_be64 e_type;
 };
-OFP_ASSERT(sizeof(struct ofp10_match) == 96);             /* 40->48->56->96 CEP */
+OFP_ASSERT(sizeof(struct ofp10_match) == 64);             /* 40->48->56->96->80->64 CEP  i have to reduce 16. */ 
 
 enum ofp10_flow_mod_flags {
     OFPFF10_EMERG       = 1 << 2 /* Part of "emergency flow cache". */
@@ -329,7 +316,7 @@ struct ofp10_flow_mod {
     /* Followed by OpenFlow actions whose length is inferred from the length
      * field in the OpenFlow header. */
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_mod) == 120);        /* 64->72->120 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_mod) == 88);        /* 64->72->120->104->88 CEP */
 
 /* Flow removed (datapath -> controller). */
 struct ofp10_flow_removed {
@@ -348,7 +335,7 @@ struct ofp10_flow_removed {
     ovs_be64 packet_count;
     ovs_be64 byte_count;
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_removed) == 136);    /* 80->88->96->134CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_removed) == 104);    /* 80->88->96->136->120->104 CEP */
 
 /* Stats request of type OFPST_AGGREGATE or OFPST_FLOW. */
 struct ofp10_flow_stats_request {
@@ -362,7 +349,7 @@ struct ofp10_flow_stats_request {
     uint8_t pad1[4];
                          
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_stats_request) == 104);     /* 44->56->60->64->52->56->64 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_stats_request) == 72);     /* 44->56->60->64->52->56->64->88->72 CEP */
 
 /* Body of reply to OFPST_FLOW request. */
 struct ofp10_flow_stats {
@@ -387,7 +374,7 @@ struct ofp10_flow_stats {
       
     /* Followed by OpenFlow actions whose length is inferred from 'length'. */
 };
-OFP_ASSERT(sizeof(struct ofp10_flow_stats) == 152);       /* 88->104->112->152 CEP */
+OFP_ASSERT(sizeof(struct ofp10_flow_stats) == 120);       /* 88->104->112->152->136->120 CEP */
 
 /* Body of reply to OFPST_TABLE request. */
 struct ofp10_table_stats {

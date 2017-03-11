@@ -15,7 +15,7 @@ class UDPClient
 //while(true){
        String sentence = inFromUser.readLine();
        sendData = sentence.getBytes();
-       DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9876);
+       DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9877);
        clientSocket.send(sendPacket);
 //		}
        //DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);

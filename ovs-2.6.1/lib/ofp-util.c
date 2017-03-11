@@ -102,7 +102,7 @@ ofputil_netmask_to_wcbits(ovs_be32 netmask)
 void
 ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
 {
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 43);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
 
     /* Initialize most of wc. */
     flow_wildcards_init_catchall(wc);
@@ -130,15 +130,6 @@ ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
         wc->masks.tp_dst = OVS_BE16_MAX;
     }
 
-    if (!(ofpfw & OFPFW10_UDP_PYD)) {
-        VLOG_DBG("VLOG OFPFW10_UDP_PYD\n");
-        wc->masks.udp_pyd = OVS_BE64_MAX;
-    } /*CEP*/
-
-    if (!(ofpfw & OFPFW10_UDP_PYD1)) {
-        VLOG_DBG("VLOG OFPFW10_UDP_PYD1\n");
-        wc->masks.udp_pyd1 = OVS_BE64_MAX;
-    } /*CEP*/
 
     if (!(ofpfw & OFPFW10_EVNT_ATTR1)) {
         VLOG_DBG("VLOG OFPFW10_EVNT_ATTR1\n");
@@ -149,26 +140,12 @@ ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
         VLOG_DBG("VLOG OFPFW10_EVNT_ATTR2\n");
         wc->masks.e_attr2 = OVS_BE64_MAX;
     } /*CEP*/
-
-    if (!(ofpfw & OFPFW10_EVNT_VAL1)) {
-        wc->masks.e_val1 = OVS_BE64_MAX;
-    } /*CEP*/
-
-    if (!(ofpfw & OFPFW10_EVNT_VAL2)) {
-        wc->masks.e_val2 = OVS_BE64_MAX;
-    } /*CEP*/               
-
+           
     if (!(ofpfw & OFPFW10_EVNT_TYP)) {
-        wc->masks.e_type = OVS_BE16_MAX;
+        wc->masks.e_type = OVS_BE64_MAX;
     } /*CEP*/
 
-    if (!(ofpfw & OFPFW10_EVNT_OP1)) {
-        wc->masks.e_op1 = OVS_BE16_MAX;
-    } /*CEP*/
-
-    if (!(ofpfw & OFPFW10_EVNT_OP2)) {
-        wc->masks.e_op2 = OVS_BE16_MAX;
-    } /*CEP*/        
+       
     if (!(ofpfw & OFPFW10_DL_SRC)) {
         WC_MASK_FIELD(wc, dl_src);
     }
@@ -203,9 +180,9 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     memset(&match->flow, 0, sizeof match->flow);
     ofputil_wildcard_from_ofpfw10(ofpfw, &match->wc);
 
-    VLOG_DBG("VLOG At this point in ofp_util udp_pyd in ofmatch is %"PRIu64"\n",ofmatch->udp_pyd);
+    
     VLOG_DBG("VLOG At this point in ofp_util e_attr1 in ofmatch is %"PRIu64"\n",ofmatch->e_attr1);
-    VLOG_DBG("VLOG At this point in ofp_util udp_pyd1 in ofmatch is %"PRIu64"\n",ofmatch->udp_pyd1);
+    
     VLOG_DBG("VLOG At this point in ofp_util e_attr2 in ofmatch is %"PRIu64"\n",ofmatch->e_attr2);    
 
     /* Initialize most of match->flow. */
@@ -215,25 +192,14 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     match->flow.dl_type = ofputil_dl_type_from_openflow(ofmatch->dl_type);
     match->flow.tp_src = ofmatch->tp_src;
     match->flow.tp_dst = ofmatch->tp_dst;
-    match->flow.udp_pyd = ofmatch->udp_pyd; /*CEP*/ /*maybe here?*/
-    match->flow.udp_pyd1 = ofmatch->udp_pyd1;
     match->flow.e_attr1 = ofmatch->e_attr1; /*CEP*/ /*maybe here?*/
     match->flow.e_attr2 = ofmatch->e_attr2;
-    match->flow.e_val1 = ofmatch->e_val1; /*CEP*/ /*maybe here?*/
-    match->flow.e_val2 = ofmatch->e_val2;
-    match->flow.e_type = ofmatch->e_type; /*CEP*/ /*maybe here?*/
-    match->flow.e_op1 = ofmatch->e_op1;
-    match->flow.e_op2 = ofmatch->e_op2; /*CEP*/ /*maybe here?*/                
+    match->flow.e_type = ofmatch->e_type; /*CEP*/ /*maybe here?*/           
     match->flow.dl_src = ofmatch->dl_src;
     match->flow.dl_dst = ofmatch->dl_dst;
     match->flow.nw_tos = ofmatch->nw_tos & IP_DSCP_MASK;
     match->flow.nw_proto = ofmatch->nw_proto;
 
-    VLOG_DBG("VLOG At this point in ofp_util udp_pyd in match is %"PRIu64"\n",match->flow.udp_pyd);
-    VLOG_DBG("VLOG At this point in ofp_util udp_pyd1 in match is %"PRIu64"\n",match->flow.udp_pyd1);
-
-    VLOG_DBG("VLOG At this point in ofp_util udp_pyd mask in match is %"PRIu64"\n",match->wc.masks.udp_pyd);
-    VLOG_DBG("VLOG At this point in ofp_util udp_pyd1 mask in match is %"PRIu64"\n",match->wc.masks.udp_pyd1);
 
     /* Translate VLANs. */
     if (!(ofpfw & OFPFW10_DL_VLAN) &&
@@ -261,8 +227,7 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
 
     /* Clean up. */
     match_zero_wildcarded_fields(match);
-    VLOG_DBG("VLOG After zero wildcard ofp_util udp_pyd in match is %"PRIu64"\n",match->flow.udp_pyd);
-    VLOG_DBG("VLOG After zero wildcard ofp_util udp_pyd1 in match is %"PRIu64"\n",match->flow.udp_pyd1);
+
 }
 
 /* Convert 'match' into the OpenFlow 1.0 match structure 'ofmatch'. */
@@ -297,14 +262,6 @@ ofputil_match_to_ofp10_match(const struct match *match,
     if (!wc->masks.tp_dst) {
         ofpfw |= OFPFW10_TP_DST;
     }
-    if (!wc->masks.udp_pyd) {
-        VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_UDP_PYD \n");
-        ofpfw |= OFPFW10_UDP_PYD;
-    } /*CEP*/
-    if (!wc->masks.udp_pyd1) {
-        VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_UDP_PYD1 \n");
-        ofpfw |= OFPFW10_UDP_PYD1;
-    } /*CEP*/
     if (!wc->masks.e_attr1) {
         VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_EVNT_ATTR1 \n");
         ofpfw |= OFPFW10_EVNT_ATTR1;
@@ -313,23 +270,10 @@ ofputil_match_to_ofp10_match(const struct match *match,
         VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_EVNT_ATTR2 \n");
         ofpfw |= OFPFW10_EVNT_ATTR2;
     } /*CEP*/ 
-    if (!wc->masks.e_val1) {
-        VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_EVNT_VAL1 \n");
-        ofpfw |= OFPFW10_EVNT_VAL1;
-    } /*CEP*/
-    if (!wc->masks.e_val2) {
-        VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_EVNT_VAL2 \n");
-        ofpfw |= OFPFW10_EVNT_VAL2;
-    } /*CEP*/
     if (!wc->masks.e_type) {
         ofpfw |= OFPFW10_EVNT_TYP;
     } /*CEP*/        
-    if (!wc->masks.e_op1) {
-        ofpfw |= OFPFW10_EVNT_OP1;
-    } /*CEP*/
-    if (!wc->masks.e_op2) {
-        ofpfw |= OFPFW10_EVNT_OP2;
-    } /*CEP*/                  
+                
     if (eth_addr_is_zero(wc->masks.dl_src)) {
         ofpfw |= OFPFW10_DL_SRC;
     }
@@ -371,19 +315,13 @@ ofputil_match_to_ofp10_match(const struct match *match,
     ofmatch->nw_proto = match->flow.nw_proto;
     ofmatch->tp_src = match->flow.tp_src;
     ofmatch->tp_dst = match->flow.tp_dst;
-    ofmatch->udp_pyd = match->flow.udp_pyd; /*CEP*/
-    ofmatch->udp_pyd1 = match->flow.udp_pyd1; /*CEP*/
     ofmatch->e_attr1 = match->flow.e_attr1; 
     ofmatch->e_attr2 = match->flow.e_attr2;
-    ofmatch->e_val1 = match->flow.e_val1; 
-    ofmatch->e_val2 = match->flow.e_val2;
     ofmatch->e_type = match->flow.e_type; 
-    ofmatch->e_op1 = match->flow.e_op1;        
-    ofmatch->e_op2 = match->flow.e_op2;
+
       
     memset(ofmatch->pad1, '\0', sizeof ofmatch->pad1);
     memset(ofmatch->pad2, '\0', sizeof ofmatch->pad2);
-    memset(ofmatch->pad3, '\0', sizeof ofmatch->pad3); /*CEP */
 }
 
 enum ofperr
@@ -6293,15 +6231,9 @@ static const struct ofp10_wc_map ofp10_wc_map[] = {
     { OFPFW10_NW_PROTO,    MFF_IP_PROTO },
     { OFPFW10_TP_SRC,      MFF_TCP_SRC },
     { OFPFW10_TP_DST,      MFF_TCP_DST },
-    { OFPFW10_UDP_PYD,     MFF_UDP_PYD },
-    { OFPFW10_UDP_PYD1,    MFF_UDP_PYD1 },
     { OFPFW10_EVNT_ATTR1,  MFF_EVNT_ATTR1 },
     { OFPFW10_EVNT_ATTR2,  MFF_EVNT_ATTR2 },
-    { OFPFW10_EVNT_VAL1,   MFF_EVNT_VAL1 },
-    { OFPFW10_EVNT_VAL2,   MFF_EVNT_VAL2 },
-    { OFPFW10_EVNT_TYP,    MFF_EVNT_TYP }, 
-    { OFPFW10_EVNT_OP1,    MFF_EVNT_OP1 },
-    { OFPFW10_EVNT_OP2,    MFF_EVNT_OP2 },        
+    { OFPFW10_EVNT_TYP,    MFF_EVNT_TYP },      
     { OFPFW10_NW_SRC_MASK, MFF_IPV4_SRC },
     { OFPFW10_NW_DST_MASK, MFF_IPV4_DST },
     { OFPFW10_DL_VLAN_PCP, MFF_VLAN_PCP },
@@ -7359,15 +7291,9 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         MAY_IPV6        = 1 << 6, /* ipv6_src, ipv6_dst, ipv6_label */
         MAY_ND_TARGET   = 1 << 7, /* nd_target */
         MAY_MPLS        = 1 << 8, /* mpls label and tc */
-        MAY_UDP_PYD     = 1 << 11,  /*CEP*/
-        MAY_UDP_PYD1    = 1 << 12,
         MAY_EVNT_ATTR1  = 1 << 9,
         MAY_EVNT_ATTR2  = 1 << 10,
-        MAY_EVNT_VAL1   = 1 << 13,
-        MAY_EVNT_VAL2   = 1 << 14,
-        MAY_EVNT_TYP    = 1 << 15,
-        MAY_EVNT_OP1    = 1 << 16,
-        MAY_EVNT_OP2    = 1 << 17,  /*CEP*/
+        MAY_EVNT_TYP    = 1 << 11,
     } may_match;
 
     struct flow_wildcards wc;
@@ -7388,14 +7314,6 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         } else if(match->flow.nw_proto == IPPROTO_UDP) {       /*CEP*/
             VLOG_DBG("VLOG Point 2"); /*CEP*/
             may_match |= MAY_TP_ADDR;
-            if(match->flow.udp_pyd){
-                VLOG_DBG("VLOG set MAY_UDP_PYD %"PRId64"\n",match->flow.udp_pyd);
-                 may_match |= MAY_UDP_PYD | MAY_TP_ADDR; 
-            }
-            if(match->flow.udp_pyd1) {
-                    VLOG_DBG("VLOG set MAY_UDP_PYD1 %"PRId64"\n",match->flow.udp_pyd1); 
-                     may_match |= MAY_UDP_PYD1 | MAY_TP_ADDR;
-                }
             if(match->flow.e_attr1){
                 VLOG_DBG("VLOG set MAY_EVNT_ATTR1  %"PRId64"\n",match->flow.e_attr1);
                  may_match |= MAY_EVNT_ATTR1 | MAY_TP_ADDR; 
@@ -7404,26 +7322,11 @@ ofputil_normalize_match__(struct match *match, bool may_log)
                 VLOG_DBG("VLOG set MAY_EVNT_ATTR2 %"PRId64"\n",match->flow.e_attr2);
                  may_match |= MAY_EVNT_ATTR2 | MAY_TP_ADDR; 
             }
-            if(match->flow.e_val1){
-                VLOG_DBG("VLOG set MAY_EVNT_VAL1 %"PRId64"\n",match->flow.e_val1);
-                 may_match |= MAY_EVNT_VAL1 | MAY_TP_ADDR; 
-            }
-            if(match->flow.e_val2){
-                VLOG_DBG("VLOG set MAY_EVNT_VAL2 %"PRId64"\n",match->flow.e_val2);
-                 may_match |= MAY_EVNT_VAL2 | MAY_TP_ADDR; 
-            }
             if(match->flow.e_type){
-                VLOG_DBG("VLOG set MAY_EVNT_TYP %"PRId16"\n",match->flow.e_type);
+                VLOG_DBG("VLOG set MAY_EVNT_TYP %"PRId64"\n",match->flow.e_type);
                  may_match |= MAY_EVNT_TYP | MAY_TP_ADDR; 
             }
-            if(match->flow.e_op1){
-                VLOG_DBG("VLOG set MAY_EVNT_OP1 %"PRId16"\n",match->flow.e_op1);
-                 may_match |= MAY_EVNT_OP1 | MAY_TP_ADDR; 
-            }
-            if(match->flow.e_op2){
-                VLOG_DBG("VLOG set MAY_EVNT_OP2 %"PRId16"\n",match->flow.e_op2);
-                 may_match |= MAY_EVNT_OP2 | MAY_TP_ADDR; 
-            }                                                          
+                                                        
                                  
            
         }
@@ -7462,16 +7365,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         VLOG_DBG("VLOG Point 4 - MAY_TP_ADDR"); /*CEP*/
         wc.masks.tp_src = wc.masks.tp_dst = htons(0);
     }
-    if (!(may_match & MAY_UDP_PYD)) {  /* CEP */
-        VLOG_DBG("VLOG Point 5 - MAY_UDP_PYD"); /*CEP*/
-        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.udp_pyd = htonll(0);
-    }
-    if (!(may_match & MAY_UDP_PYD1)) {  /* CEP */
-        VLOG_DBG("VLOG Point 6 - MAY_UDP_PYD1"); /*CEP*/
-        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.udp_pyd1 = htonll(0);
-    }
+
     if (!(may_match & MAY_EVNT_ATTR1)) {  /* CEP */
         VLOG_DBG("VLOG Point 51 - MAY_EVNT_ATTR1"); /*CEP*/
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
@@ -7482,31 +7376,12 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.e_attr2 = htonll(0);
     }
-    if (!(may_match & MAY_EVNT_VAL1)) {  /* CEP */
-        VLOG_DBG("VLOG Point 52 - MAY_EVNT_VAL1"); /*CEP*/
-        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.e_val1 = htonll(0);
-    }
-    if (!(may_match & MAY_EVNT_VAL2)) {  /* CEP */
-        VLOG_DBG("VLOG Point 62 - MAY_EVNT_VAL2"); /*CEP*/
-        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.e_val2 = htonll(0);
-    }
     if (!(may_match & MAY_EVNT_TYP)) {  /* CEP */
         VLOG_DBG("VLOG Point 54 - MAY_EVNT_TYP"); /*CEP*/
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.e_type = htons(0);
+        wc.masks.e_type = htonll(0);
     }
-    if (!(may_match & MAY_EVNT_OP1)) {  /* CEP */
-        VLOG_DBG("VLOG Point 53 - MAY_EVNT_OP1"); /*CEP*/
-        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.e_op1 = htons(0);
-    }
-    if (!(may_match & MAY_EVNT_OP2)) {  /* CEP */
-        VLOG_DBG("VLOG Point 63 - MAY_EVNT_OP2"); /*CEP*/
-        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
-        wc.masks.e_op2 = htons(0);
-    }                
+                
 
     if (!(may_match & MAY_NW_PROTO)) {
         wc.masks.nw_proto = 0;

@@ -340,11 +340,9 @@ enum ovs_key_attr {
 	OVS_KEY_ATTR_UDP,       /* struct ovs_key_udp */
 #ifndef __KERNEL__
 	/* Only used within userspace datapath*/	
-	OVS_KEY_ATTR_UDPPYD,	/* struct ovs_key_pyd */
 	OVS_KEY_ATTR_EVNT,
 	OVS_KEY_ATTR_EVNT_TYP,
-	OVS_KEY_ATTR_EVNT_FIRST_OP,
-	OVS_KEY_ATTR_EVNT_SEC_OP,
+
 
 #endif	
 	OVS_KEY_ATTR_ICMP,      /* struct ovs_key_icmp */
@@ -452,10 +450,6 @@ struct ovs_key_udp {
 	__be16 udp_dst;
 };
 
-struct ovs_key_pyd {
-	__be64 udp_pyd;
-	__be64 udp_pyd1;
-};
 
 struct ovs_key_eattr {
 	__be64 e_attr1;
@@ -463,18 +457,9 @@ struct ovs_key_eattr {
 };
 
 struct ovs_key_etype {
-	__be16 e_type;
+	__be64 e_type;
 };
 
-struct ovs_key_efop {
-	__be64 e_val1;
-	__be16 e_op1;
-};
-
-struct ovs_key_esop {
-	__be64 e_val2;
-	__be16 e_op2;
-};
 struct ovs_key_sctp {
 	__be16 sctp_src;
 	__be16 sctp_dst;

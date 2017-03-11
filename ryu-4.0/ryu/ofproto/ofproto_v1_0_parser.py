@@ -183,8 +183,7 @@ class OFPMatch(StringifyMixin):
                                      specified as IPv4 address prefix.
     nw_dst_mask      Integer 8bit    IP destination address mask
                                      specified as IPv4 address prefix.
-    udp_pyd          Integer 64bit   UDP Payload one.
-    udp_pyd1         Integer 64bit   UDP Payload two.                                 
+                                
     ================ =============== ==================================
 
     Example::
@@ -204,11 +203,11 @@ class OFPMatch(StringifyMixin):
     def __init__(self, wildcards=None, in_port=None, dl_src=None, dl_dst=None,
                  dl_vlan=None, dl_vlan_pcp=None, dl_type=None, nw_tos=None,
                  nw_proto=None, nw_src=None, nw_dst=None,
-                 tp_src=None, tp_dst=None, udp_pyd=None, udp_pyd1=None, e_attr1=None, e_attr2=None, e_val1=None, e_val2=None,
-                 e_type=None, e_op1=None, e_op2=None,  nw_src_mask=32, nw_dst_mask=32):
+                 tp_src=None, tp_dst=None, e_attr1=None, e_attr2=None, 
+                 e_type=None, nw_src_mask=32, nw_dst_mask=32):
         super(OFPMatch, self).__init__()
         wc = ofproto.OFPFW_ALL
-        LOG.debug('VLOG In ofproto_v1_0_parser OFPMatch point -1  udp_pyd - %d udp_pyd1 - %d', udp_pyd, udp_pyd1) #CEP          
+        LOG.debug('VLOG In ofproto_v1_0_parser OFPMatch point -1  e_attr1 - %d e_attr2 - %d e_type - %d', e_attr1, e_attr2, e_type) #CEP          
         LOG.debug('VLOG In ofproto_v1_0_parser OFPMatch point -2  wildcards - %d tp_dst - %d', wildcards, tp_dst) #CEP  
         if in_port is None:
             self.in_port = 0
@@ -305,18 +304,6 @@ class OFPMatch(StringifyMixin):
         The same values can be see in the TCP wirehshark trace between ryu and ovs.
         However, the switch discards the udp_pyd part. This has to be investigated.
         '''
-        if udp_pyd is None:
-            self.udp_pyd = 0 #cep from 0 to 30
-        else:
-            wc &= ~ofproto.OFPFW_UDP_PYD
-            self.udp_pyd = udp_pyd
-
-        if udp_pyd1 is None:
-            self.udp_pyd1 = 0 #cep from 0 to 31
-        else:
-            wc &= ~ofproto.OFPFW_UDP_PYD1
-            self.udp_pyd1 = udp_pyd1   
-
         if e_attr1 is None:
             self.e_attr1 = 0
         else:
@@ -328,30 +315,6 @@ class OFPMatch(StringifyMixin):
         else:
             wc &= ~ofproto.OFPFW_EVNT_ATTR2
             self.e_attr2 = e_attr2
-
-        if e_val1 is None:
-            self.e_val1 = 0
-        else:
-            wc &= ~ofproto.OFPFW_EVNT_VAL1
-            self.e_val1 = e_val1
-
-        if e_val2 is None:
-            self.e_val2 = 0 
-        else:
-            wc &= ~ofproto.OFPFW_EVNT_VAL2
-            self.e_val2 = e_val2
-
-        if e_op1 is None:
-            self.e_op1 = 0
-        else:
-            wc &= ~ofproto.OFPFW_EVNT_OP1
-            self.e_op1 = e_op1
-
-        if e_op2 is None:
-            self.e_op2 = 0 
-        else:
-            wc &= ~ofproto.OFPFW_EVNT_OP2
-            self.e_op2 = e_op2  
 
         if e_type is None:
             self.e_type = 0 
@@ -401,8 +364,8 @@ class OFPMatch(StringifyMixin):
                       self.wildcards, self.in_port, self.dl_src,
                       self.dl_dst, self.dl_vlan, self.dl_vlan_pcp,
                       self.dl_type, self.nw_tos, self.nw_proto,
-                      self.nw_src, self.nw_dst, self.tp_src, self.tp_dst, self.udp_pyd, self.udp_pyd1,
-                      self.e_attr1, self.e_attr2, self.e_val1, self.e_val2,  self.e_type, self.e_op1, self.e_op2)
+                      self.nw_src, self.nw_dst, self.tp_src, self.tp_dst,
+                      self.e_attr1, self.e_attr2, self.e_type)
 
     @classmethod
     def parse(cls, buf, offset):

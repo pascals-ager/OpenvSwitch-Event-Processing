@@ -1020,21 +1020,13 @@ sflow_read_set_action(const struct nlattr *attr,
         }
         break;
 
-    case OVS_KEY_ATTR_UDPPYD:
-        /*CEP*/ /*Add later*/
-         break;
     case OVS_KEY_ATTR_EVNT:
          /*CEP*/ /*Add later*/
          break;
     case OVS_KEY_ATTR_EVNT_TYP:
         /*CEP*/ /*Add later*/
          break;
-    case OVS_KEY_ATTR_EVNT_FIRST_OP:
-         /*CEP*/ /*Add later*/
-         break;
-    case OVS_KEY_ATTR_EVNT_SEC_OP:
-        /*CEP*/ /*Add later*/
-         break;            
+           
                
          
     case OVS_KEY_ATTR_TCP_FLAGS:
