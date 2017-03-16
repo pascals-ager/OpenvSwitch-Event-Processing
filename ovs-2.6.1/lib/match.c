@@ -702,6 +702,16 @@ match_set_event_type_masked(struct match *match, ovs_be64 e_type, ovs_be64 mask)
     match->wc.masks.e_type = mask;
 }
 
+void
+match_set_event_val1(struct match *match, ovs_be64 e_val1){
+
+    match_set_event_val1_masked(match, e_val1, OVS_BE64_MAX);
+}
+void
+match_set_event_val1_masked(struct match *match, ovs_be64 e_val1, ovs_be64 mask){
+    match->flow.e_val1 = e_val1 & mask;
+    match->wc.masks.e_val1 = mask;
+}
 /*CEP*/
 
 void
@@ -1120,7 +1130,7 @@ match_format(const struct match *match, struct ds *s, int priority)
 
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 40);
     VLOG_DBG("VLOG In match_format\n");/*CEP*/
 
     if (priority != OFP_DEFAULT_PRIORITY) {
@@ -1407,7 +1417,8 @@ match_format(const struct match *match, struct ds *s, int priority)
         format_be16_masked(s, "tp_dst", f->tp_dst, wc->masks.tp_dst); 
         format_be64_masked(s, "e_type", f->e_type, wc->masks.e_type); /*CEP*/
         format_be64_masked(s, "e_attr1", f->e_attr1, wc->masks.e_attr1); /*CEP*/
-        format_be64_masked(s, "e_attr2", f->e_attr2, wc->masks.e_attr2); /*CEP*/       
+        format_be64_masked(s, "e_attr2", f->e_attr2, wc->masks.e_attr2); /*CEP*/      
+        format_be64_masked(s, "e_val1", f->e_val1, wc->masks.e_val1); /*CEP*/    
         VLOG_DBG("VLOG In after format_be64_masked\n"); /*CEP*/
     }
     if (is_ip_any(f) && f->nw_proto == IPPROTO_TCP && wc->masks.tcp_flags) {

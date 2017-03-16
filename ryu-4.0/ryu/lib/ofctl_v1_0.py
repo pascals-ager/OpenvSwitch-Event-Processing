@@ -29,7 +29,7 @@ DEFAULT_TIMEOUT = 1.0   # TODO:XXX
 
 UTIL = ofctl_utils.OFCtlUtil(ofproto_v1_0)
 
-
+#cep
 def to_actions(dp, acts):
     actions = []
     for a in acts:
@@ -69,8 +69,25 @@ def to_actions(dp, acts):
             tp_src = int(a.get('tp_src', 0))
             actions.append(dp.ofproto_parser.OFPActionSetTpSrc(tp_src))
         elif action_type == 'SET_TP_DST':
+            LOG.debug('VLOG In to_actions SET_TP_DST')
             tp_dst = int(a.get('tp_dst', 0))
-            actions.append(dp.ofproto_parser.OFPActionSetTpDst(tp_dst))
+            actions.append(dp.ofproto_parser.OFPActionSetTpDst(tp_dst))  
+        elif action_type == 'SET_MIN':
+            LOG.debug('VLOG In to_actions SET_MIN')
+            val = int(a.get('val', 0))
+            actions.append(dp.ofproto_parser.OFPActionSetMin(val))
+        elif action_type == 'SET_MAX':
+            LOG.debug('VLOG In to_actions SET_MAX')
+            val = int(a.get('val', 0))
+            actions.append(dp.ofproto_parser.OFPActionSetMax(val))   
+        elif action_type == 'SET_MOV_MIN':
+            LOG.debug('VLOG In to_actions SET_MOV_MIN')
+            val = int(a.get('val', 0))
+            actions.append(dp.ofproto_parser.OFPActionSetMovMin(val))   
+        elif action_type == 'SET_MOV_MAX':
+            LOG.debug('VLOG In to_actions SET_MOV_MAX')
+            val = int(a.get('val', 0))
+            actions.append(dp.ofproto_parser.OFPActionSetMovMax(val))                                            
         elif action_type == 'ENQUEUE':
             port = UTIL.ofp_port_from_user(
                 a.get('port', ofproto_v1_0.OFPP_NONE))
@@ -81,7 +98,7 @@ def to_actions(dp, acts):
 
     return actions
 
-
+#cep
 def actions_to_str(acts):
     actions = []
     for a in acts:
@@ -111,7 +128,20 @@ def actions_to_str(acts):
         elif action_type == ofproto_v1_0.OFPAT_SET_TP_SRC:
             buf = 'SET_TP_SRC:' + str(a.tp)
         elif action_type == ofproto_v1_0.OFPAT_SET_TP_DST:
+            LOG.debug('VLOG In actions_to_str SET_TP_DST')
             buf = 'SET_TP_DST:' + str(a.tp)
+        elif action_type == ofproto_v1_0.OFPAT_SET_MIN:
+            LOG.debug('VLOG In actions_to_str SET_MIN')
+            buf = 'SET_MIN:' + str(a.val)
+        elif action_type == ofproto_v1_0.OFPAT_SET_MAX:
+            LOG.debug('VLOG In actions_to_str SET_MAX')
+            buf = 'SET_MAX:' + str(a.val)   
+        elif action_type == ofproto_v1_0.OFPAT_SET_MOV_MIN:
+            LOG.debug('VLOG In actions_to_str SET_MOV_MIN')
+            buf = 'SET_MOV_MIN:' + str(a.val)   
+        elif action_type == ofproto_v1_0.OFPAT_SET_MOV_MAX:
+            LOG.debug('VLOG In actions_to_str SET_MOV_MAX')
+            buf = 'SET_MOV_MAX:' + str(a.val)                                                  
         elif action_type == ofproto_v1_0.OFPAT_ENQUEUE:
             port = UTIL.ofp_port_to_user(a.port)
             queue = UTIL.ofp_queue_to_user(a.queue_id)
@@ -158,6 +188,7 @@ def to_match(dp, attrs):
     e_attr1 = 0
     e_attr2 = 0
     e_type = 0
+    e_val1 = 0
 
 
 
@@ -238,7 +269,11 @@ def to_match(dp, attrs):
                 strval += format(ord(k),"d")
             e_type = int(strval)
             wildcards &= ~ofp.OFPFW_EVNT_TYP
-            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_TYP - %d wildcards - %d', ofp.OFPFW_EVNT_TYP, wildcards) #CEP  
+            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_TYP - %d wildcards - %d', ofp.OFPFW_EVNT_TYP, wildcards) #CEP 
+        elif key == 'e_val1':
+            e_val1 = int(value)
+            wildcards &= ~ofp.OFPFW_EVNT_VAL1
+            LOG.debug('VLOG In to_match point -14  OFPFW_EVNT_VAL1 - %d wildcards - %d', ofp.OFPFW_EVNT_VAL1, wildcards) #CEP  
     
         else:
             LOG.error("unknown match name %s, %s, %d", key, value, len(key))
@@ -246,7 +281,7 @@ def to_match(dp, attrs):
     LOG.debug('VLOG In ofctl_v1_0 to_match point -15  e_attr1 - %d e_attr2 - %d e_type - %d', e_attr1, e_attr2, e_type) #CEP          
     match = dp.ofproto_parser.OFPMatch(
         wildcards, in_port, dl_src, dl_dst, dl_vlan, dl_vlan_pcp,
-        dl_type, nw_tos, nw_proto, nw_src, nw_dst, tp_src, tp_dst, e_attr1, e_attr2, e_type)
+        dl_type, nw_tos, nw_proto, nw_src, nw_dst, tp_src, tp_dst, e_attr1, e_attr2, e_type, e_val1)
 
     return match
 
@@ -298,7 +333,10 @@ def match_to_str(m):
         match['e_attr2'] = m.e_attr2                         
 
     if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_TYP:
-        match['e_type'] = m.e_type 
+        match['e_type'] = m.e_type
+
+    if ~m.wildcards & ofproto_v1_0.OFPFW_EVNT_TYP:
+        match['e_val1'] = m.e_val1 
     return match
 
 
@@ -574,7 +612,7 @@ def mod_flow_entry(dp, flow, cmd):
 
 def delete_flow_entry(dp):
     match = dp.ofproto_parser.OFPMatch(
-        dp.ofproto.OFPFW_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) #from 12 to 21 to 15 zeromasks
+        dp.ofproto.OFPFW_ALL, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0) #from 12 to 21 to 15 to 16 zeromasks
 
     flow_mod = dp.ofproto_parser.OFPFlowMod(
         datapath=dp, match=match, cookie=0,

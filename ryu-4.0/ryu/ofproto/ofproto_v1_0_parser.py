@@ -204,7 +204,7 @@ class OFPMatch(StringifyMixin):
                  dl_vlan=None, dl_vlan_pcp=None, dl_type=None, nw_tos=None,
                  nw_proto=None, nw_src=None, nw_dst=None,
                  tp_src=None, tp_dst=None, e_attr1=None, e_attr2=None, 
-                 e_type=None, nw_src_mask=32, nw_dst_mask=32):
+                 e_type=None, e_val1=None, nw_src_mask=32, nw_dst_mask=32):
         super(OFPMatch, self).__init__()
         wc = ofproto.OFPFW_ALL
         LOG.debug('VLOG In ofproto_v1_0_parser OFPMatch point -1  e_attr1 - %d e_attr2 - %d e_type - %d', e_attr1, e_attr2, e_type) #CEP          
@@ -320,7 +320,13 @@ class OFPMatch(StringifyMixin):
             self.e_type = 0 
         else:
             wc &= ~ofproto.OFPFW_EVNT_TYP
-            self.e_type = e_type                                                    
+            self.e_type = e_type
+
+        if e_val1 is None:
+            self.e_val1 = 0
+        else:
+            wc &= ~ofproto.OFPFW_EVNT_VAL1
+            self.e_val1 = e_val1                                                               
 
         if wildcards is None:
             self.wildcards = wc
@@ -365,7 +371,7 @@ class OFPMatch(StringifyMixin):
                       self.dl_dst, self.dl_vlan, self.dl_vlan_pcp,
                       self.dl_type, self.nw_tos, self.nw_proto,
                       self.nw_src, self.nw_dst, self.tp_src, self.tp_dst,
-                      self.e_attr1, self.e_attr2, self.e_type)
+                      self.e_attr1, self.e_attr2, self.e_type, self.e_val1)
 
     @classmethod
     def parse(cls, buf, offset):
@@ -711,11 +717,13 @@ class OFPActionSetNwTos(OFPAction):
 
 class OFPActionTpPort(OFPAction):
     def __init__(self, tp):
+        LOG.debug('VLOG In OFPActionTpPort OFPAction __init__')
         super(OFPActionTpPort, self).__init__()
         self.tp = tp
 
     @classmethod
     def parser(cls, buf, offset):
+        LOG.debug('VLOG In OFPActionTpPort OFPAction PARSER')
         type_, len_, tp = struct.unpack_from(
             ofproto.OFP_ACTION_TP_PORT_PACK_STR, buf, offset)
         assert type_ in (ofproto.OFPAT_SET_TP_SRC,
@@ -726,6 +734,28 @@ class OFPActionTpPort(OFPAction):
     def serialize(self, buf, offset):
         msg_pack_into(ofproto.OFP_ACTION_TP_PORT_PACK_STR,
                       buf, offset, self.type, self.len, self.tp)
+
+class OFPActionAttrVal(OFPAction):
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionAttrVal OFPAction __init__')
+        super(OFPActionAttrVal, self).__init__()
+        self.val = val
+
+    @classmethod
+    def parser(cls, buf, offset):
+        LOG.debug('VLOG In OFPActionAttrVal OFPAction PARSER')
+        type_, len_, val = struct.unpack_from(
+            ofproto.OFP_ACTION_ATTR_VAL_STR, buf, offset)
+        assert type_ in (ofproto.OFPAT_SET_MOV_MIN,
+                         ofproto.OFPAT_SET_MOV_MAX,
+                         ofproto.OFPAT_SET_MIN,
+                         ofproto.OFPAT_SET_MAX)
+        assert len_ == ofproto.OFP_ACTION_ATTR_VAL_SIZE
+        return cls(val)
+
+    def serialize(self, buf, offset):
+        msg_pack_into(ofproto.OFP_ACTION_ATTR_VAL_STR,
+                      buf, offset, self.type, self.len, self.val)        
 
 
 @OFPAction.register_action_type(ofproto.OFPAT_SET_TP_SRC,
@@ -761,7 +791,80 @@ class OFPActionSetTpDst(OFPActionTpPort):
     ================ ======================================================
     """
     def __init__(self, tp):
+        LOG.debug('VLOG In OFPActionSetTpDst OFPActionTpPort')
         super(OFPActionSetTpDst, self).__init__(tp)
+
+@OFPAction.register_action_type(ofproto.OFPAT_SET_MIN,
+                                ofproto.OFP_ACTION_ATTR_VAL_SIZE)
+class OFPActionSetMin(OFPActionAttrVal):
+    """
+    Set the Minimum value for attribute1
+
+    This action indicates the minimum value to be set.
+
+    ================ ======================================================
+    Attribute        Description
+    ================ ======================================================
+    val              Attribute 1.
+    ================ ======================================================
+    """
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionSetMin OFPActionAttrVal')
+        super(OFPActionSetMin, self).__init__(val)
+
+@OFPAction.register_action_type(ofproto.OFPAT_SET_MAX,
+                                ofproto.OFP_ACTION_ATTR_VAL_SIZE)
+class OFPActionSetMax(OFPActionAttrVal):
+    """
+    Set the Maximum value for attribute1
+
+    This action indicates the maximum value to be set.
+
+    ================ ======================================================
+    Attribute        Description
+    ================ ======================================================
+    val              Attribute 1.
+    ================ ======================================================
+    """
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionSetMax OFPActionAttrVal')
+        super(OFPActionSetMax, self).__init__(val) 
+
+@OFPAction.register_action_type(ofproto.OFPAT_SET_MOV_MIN,
+                                ofproto.OFP_ACTION_ATTR_VAL_SIZE)
+class OFPActionSetMovMin(OFPActionAttrVal):
+    """
+    Set the Moving Minimum value for attribute1
+
+    This action indicates the moving minimum value to be set.
+
+    ================ ======================================================
+    Attribute        Description
+    ================ ======================================================
+    val              Attribute 1.
+    ================ ======================================================
+    """
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionSetMax OFPActionAttrVal')
+        super(OFPActionSetMovMin, self).__init__(val)         
+
+@OFPAction.register_action_type(ofproto.OFPAT_SET_MOV_MAX,
+                                ofproto.OFP_ACTION_ATTR_VAL_SIZE)
+class OFPActionSetMovMax(OFPActionAttrVal):
+    """
+    Set the Moving Minimum value for attribute1
+
+    This action indicates the moving minimum value to be set.
+
+    ================ ======================================================
+    Attribute        Description
+    ================ ======================================================
+    val              Attribute 1.
+    ================ ======================================================
+    """
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionSetMovMax OFPActionAttrVal')
+        super(OFPActionSetMovMax, self).__init__(val)                     
 
 
 @OFPAction.register_action_type(ofproto.OFPAT_ENQUEUE,

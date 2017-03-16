@@ -78,7 +78,8 @@ class Flow(ofproto_parser.StringifyMixin):
         self.tp_src = 0
         self.e_attr1 = 0
         self.e_attr2 = 0
-        self.e_type = 0           
+        self.e_type = 0 
+        self.e_val1 = 0          
         self.nw_tos = 0
         self.vlan_tci = 0
         self.nw_ttl = 0
@@ -108,6 +109,7 @@ class FlowWildcards(ofproto_parser.StringifyMixin):
         self.e_attr1_mask = 0
         self.e_attr2_mask = 0
         self.e_type_mask = 0                           
+        self.e_val1_mask = 0  
         self.nw_src_mask = 0
         self.nw_dst_mask = 0
         self.tun_id_mask = 0
@@ -226,7 +228,16 @@ class ClsRule(ofproto_parser.StringifyMixin):
     def set_e_type_masked(self, e_type, mask):
         LOG.debug('VLOG in point 171') #CEP
         self.wc.e_type_mask = mask
-        self.flow.e_type = e_type & mask                  
+        self.flow.e_type = e_type & mask 
+
+    def set_e_val1(self, e_val1):
+        LOG.debug('VLOG in point 51') #CEP
+        self.set_e_val1_masked(e_val1, UINT64_MAX)
+
+    def set_e_val1_masked(self, e_val1, mask):
+        LOG.debug('VLOG in point 61') #CEP
+        self.wc.e_val1_mask = mask
+        self.flow.e_val1 = e_val1 & mask                        
 
            
     #CEP    
@@ -433,14 +444,18 @@ class ClsRule(ofproto_parser.StringifyMixin):
 
         if self.flow.e_type != 0:
             LOG.debug('VLOG in point 58')
-            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_TYP                                                                                  
+            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_TYP
+
+        if self.flow.e_val1 != 0:
+            LOG.debug('VLOG in point 58')
+            wildcards &= ~ofproto_v1_0.OFPFW_EVNT_VAL1                                                                                              
 
         return (wildcards, self.flow.in_port, self.flow.dl_src,
                 self.flow.dl_dst, self.flow.dl_vlan, self.flow.dl_vlan_pcp,
                 self.flow.dl_type, self.flow.nw_tos & IP_DSCP_MASK,
                 self.flow.nw_proto, self.flow.nw_src, self.flow.nw_dst,
                 self.flow.tp_src, self.flow.tp_dst, self.flow.e_attr1, 
-                self.flow.e_attr2, self.flow.e_type)
+                self.flow.e_attr2, self.flow.e_type, self.flow.e_val1)
 
 
 def _set_nxm_headers(nxm_headers):
@@ -823,7 +838,20 @@ class MFEVNTTYP(MFField):
 
     def put(self, buf, offset, rule):
         LOG.debug('VLOG in point 86')
-        return self.putm(buf, offset, rule.flow.e_type, rule.wc.e_type_mask)                                          
+        return self.putm(buf, offset, rule.flow.e_type, rule.wc.e_type_mask)
+
+
+@_register_make
+@_set_nxm_headers([ofproto_v1_0.NXM_OF_EVNT_VAL1])
+class MFEVNTVAL1(MFField):
+    @classmethod
+    def make(cls, header):
+        LOG.debug('VLOG in point 73')
+        return cls(header, MF_PACK_STRING_BE64)
+
+    def put(self, buf, offset, rule):
+        LOG.debug('VLOG in point 83')
+        return self.putm(buf, offset, rule.flow.e_val1, rule.wc.e_val1_mask)
 
 #CEP
 @_register_make
@@ -1153,7 +1181,16 @@ def serialize_nxm_match(rule, buf, offset):
         else:
             header = 0
         if header != 0: 
-            offset += nxm_put(buf, offset, header, rule)              
+            offset += nxm_put(buf, offset, header, rule)
+
+    if rule.flow.e_val1 != 0:
+        LOG.debug('VLOG in point 117')
+        if rule.flow.nw_proto == 17 and rule.wc.e_type_mask == UINT64_MAX:
+            header = ofproto_v1_0.NXM_OF_EVNT_VAL1
+        else:
+            header = 0
+        if header != 0: 
+            offset += nxm_put(buf, offset, header, rule)                       
 
 
 

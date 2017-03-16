@@ -1668,13 +1668,29 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Formatting: decimal.
      * Prerequisites: UDP.
      * Access: read-only.
-     * NXM: NXM_OF_EVNT_TYP(115) since v2.6.
-     * OXM: OXM_OF_EVNT_TYP(48) since OF1.2 and v2.6.
+     * NXM: NXM_OF_EVNT_TYP(113) since v2.6.
+     * OXM: OXM_OF_EVNT_TYP(46) since OF1.2 and v2.6.
      * OF1.0: exact match.
      * OF1.1: exact match.
      */    
     MFF_EVNT_TYP,
-   
+
+    /* "e_val1".
+     *
+     * Event Value1.
+     *
+     * Type: be64.
+     * Maskable: bitwise.
+     * Formatting: decimal.
+     * Prerequisites: UDP.
+     * Access: read-only.
+     * NXM: NXM_OF_EVNT_VAL1(114) since v2.6.
+     * OXM: OXM_OF_EVNT_VAL1(47) since OF1.2 and v2.6.
+     * OF1.0: exact match.
+     * OF1.1: exact match.
+     */
+    MFF_EVNT_VAL1,
+
 /* ## ---- ## */
 /* ## SCTP ## */
 /* ## ---- ## */

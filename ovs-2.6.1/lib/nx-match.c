@@ -904,7 +904,15 @@ nxm_put_ip(struct ofpbuf *b, const struct match *match, enum ofp_version oxm)
                 nxm_put_64m(b, MFF_EVNT_TYP, oxm,
                             flow->e_type, match->wc.masks.e_type);   
             }
+            
+            if(match->wc.masks.e_val1){            
+            VLOG_DBG("VLOG flow->e_val1 at this point: %"PRIu64"\n",flow->e_val1); /*2161727821137838080*/
+            VLOG_DBG("VLOG htonll(flow->e_val1) at this point: %"PRIu64"\n",htonll(flow->e_val1)); /*30*/
+            VLOG_DBG("VLOG match mask of e_val1: %"PRIu64"\n",match->wc.masks.e_val1); /*18446744073709551615*/
 
+                nxm_put_64m(b, MFF_EVNT_VAL1, oxm,
+                            flow->e_val1, match->wc.masks.e_val1);    
+            }            
                                              
 
 }
@@ -969,7 +977,7 @@ nx_put_raw(struct ofpbuf *b, enum ofp_version oxm, const struct match *match,
     int match_len;
     int i;
 
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 40);
     VLOG_DBG("VLOG Advith is in nx_put_raw \n");  /* CEP */
 
     /* Metadata. */

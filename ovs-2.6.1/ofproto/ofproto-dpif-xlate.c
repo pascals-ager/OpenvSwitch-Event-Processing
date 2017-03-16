@@ -42,6 +42,7 @@
 #include "netlink.h"
 #include "nx-match.h"
 #include "odp-execute.h"
+#include "openvswitch/ofp-parse.h"
 #include "ofproto/ofproto-dpif-ipfix.h"
 #include "ofproto/ofproto-dpif-mirror.h"
 #include "ofproto/ofproto-dpif-monitor.h"
@@ -3011,7 +3012,7 @@ compose_output_action__(struct xlate_ctx *ctx, ofp_port_t ofp_port,
 
     /* If 'struct flow' gets additional metadata, we'll need to zero it out
      * before traversing a patch port. */
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 40);
     memset(&flow_tnl, 0, sizeof flow_tnl);
 
     if (!xport) {
@@ -4468,6 +4469,10 @@ freeze_unroll_actions(const struct ofpact *a, const struct ofpact *end,
         case OFPACT_SET_IP_TTL:
         case OFPACT_SET_L4_SRC_PORT:
         case OFPACT_SET_L4_DST_PORT:
+        case OFPACT_SET_MOV_MIN:
+        case OFPACT_SET_MOV_MAX:
+        case OFPACT_SET_MIN:
+        case OFPACT_SET_MAX:        
         case OFPACT_SET_QUEUE:
         case OFPACT_POP_QUEUE:
         case OFPACT_PUSH_MPLS:
@@ -4713,6 +4718,10 @@ recirc_for_mpls(const struct ofpact *a, struct xlate_ctx *ctx)
     case OFPACT_SET_IP_TTL:
     case OFPACT_SET_L4_SRC_PORT:
     case OFPACT_SET_L4_DST_PORT:
+    case OFPACT_SET_MOV_MIN:
+    case OFPACT_SET_MOV_MAX:
+    case OFPACT_SET_MIN:
+    case OFPACT_SET_MAX:
     case OFPACT_REG_MOVE:
     case OFPACT_STACK_PUSH:
     case OFPACT_STACK_POP:
@@ -4936,6 +4945,91 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
                 flow->tp_dst = htons(ofpact_get_SET_L4_DST_PORT(a)->port);
             }
             break;
+        case OFPACT_SET_MOV_MIN:{
+        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN\n"); /*CEP*/
+        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
+                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
+                
+                flow->e_val1 = htonll(ofpact_get_SET_MOV_MIN(a)->attr);
+            }
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            if(htonll(flow->e_attr1) < htonll(flow->e_val1)){
+                
+            }
+            else{
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN else loop\n"); /*CEP*/
+                //parse and encode attr
+                //enum ofp_raw_action_type raw = OFPAT_RAW_SET_MOV_MIN;
+                //enum ofp_version ofp_version = OFP10_VERSION;
+                uint64_t attr = flow->e_val1; 
+                struct ofpbuf b;
+                ofpbuf_init(&b, 32);
+                char * str = (char *)malloc(20);
+                sprintf(str,"%"PRIu64"",attr);
+                char * tmp = str_to_u64(str, &ofpact_put_SET_MOV_MIN(&b)->attr);
+                //VLOG_DBG("VLOG using tmp - %s\n",tmp);
+                //ofpact_put_raw(&b, 1, raw, attr);
+                xlate_normal(ctx);
+                free(str);
+                free(tmp);
+            }/*CEP*/
+            break;    
+        }
+        case OFPACT_SET_MOV_MAX:{
+        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX\n"); /*CEP*/
+        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
+                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
+                
+                flow->e_val1 = htonll(ofpact_get_SET_MOV_MAX(a)->attr);
+            }
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            if(htonll(flow->e_attr1) > htonll(flow->e_val1)){
+                
+            }
+            else{
+                xlate_normal(ctx);
+                 
+            }/*CEP*/ 
+            break;   
+        }
+        case OFPACT_SET_MIN:{
+        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN\n"); /*CEP*/
+        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
+                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
+                
+                flow->e_val1 = htonll(ofpact_get_SET_MIN(a)->attr);
+            }
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            if(htonll(flow->e_attr1) <= htonll(flow->e_val1)){
+                
+            }
+            else{
+                xlate_normal(ctx);
+                
+            }
+            break;/*CEP*/      
+        }
+        case OFPACT_SET_MAX:{
+        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX\n"); /*CEP*/
+        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
+                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
+                
+                flow->e_val1 = htonll(ofpact_get_SET_MAX(a)->attr);
+            }
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            if(htonll(flow->e_attr1) >= htonll(flow->e_val1)){
+                
+            }
+            else{
+                xlate_normal(ctx);
+                 
+            }/*CEP*/  
+            break;    
+        }
 
         case OFPACT_RESUBMIT:
         VLOG_DBG("VLOG in do_xlate_actions OFPACT_RESUBMIT\n"); /*CEP*/

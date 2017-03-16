@@ -102,7 +102,7 @@ ofputil_netmask_to_wcbits(ovs_be32 netmask)
 void
 ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
 {
-    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 39);
+    BUILD_ASSERT_DECL(FLOW_WC_SEQ == 40);
 
     /* Initialize most of wc. */
     flow_wildcards_init_catchall(wc);
@@ -144,6 +144,10 @@ ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
     if (!(ofpfw & OFPFW10_EVNT_TYP)) {
         wc->masks.e_type = OVS_BE64_MAX;
     } /*CEP*/
+
+    if (!(ofpfw & OFPFW10_EVNT_VAL1)) {
+        wc->masks.e_val1 = OVS_BE64_MAX;
+    } /*CEP*/        
 
        
     if (!(ofpfw & OFPFW10_DL_SRC)) {
@@ -194,7 +198,8 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
     match->flow.tp_dst = ofmatch->tp_dst;
     match->flow.e_attr1 = ofmatch->e_attr1; /*CEP*/ /*maybe here?*/
     match->flow.e_attr2 = ofmatch->e_attr2;
-    match->flow.e_type = ofmatch->e_type; /*CEP*/ /*maybe here?*/           
+    match->flow.e_type = ofmatch->e_type; /*CEP*/ /*maybe here?*/    
+    match->flow.e_val1 = ofmatch->e_val1;       
     match->flow.dl_src = ofmatch->dl_src;
     match->flow.dl_dst = ofmatch->dl_dst;
     match->flow.nw_tos = ofmatch->nw_tos & IP_DSCP_MASK;
@@ -272,7 +277,11 @@ ofputil_match_to_ofp10_match(const struct match *match,
     } /*CEP*/ 
     if (!wc->masks.e_type) {
         ofpfw |= OFPFW10_EVNT_TYP;
-    } /*CEP*/        
+    } /*CEP*/ 
+    if (!wc->masks.e_val1) {
+        VLOG_DBG("In ofputil_match_to_ofp10_match OFPFW10_EVNT_VAL1 \n");
+        ofpfw |= OFPFW10_EVNT_VAL1;
+    } /*CEP*/           
                 
     if (eth_addr_is_zero(wc->masks.dl_src)) {
         ofpfw |= OFPFW10_DL_SRC;
@@ -318,6 +327,7 @@ ofputil_match_to_ofp10_match(const struct match *match,
     ofmatch->e_attr1 = match->flow.e_attr1; 
     ofmatch->e_attr2 = match->flow.e_attr2;
     ofmatch->e_type = match->flow.e_type; 
+    ofmatch->e_val1 = match->flow.e_val1; 
 
       
     memset(ofmatch->pad1, '\0', sizeof ofmatch->pad1);
@@ -7294,6 +7304,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         MAY_EVNT_ATTR1  = 1 << 9,
         MAY_EVNT_ATTR2  = 1 << 10,
         MAY_EVNT_TYP    = 1 << 11,
+        MAY_EVNT_VAL1   = 1 << 12,
     } may_match;
 
     struct flow_wildcards wc;
@@ -7326,6 +7337,10 @@ ofputil_normalize_match__(struct match *match, bool may_log)
                 VLOG_DBG("VLOG set MAY_EVNT_TYP %"PRId64"\n",match->flow.e_type);
                  may_match |= MAY_EVNT_TYP | MAY_TP_ADDR; 
             }
+            if(match->flow.e_val1){
+                VLOG_DBG("VLOG set MAY_EVNT_VAL1 %"PRId64"\n",match->flow.e_val1);
+                 may_match |= MAY_EVNT_VAL1 | MAY_TP_ADDR; 
+            }            
                                                         
                                  
            
@@ -7381,6 +7396,11 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.e_type = htonll(0);
     }
+    if (!(may_match & MAY_EVNT_VAL1)) {  /* CEP */
+        VLOG_DBG("VLOG Point 52 - MAY_EVNT_VAL1"); /*CEP*/
+        //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
+        wc.masks.e_val1 = htonll(0);
+    }    
                 
 
     if (!(may_match & MAY_NW_PROTO)) {

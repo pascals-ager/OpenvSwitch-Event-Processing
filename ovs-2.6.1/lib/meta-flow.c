@@ -338,7 +338,11 @@ mf_is_all_wild(const struct mf_field *mf, const struct flow_wildcards *wc)
            return !wc->masks.e_attr2;
     case MFF_EVNT_TYP:
            /*CEP*/
-        return !wc->masks.e_type;                                
+        return !wc->masks.e_type;
+
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           return !wc->masks.e_val1;                                       
        
     case MFF_N_IDS:
     default:
@@ -543,6 +547,9 @@ mf_is_value_valid(const struct mf_field *mf, const union mf_value *value)
     case MFF_EVNT_TYP:
            /*CEP*/
         return true;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+           return true;          
                                    
     case MFF_N_IDS:
    
@@ -803,7 +810,11 @@ mf_get_value(const struct mf_field *mf, const struct flow *flow,
     case MFF_EVNT_TYP:
            /*CEP*/
         value->be64 = flow->e_type;
-        break;                                             
+        break;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+        value->be64 = flow->e_val1;
+           break;                                                     
     case MFF_N_IDS:   
     default:
         OVS_NOT_REACHED();
@@ -1079,7 +1090,11 @@ mf_set_value(const struct mf_field *mf,
         dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_TYP\n"); /*CEP*/
         match_set_event_type(match, value->be64);
         break;
-             
+     case MFF_EVNT_VAL1:
+           /*CEP*/
+        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_VAL1\n"); /*CEP*/
+        match_set_event_val1(match, value->be64);
+        break;            
     case MFF_N_IDS:
     
     default:
@@ -1430,6 +1445,10 @@ mf_set_flow_value(const struct mf_field *mf,
         flow->e_type = value->be64;
            /*CEP*/
         break;
+    case MFF_EVNT_VAL1:
+        flow->e_val1 = value->be64;
+           /*CEP*/
+           break;          
                                                          
     default:
         OVS_NOT_REACHED();
@@ -1776,6 +1795,11 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
         match->wc.masks.e_type = htonll(0);  /*CEP*/ 
         match->flow.e_type = htonll(0);      /*CEP*/    
         break;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+        match->wc.masks.e_val1 = htons(0);  /*CEP*/ 
+        match->flow.e_val1 = htons(0);      /*CEP*/    
+           break;          
                                                         
     case MFF_N_IDS:
     default:
@@ -2020,6 +2044,10 @@ mf_set(const struct mf_field *mf,
            /*CEP*/
         match_set_event_type_masked(match, value->be64, mask->be64);
         break;
+    case MFF_EVNT_VAL1:
+           /*CEP*/
+        match_set_event_val1_masked(match, value->be64, mask->be64);
+           break;          
                                                             
     case MFF_N_IDS:
     default:

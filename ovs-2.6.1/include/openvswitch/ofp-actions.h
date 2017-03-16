@@ -76,6 +76,10 @@
     OFPACT(SET_IP_TTL,      ofpact_ip_ttl,      ofpact, "mod_nw_ttl")   \
     OFPACT(SET_L4_SRC_PORT, ofpact_l4_port,     ofpact, "mod_tp_src")   \
     OFPACT(SET_L4_DST_PORT, ofpact_l4_port,     ofpact, "mod_tp_dst")   \
+    OFPACT(SET_MOV_MIN,     ofpact_attr,        ofpact, "mov_min")      \
+    OFPACT(SET_MOV_MAX,     ofpact_attr,        ofpact, "mov_max")      \
+    OFPACT(SET_MIN,         ofpact_attr,        ofpact, "set_min")      \
+    OFPACT(SET_MAX,         ofpact_attr,        ofpact, "set_max")      \
     OFPACT(REG_MOVE,        ofpact_reg_move,    ofpact, "move")         \
     OFPACT(STACK_PUSH,      ofpact_stack,       ofpact, "push")         \
     OFPACT(STACK_POP,       ofpact_stack,       ofpact, "pop")          \
@@ -456,6 +460,14 @@ struct ofpact_l4_port {
     struct ofpact ofpact;
     uint16_t port;              /* TCP, UDP or SCTP port number. */
     uint8_t  flow_ip_proto;     /* IP proto from corresponding match, or 0 */
+};
+
+/* OFPACT_SET_MOV_MIN, OFPACT_SET_MOV_MAX, OFPACT_SET_MIN, OFPACT_SET_MAX.
+ *
+ * Used for OFPAT10_SET_MOV_MIN, OFPAT10_SET_MOV_MAX, OFPAT10_SET_MIN, OFPAT10_SET_MAX. */
+struct ofpact_attr {
+    struct ofpact ofpact;
+    uint64_t attr;              /* Attribute value. */
 };
 
 /* OFPACT_REG_MOVE.
