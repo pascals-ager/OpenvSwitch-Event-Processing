@@ -285,10 +285,10 @@ odp_execute_set_action(struct dp_packet *packet, const struct nlattr *a)
         break;
     
     case OVS_KEY_ATTR_EVNT:
-        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+        //VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
          break;
     case OVS_KEY_ATTR_EVNT_TYP:
-        VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
+        //VLOG_DBG("VLOG in odp_execute_set_action\n"); /*CEP*/ /*Add later*/
          break;
                                    
     
@@ -402,10 +402,10 @@ odp_execute_masked_set_action(struct dp_packet *packet,
 
 
     case OVS_KEY_ATTR_EVNT:
-        VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
+        //VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
          break;
     case OVS_KEY_ATTR_EVNT_TYP:
-        VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
+        //VLOG_DBG("VLOG in odp_execute_masked_set_action\n"); /*CEP*/ /*Add later*/
          break;
            
 

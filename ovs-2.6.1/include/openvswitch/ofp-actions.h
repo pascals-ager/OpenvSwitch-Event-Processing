@@ -80,6 +80,7 @@
     OFPACT(SET_MOV_MAX,     ofpact_attr,        ofpact, "mov_max")      \
     OFPACT(SET_MIN,         ofpact_attr,        ofpact, "set_min")      \
     OFPACT(SET_MAX,         ofpact_attr,        ofpact, "set_max")      \
+    OFPACT(SET_TYPE,        ofpact_attr,        ofpact, "set_type")      \
     OFPACT(REG_MOVE,        ofpact_reg_move,    ofpact, "move")         \
     OFPACT(STACK_PUSH,      ofpact_stack,       ofpact, "push")         \
     OFPACT(STACK_POP,       ofpact_stack,       ofpact, "pop")          \
@@ -462,9 +463,9 @@ struct ofpact_l4_port {
     uint8_t  flow_ip_proto;     /* IP proto from corresponding match, or 0 */
 };
 
-/* OFPACT_SET_MOV_MIN, OFPACT_SET_MOV_MAX, OFPACT_SET_MIN, OFPACT_SET_MAX.
+/* OFPACT_SET_MOV_MIN, OFPACT_SET_MOV_MAX, OFPACT_SET_MIN, OFPACT_SET_MAX, OFPACT_SET_TYPE.
  *
- * Used for OFPAT10_SET_MOV_MIN, OFPAT10_SET_MOV_MAX, OFPAT10_SET_MIN, OFPAT10_SET_MAX. */
+ * Used for OFPAT10_SET_MOV_MIN, OFPAT10_SET_MOV_MAX, OFPAT10_SET_MIN, OFPAT10_SET_MAX, OFPAT10_SET_TYPE. */
 struct ofpact_attr {
     struct ofpact ofpact;
     uint64_t attr;              /* Attribute value. */

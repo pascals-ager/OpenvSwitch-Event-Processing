@@ -2892,7 +2892,7 @@ format_odp_key_attr(const struct nlattr *a, const struct nlattr *ma,
         format_be64(ds, "eattr2", key->e_attr2, MASK(mask, e_attr2), verbose);
         ds_chomp(ds, ',');
 
-        VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
+        //VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
          break;
      }
     case OVS_KEY_ATTR_EVNT_TYP:{
@@ -2901,7 +2901,7 @@ format_odp_key_attr(const struct nlattr *a, const struct nlattr *ma,
 
         format_be64(ds, "etype", key->e_type, MASK(mask, e_type), verbose);
         ds_chomp(ds, ',');
-        VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
+        //VLOG_DBG("VLOG in format_odp_key_attr\n"); /*CEP*/ /*Add later*/
          break;
     }
 
@@ -4064,7 +4064,7 @@ parse_odp_key_mask_attr(const char *s, const struct simap *port_names,
 {
     ovs_u128 ufid;
     int len;
-    VLOG_DBG("VLOG In parse_odp_key_mask_attr\n"); /*CEP*/
+    //VLOG_DBG("VLOG In parse_odp_key_mask_attr\n"); /*CEP*/
 
     /* Skip UFID. */
     len = odp_ufid_from_string(s, &ufid);
@@ -4303,6 +4303,8 @@ static void put_tp_key(const union ovs_key_tp *, struct flow *);
 //static void get_pyd_key(const struct flow *, struct ovs_key_pyd *); /*cep*/
 static void get_eattr_key(const struct flow *, struct ovs_key_eattr *);
 static void get_etype_key(const struct flow *, struct ovs_key_etype *);
+static void put_eattr_key(const struct ovs_key_eattr *, struct flow * );
+static void put_etype_key(const struct ovs_key_etype *,  struct flow * );
 //static void get_efop_key(const struct flow *, struct ovs_key_efop *);
 //static void get_esop_key(const struct flow *, struct ovs_key_esop *);
 
@@ -4441,17 +4443,17 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
             get_tp_key(data, udp_key);
             
             if(flow->e_attr1 || flow->e_attr2 ){
-                VLOG_DBG("VLOG e_attr1 in flow: %"PRIu64"\n",flow->e_attr1); /*CEP*/
-                VLOG_DBG("VLOG e_attr2 in flow: %"PRIu64"\n",flow->e_attr2); /*CEP*/
-                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); /*CEP*/
+                VLOG_DBG("VLOG e_attr1 in flow: %"PRIu64"\n",htonll(flow->e_attr1)); /*CEP*/
+                VLOG_DBG("VLOG e_attr2 in flow: %"PRIu64"\n",htonll(flow->e_attr2)); /*CEP*/
+                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",htons(flow->tp_dst)); /*CEP*/
                 struct ovs_key_eattr *eattr_key;  /* CEP */
                 eattr_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_EVNT,
                                                sizeof *eattr_key);   /* CEP */ 
                 get_eattr_key(data, eattr_key); /* CEP */
             }
             if(flow->e_type){
-                VLOG_DBG("VLOG e_type in flow: %"PRIu64"\n",flow->e_type); /*CEP*/
-                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); /*CEP*/
+                //VLOG_DBG("VLOG e_type in flow: %"PRIu64"\n",flow->e_type); /*CEP*/
+                //VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",flow->tp_dst); /*CEP*/
                 struct ovs_key_etype *etype_key;  /* CEP */
                 etype_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_EVNT_TYP,
                                                sizeof *etype_key);   /* CEP */ 
@@ -4768,7 +4770,7 @@ check_expectations(uint64_t present_attrs, int out_of_range_attr,
 {
     uint64_t missing_attrs;
     uint64_t extra_attrs;
-
+    VLOG_DBG("VLOG Checking expectations\n");
     missing_attrs = expected_attrs & ~present_attrs;
     if (missing_attrs) {
         static struct vlog_rate_limit rl = VLOG_RATE_LIMIT_INIT(10, 10);
@@ -4963,19 +4965,39 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
             expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_TCP_FLAGS;
             flow->tcp_flags = nl_attr_get_be16(attrs[OVS_KEY_ATTR_TCP_FLAGS]);
         }
-    } else if (src_flow->nw_proto == IPPROTO_UDP
+    } else if (src_flow->nw_proto == IPPROTO_UDP   /*CEP*/
                && (src_flow->dl_type == htons(ETH_TYPE_IP) ||
                    src_flow->dl_type == htons(ETH_TYPE_IPV6))
                && !(src_flow->nw_frag & FLOW_NW_FRAG_LATER)) {
         if (!is_mask) {
+            VLOG_DBG("VLOG In parse_l2_5_onward - is_mask\n");
             expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_UDP;
+            expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_EVNT;
+            expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_EVNT_TYP;
         }
         if (present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_UDP)) {
+            VLOG_DBG("VLOG In parse_l2_5_onward - OVS_KEY_ATTR_UDP\n");
             const union ovs_key_tp *udp_key;
 
             udp_key = nl_attr_get(attrs[OVS_KEY_ATTR_UDP]);
             put_tp_key(udp_key, flow);
             expected_bit = OVS_KEY_ATTR_UDP;
+        }
+        if (present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_EVNT)) {
+            VLOG_DBG("VLOG In parse_l2_5_onward-OVS_KEY_ATTR_EVNT\n");
+            const struct ovs_key_eattr *eattr_key;
+
+            eattr_key = nl_attr_get(attrs[OVS_KEY_ATTR_EVNT]);
+            put_eattr_key(eattr_key, flow);
+            //expected_bit = OVS_KEY_ATTR_EVNT;
+        }
+           if (present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_EVNT_TYP)) {
+            VLOG_DBG("VLOG In parse_l2_5_onward-OVS_KEY_ATTR_EVNT_TYP\n");
+            const struct ovs_key_etype *etype_key;
+
+            etype_key = nl_attr_get(attrs[OVS_KEY_ATTR_EVNT_TYP]);
+            put_etype_key(etype_key, flow);
+            //expected_bit = OVS_KEY_ATTR_EVNT_TYP;
         }
     } else if (src_flow->nw_proto == IPPROTO_SCTP
                && (src_flow->dl_type == htons(ETH_TYPE_IP) ||
@@ -5052,6 +5074,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
         if ((flow->tp_src || flow->tp_dst) && flow->nw_proto != 0xff) {
             return ODP_FIT_ERROR;
         } else {
+            VLOG_DBG("VLOG In parse_l2_5_onward - is_mask && expected_bit != OVS_KEY_ATTR_UNSPEC\n");
             expected_attrs |= UINT64_C(1) << expected_bit;
         }
     }
@@ -5909,6 +5932,18 @@ put_tp_key(const union ovs_key_tp *tp, struct flow *flow)
     flow->tp_dst = tp->tcp.tcp_dst;
 }
 
+static void
+put_eattr_key(const struct ovs_key_eattr *eattr, struct flow *flow)
+{
+    flow->e_attr1 = eattr->e_attr1;
+    flow->e_attr2 = eattr->e_attr2;
+}
+
+static void
+put_etype_key(const struct ovs_key_etype *etype, struct flow *flow)
+{
+    flow->e_type = etype->e_type;
+}
 
 static void
 get_eattr_key(const struct flow *flow, struct ovs_key_eattr *eattr)
@@ -5932,7 +5967,7 @@ commit_set_port_action(const struct flow *flow, struct flow *base_flow,
 {
     enum ovs_key_attr key_type;
     union ovs_key_tp key, mask, base;
-    VLOG_DBG("VLOG In commit_set_port_action\n"); /*CEP*/
+    //VLOG_DBG("VLOG In commit_set_port_action\n"); /*CEP*/
 
     /* Check if 'flow' really has an L3 header. */
     if (!flow->nw_proto) {

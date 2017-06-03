@@ -531,7 +531,7 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
     uint32_t hash;
     unsigned int i;
 
-    VLOG_DBG("VLOG In classifier_replace\n"); /*CEP*/
+    //  VLOG_DBG("VLOG In classifier_replace\n"); /*CEP*/
 
 
 
@@ -541,7 +541,7 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
 
     subtable = find_subtable(cls, rule->match.mask);
     if (!subtable) {
-         VLOG_DBG("VLOG In classifier_replace in !subtable\n"); /*CEP*/
+         // VLOG_DBG("VLOG In classifier_replace in !subtable\n"); /*CEP*/
         subtable = insert_subtable(cls, rule->match.mask);
     }
 
@@ -549,7 +549,7 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
     basis = 0;
     mask_offset = 0;
     for (i = 0; i < subtable->n_indices; i++) {
-        VLOG_DBG("VLOG In classifier_replace in for loop\n"); /*CEP*/ /*minimatch_hash_range does not rely on individual fields*/
+        //VLOG_DBG("VLOG In classifier_replace in for loop\n"); /*CEP*/ /*minimatch_hash_range does not rely on individual fields*/
         ihash[i] = minimatch_hash_range(&rule->match, subtable->index_maps[i],
                                         &mask_offset, &basis);
     }
@@ -562,8 +562,8 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
          *
          * Concurrent readers might miss seeing the rule until this update,
          * which might require being fixed up by revalidation later. */
-    VLOG_DBG("VLOG In classifier_replace !head - This is a new rule!\n"); /*CEP*/ 
-    VLOG_DBG("VLOG The hash value however is %"PRIu32"\n",hash); /*CEP*/ 
+    //VLOG_DBG("VLOG In classifier_replace !head - This is a new rule!\n"); /*CEP*/ 
+    //VLOG_DBG("VLOG The hash value however is %"PRIu32"\n",hash); /*CEP*/ 
     const struct miniflow *mf = rule->match.flow;
     
     struct flow f;
@@ -573,12 +573,12 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
 
     minimask_expand(mm,&fwc);
 
-    VLOG_DBG("VLOG At this point e_attr1 in minimatch is %"PRIu64"\n",f.e_attr1); /*21617821137838080*/
-    VLOG_DBG("VLOG At this point e_attr2 in minimatch is %"PRIu64"\n",fwc.masks.e_attr2); /*18446744073709551615*/
+    //VLOG_DBG("VLOG At this point e_attr1 in minimatch is %"PRIu64"\n",f.e_attr1); /*21617821137838080*/
+    //VLOG_DBG("VLOG At this point e_attr2 in minimatch is %"PRIu64"\n",fwc.masks.e_attr2); /*18446744073709551615*/
 
     
-    VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
-    VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/
+    //VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
+    //VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/
         for (i = 0; i < cls->n_tries; i++) {
             if (subtable->trie_plen[i]) {
                 trie_insert(&cls->tries[i], rule, subtable->trie_plen[i]);
@@ -595,12 +595,12 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
 
             trie_insert_prefix(&subtable->ports_trie, &masked_ports,
                                subtable->ports_mask_len);
-            VLOG_DBG("VLOG Added rule to ports trie\n"); /*CEP*/
+            //VLOG_DBG("VLOG Added rule to ports trie\n"); /*CEP*/
         }
 
         /* Add new node to segment indices. */
         for (i = 0; i < subtable->n_indices; i++) {
-            VLOG_DBG("VLOG Add new node to segment indices\n"); /*CEP*/
+            //VLOG_DBG("VLOG Add new node to segment indices\n"); /*CEP*/
             ccmap_inc(&subtable->indices[i], ihash[i]);
         }
         n_rules = cmap_insert(&subtable->rules, &new->cmap_node, hash);
@@ -699,7 +699,7 @@ classifier_replace(struct classifier *cls, const struct cls_rule *rule,
     cls->n_rules++;
 
     if (cls->publish) {
-        VLOG_DBG("VLOG Calling pvector_publish\n");/*CEP*/
+        //VLOG_DBG("VLOG Calling pvector_publish\n");/*CEP*/
         pvector_publish(&cls->subtables);
     }
 
@@ -2080,7 +2080,7 @@ trie_insert_prefix(rcu_trie_ptr *edge, const ovs_be32 *prefix, int mlen)
         ofs += eqbits;
         if (eqbits < node->n_bits) {
             /* Mismatch, new node needs to be inserted above. */
-            VLOG_DBG("VLOG In trie_insert_prefix new rule inserted above\n"); /*CEP*/
+            //VLOG_DBG("VLOG In trie_insert_prefix new rule inserted above\n"); /*CEP*/
             int old_branch = get_bit_at(node->prefix, eqbits);
             struct trie_node *new_parent;
 
@@ -2106,7 +2106,7 @@ trie_insert_prefix(rcu_trie_ptr *edge, const ovs_be32 *prefix, int mlen)
 
         if (ofs == mlen) {
             /* Full match at the current node, rule needs to be added here. */
-            VLOG_DBG("VLOG In trie_insert_prefix new rule inserted here\n"); /*CEP*/
+            //VLOG_DBG("VLOG In trie_insert_prefix new rule inserted here\n"); /*CEP*/
             node->n_rules++;
             return;
         }

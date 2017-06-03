@@ -4772,7 +4772,7 @@ add_flow_start(struct ofproto *ofproto, struct ofproto_flow_mod *ofm)
     //VLOG("VLOG Flow map:\nVLOG: %llu", cep_map);
     /*CEP*/
 
-    VLOG_DBG("VLOG In add_flow_start\n"); /*CEP*/
+    //VLOG_DBG("VLOG In add_flow_start\n"); /*CEP*/
 
     /* Must check actions while holding ofproto_mutex to avoid a race. */
     error = ofproto_check_ofpacts(ofproto, actions->ofpacts,
@@ -5534,7 +5534,7 @@ handle_flow_mod(struct ofconn *ofconn, const struct ofp_header *oh)
     struct ofpbuf ofpacts;
     enum ofperr error;
 
-    VLOG_DBG("VLOG In ofproto handle_flow_mod"); /*CEP*/
+    //VLOG_DBG("VLOG In ofproto handle_flow_mod"); /*CEP*/
 
     error = reject_slave_controller(ofconn);
     if (error) {
@@ -7805,12 +7805,13 @@ static void
 handle_openflow(struct ofconn *ofconn, const struct ofpbuf *ofp_msg)
     OVS_EXCLUDED(ofproto_mutex)
 {
-    struct ds string = DS_EMPTY_INITIALIZER;
+    /*              struct ds string = DS_EMPTY_INITIALIZER;
                     ds_put_hex(&string, ofp_msg->data, MIN(ofp_msg->size, 200));
                     char *buffer = ds_steal_cstr(&string);
-                    VLOG_DBG("VLOG In handle_openflow, the message is %s\n",buffer);  /*CEP Trying to print the msg*/
+                    VLOG_DBG("VLOG In handle_openflow, the message is %s\n",buffer);  // CEP performance
                     ds_destroy(&string);
                     free(buffer);
+    */
     enum ofperr error = handle_openflow__(ofconn, ofp_msg);
 
     if (error) {
@@ -8253,7 +8254,7 @@ ofproto_rule_insert__(struct ofproto *ofproto, struct rule *rule)
     OVS_REQUIRES(ofproto_mutex)
 {
     const struct rule_actions *actions = rule_get_actions(rule);
-    VLOG_DBG("VLOG In ofproto_rule_insert\n"); /*CEP*/
+    //VLOG_DBG("VLOG In ofproto_rule_insert\n"); /*CEP*/
     const struct miniflow *mf = rule->cr.match.flow;
     
     struct flow f;
@@ -8267,8 +8268,8 @@ ofproto_rule_insert__(struct ofproto *ofproto, struct rule *rule)
 
 
     
-    VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
-    VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/
+    //VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",f.tp_dst);  /*37926*/
+    //VLOG_DBG("VLOG At this point tp_dst in minimatch is %"PRIu16"\n",fwc.masks.tp_dst); /*65535*//*CEP*/
 
     ovs_assert(rule->removed);
 

@@ -329,11 +329,11 @@ int flow_parse_str(const char * tmp, const char *token){
 int flow_extract_str( const char *temp, int length, char * p){
    if(length){
        int i;
-       VLOG_DBG("VLOG temp string here is %s",temp);
+       //VLOG_DBG("VLOG temp string here is %s",temp);
     for (i=0;i<length;i++,temp++){
-        VLOG_DBG("VLOG Iterator i - %d, temp value - %c\n",i,*temp);
+        //VLOG_DBG("VLOG Iterator i - %d, temp value - %c\n",i,*temp);
        *p = *temp;
-       VLOG_DBG("VLOG value of *p - %c\n",*p);
+       //VLOG_DBG("VLOG value of *p - %c\n",*p);
         p++; 
         }
     }
@@ -370,7 +370,7 @@ void flow_string_convert(char *str){
     while (*pr){
     memcpy(ps,pr,2);
     num = (int) strtol(ps, NULL, 16);
-    VLOG_DBG("VLOG num here is %d",num);
+    //VLOG_DBG("VLOG num here is %d",num);
     sprintf(pw, "%d", num);
     pr+=2;
     pw+=2;
@@ -879,7 +879,7 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                              sscanf(data[i],"%"PRIu64"",&event[i]);
                         }
                         
-                        VLOG_DBG("VLOG event[%d] %"PRIu64"\n",i,event[i]);
+                        //VLOG_DBG("VLOG event[%d] %"PRIu64"\n",i,event[i]);
 
                         }
 
@@ -916,20 +916,21 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
                     miniflow_push_be64(mf, e_type, htonll(event[0]));                   
                     miniflow_push_be64(mf, e_attr1, htonll(event[1]));
                     miniflow_push_be64(mf, e_attr2, htonll(event[2]));
-                    miniflow_push_be64(mf, e_val1, htonll(0));
+                    //miniflow_push_be64(mf, e_val1, htonll(0));
 
-            VLOG_DBG("VLOG In flow_extract event[0] - %"PRIu64"\n",event[0]);
-            VLOG_DBG("VLOG In flow_extract htonll event[0] - %"PRIu64"\n",htonll(event[0]));
-            VLOG_DBG("VLOG In flow_extract event[1] - %"PRIu64"\n",event[1]);
-            VLOG_DBG("VLOG In flow_extract htonll event[1] - %"PRIu64"\n",htonll(event[1]));
-            VLOG_DBG("VLOG In flow_extract event[2] - %"PRIu64"\n",event[2]);                                                                                                 
-            VLOG_DBG("VLOG In flow_extract htonll event[2] - %"PRIu64"\n",htonll(event[2]));
+            
+            VLOG_DBG("VLOG In flow_extract  event[0] - %"PRIu64"\n",event[0]);
+            VLOG_DBG("VLOG In flow_extract  event[1] - %"PRIu64"\n",event[1]);
+            VLOG_DBG("VLOG In flow_extract  event[2] - %"PRIu64"\n",event[2]);
+            //VLOG_DBG("VLOG In flow_extract htonll event[1] - %"PRIu64"\n",htonll(event[1]));
+            //VLOG_DBG("VLOG In flow_extract event[2] - %"PRIu64"\n",event[2]);                                                                                                 
+            //VLOG_DBG("VLOG In flow_extract htonll event[2] - %"PRIu64"\n",htonll(event[2]));
 
                     ds_destroy(&string);            
             }
 
-            VLOG_DBG("VLOG In flow_extract udp-src - %d\n",udp->udp_src);
-            VLOG_DBG("VLOG In flow_extract udp-dst - %d\n",udp->udp_dst);
+            //VLOG_DBG("VLOG In flow_extract udp-src - %d\n",udp->udp_src);
+            //VLOG_DBG("VLOG In flow_extract udp-dst - %d\n",udp->udp_dst);
                 miniflow_push_be16(mf, tp_src, udp->udp_src);
                 miniflow_push_be16(mf, tp_dst, udp->udp_dst);
                 miniflow_pad_to_64(mf, tp_dst);

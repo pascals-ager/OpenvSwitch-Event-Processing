@@ -359,42 +359,42 @@ parse_ofp_str__(struct ofputil_flow_mod *fm, int command, char *string,
     while (ofputil_parse_key_value(&string, &name, &value)) {
         const struct protocol *p;
         char *error = NULL;
-        VLOG_DBG("VLOG parse_ofp_str__ Point 0\n");/*CEP*/
+        //VLOG_DBG("VLOG parse_ofp_str__ Point 0\n");/*CEP*/
         if (parse_protocol(name, &p)) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 1\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 1\n");/*CEP*/
             match_set_dl_type(&fm->match, htons(p->dl_type));
             if (p->nw_proto) {
-                VLOG_DBG("VLOG parse_ofp_str__ Point 2\n");/*CEP*/
+                //VLOG_DBG("VLOG parse_ofp_str__ Point 2\n");/*CEP*/
                 match_set_nw_proto(&fm->match, p->nw_proto);
             }
         } else if (fields & F_FLAGS && !strcmp(name, "send_flow_rem")) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 3\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 3\n");/*CEP*/
             fm->flags |= OFPUTIL_FF_SEND_FLOW_REM;
         } else if (fields & F_FLAGS && !strcmp(name, "check_overlap")) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 4\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 4\n");/*CEP*/
             fm->flags |= OFPUTIL_FF_CHECK_OVERLAP;
         } else if (fields & F_FLAGS && !strcmp(name, "reset_counts")) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 5\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 5\n");/*CEP*/
             fm->flags |= OFPUTIL_FF_RESET_COUNTS;
             *usable_protocols &= OFPUTIL_P_OF12_UP;
         } else if (fields & F_FLAGS && !strcmp(name, "no_packet_counts")) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 6\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 6\n");/*CEP*/
             fm->flags |= OFPUTIL_FF_NO_PKT_COUNTS;
             *usable_protocols &= OFPUTIL_P_OF13_UP;
         } else if (fields & F_FLAGS && !strcmp(name, "no_byte_counts")) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 7\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 7\n");/*CEP*/
             fm->flags |= OFPUTIL_FF_NO_BYT_COUNTS;
             *usable_protocols &= OFPUTIL_P_OF13_UP;
         } else if (!strcmp(name, "no_readonly_table")
                    || !strcmp(name, "allow_hidden_fields")) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 8\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 8\n");/*CEP*/
              /* ignore these fields. */
         } else if (mf_from_name(name)) {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 9\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 9\n");/*CEP*/
             error = parse_field(mf_from_name(name), value, &fm->match,
                                 usable_protocols);
         } else {
-            VLOG_DBG("VLOG parse_ofp_str__ Point 10\n");/*CEP*/
+            //VLOG_DBG("VLOG parse_ofp_str__ Point 10\n");/*CEP*/
             if (!*value) {
                 return xasprintf("field %s missing value", name);
             }
@@ -552,7 +552,7 @@ parse_ofp_str(struct ofputil_flow_mod *fm, int command, const char *str_,
 {
     char *string = xstrdup(str_);
     char *error;
-    VLOG_DBG("VLOG In parse_ofp_str\n"); /*CEP*/
+    //VLOG_DBG("VLOG In parse_ofp_str\n"); /*CEP*/
     error = parse_ofp_str__(fm, command, string, usable_protocols);
     if (error) {
         fm->ofpacts = NULL;

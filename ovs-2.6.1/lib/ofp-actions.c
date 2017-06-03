@@ -174,7 +174,10 @@ enum ofp_raw_action_type {
     OFPAT_RAW_SET_MIN,
 
     /* OF1.0(15): ovs_be64. */
-    OFPAT_RAW_SET_MAX,        
+    OFPAT_RAW_SET_MAX,
+
+    /* OF1.0(16): ovs_be64. */
+    OFPAT_RAW_SET_TYPE,  
 
     /* OF1.0(11): struct ofp10_action_enqueue. */
     OFPAT_RAW10_ENQUEUE,
@@ -418,7 +421,8 @@ ofpact_next_flattened(const struct ofpact *ofpact)
     case OFPACT_SET_MOV_MIN:
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
-    case OFPACT_SET_MAX:    
+    case OFPACT_SET_MAX:
+    case OFPACT_SET_TYPE:    
     case OFPACT_REG_MOVE:
     case OFPACT_STACK_PUSH:
     case OFPACT_STACK_POP:
@@ -2063,6 +2067,16 @@ decode_OFPAT_RAW_SET_MIN(ovs_be64 attr,
 }  /*CEP*/
 
 static enum ofperr
+decode_OFPAT_RAW_SET_TYPE(ovs_be64 attr,
+                            enum ofp_version ofp_version OVS_UNUSED,
+                            struct ofpbuf *out)
+{
+    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_TYPE\n");
+    ofpact_put_SET_TYPE(out)->attr = ntohll(attr);
+    return 0;
+}  /*CEP*/    
+
+static enum ofperr
 decode_OFPAT_RAW_SET_MAX(ovs_be64 attr,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
@@ -2118,6 +2132,17 @@ encode_SET_MIN(const struct ofpact_attr *ofpact_attr,
     dzlog_info("DZLOG In encode_SET_MIN ofp-version - %d",ofp_version);
     ofpact_put_raw(out, ofp_version, raw, attr);
 } /*CEP*/
+
+static void
+encode_SET_TYPE(const struct ofpact_attr *ofpact_attr,
+                       enum ofp_version ofp_version, struct ofpbuf *out)
+{
+    //enum mf_field_id field = MFF_EVNT_VAL1;
+    enum ofp_raw_action_type raw = OFPAT_RAW_SET_TYPE;
+    uint64_t attr = ofpact_attr->attr; 
+    dzlog_info("DZLOG In encode_SET_TYPE ofp-version - %d",ofp_version);
+    ofpact_put_raw(out, ofp_version, raw, attr);
+} /*CEP*/    
 
 static void
 encode_SET_MAX(const struct ofpact_attr *ofpact_attr,
@@ -2203,6 +2228,14 @@ parse_SET_MIN(char *arg, struct ofpbuf *ofpacts,
 } /*CEP*/
 
 static char * OVS_WARN_UNUSED_RESULT
+parse_SET_TYPE(char *arg, struct ofpbuf *ofpacts,
+                      enum ofputil_protocol *usable_protocols OVS_UNUSED)
+{
+    dzlog_info("DZLOG In parse_SET_TYPE\n");
+    return str_to_u64(arg, &ofpact_put_SET_TYPE(ofpacts)->attr);
+} /*CEP*/    
+
+static char * OVS_WARN_UNUSED_RESULT
 parse_SET_MAX(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
 {
@@ -2247,7 +2280,12 @@ static void
 format_SET_MAX(const struct ofpact_attr *a, struct ds *s)
 {
     ds_put_format(s, "%sset_max:%s%"PRIu64"", colors.param, colors.end, a->attr);
-}  /*CEP*/    
+}  /*CEP*/
+static void
+format_SET_TYPE(const struct ofpact_attr *a, struct ds *s)
+{
+    ds_put_format(s, "%sset_type:%s%"PRIu64"", colors.param, colors.end, a->attr);
+}  /*CEP*/   
 
 /* Action structure for OFPAT_COPY_FIELD. */
 struct ofp15_action_copy_field {
@@ -6317,6 +6355,7 @@ ofpact_is_set_or_move_action(const struct ofpact *a)
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:
+    case OFPACT_SET_TYPE:
     case OFPACT_SET_MPLS_LABEL:
     case OFPACT_SET_MPLS_TC:
     case OFPACT_SET_MPLS_TTL:
@@ -6393,6 +6432,7 @@ ofpact_is_allowed_in_actions_set(const struct ofpact *a)
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:
+    case OFPACT_SET_TYPE:
     case OFPACT_SET_MPLS_LABEL:
     case OFPACT_SET_MPLS_TC:
     case OFPACT_SET_MPLS_TTL:
@@ -6622,6 +6662,7 @@ ovs_instruction_type_from_ofpact_type(enum ofpact_type type)
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:
+    case OFPACT_SET_TYPE:
     case OFPACT_REG_MOVE:
     case OFPACT_SET_FIELD:
     case OFPACT_STACK_PUSH:
@@ -7127,6 +7168,7 @@ ofpact_check__(enum ofputil_protocol *usable_protocols, struct ofpact *a,
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:
+    case OFPACT_SET_TYPE:
          return 0;   /*CEP*/           
 
     case OFPACT_REG_MOVE:
@@ -7594,6 +7636,7 @@ get_ofpact_map(enum ofp_version version)
         { OFPACT_SET_MOV_MAX, 13},
         { OFPACT_SET_MIN, 14},
         { OFPACT_SET_MAX, 15},
+        { OFPACT_SET_TYPE, 16},
         { 0, -1 },
     };
 
@@ -7730,9 +7773,10 @@ ofpact_outputs_to_port(const struct ofpact *ofpact, ofp_port_t port)
     case OFPACT_SET_MOV_MIN:
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
-    case OFPACT_SET_MAX:
-        return ofpact_get_OUTPUT(ofpact)->port == port;        
-
+    case OFPACT_SET_MAX:{
+        VLOG_DBG("VLOG ofpact_outputs_to_port %"PRIu32"\n",port);    
+        return ofpact_get_OUTPUT(ofpact)->port == port; 
+    }
     case OFPACT_OUTPUT_REG:
     case OFPACT_OUTPUT_TRUNC:
     case OFPACT_BUNDLE:
@@ -7781,6 +7825,7 @@ ofpact_outputs_to_port(const struct ofpact *ofpact, ofp_port_t port)
     case OFPACT_DEBUG_RECIRC:
     case OFPACT_CT:
     case OFPACT_NAT:
+    case OFPACT_SET_TYPE: /*CEP - Moved all 4*/
     default:
         return false;
     }

@@ -132,12 +132,12 @@ ofputil_wildcard_from_ofpfw10(uint32_t ofpfw, struct flow_wildcards *wc)
 
 
     if (!(ofpfw & OFPFW10_EVNT_ATTR1)) {
-        VLOG_DBG("VLOG OFPFW10_EVNT_ATTR1\n");
+        //VLOG_DBG("VLOG OFPFW10_EVNT_ATTR1\n");
         wc->masks.e_attr1 = OVS_BE64_MAX;
     } /*CEP*/ 
 
     if (!(ofpfw & OFPFW10_EVNT_ATTR2)) {
-        VLOG_DBG("VLOG OFPFW10_EVNT_ATTR2\n");
+        //VLOG_DBG("VLOG OFPFW10_EVNT_ATTR2\n");
         wc->masks.e_attr2 = OVS_BE64_MAX;
     } /*CEP*/
            
@@ -175,19 +175,19 @@ ofputil_match_from_ofp10_match(const struct ofp10_match *ofmatch,
                                struct match *match)
 {
     uint32_t ofpfw = ntohl(ofmatch->wildcards) & OFPFW10_ALL;
-    VLOG_DBG("VLOG At this point in ofp_util unsigned ofmatch wildcards is %"PRIu32"\n",ofmatch->wildcards);
-    VLOG_DBG("VLOG At this point in ofp_util signed ofmatch wildcards is %"PRId32"\n",ofmatch->wildcards);
-    VLOG_DBG("VLOG At this point in ofp_util ofpfw is %"PRIu32"\n",ofpfw);
-    VLOG_DBG("VLOG At this point in ofp_util OFPFW10_ALL is %"PRIu32"\n",OFPFW10_ALL);
+    //VLOG_DBG("VLOG At this point in ofp_util unsigned ofmatch wildcards is %"PRIu32"\n",ofmatch->wildcards);
+    //VLOG_DBG("VLOG At this point in ofp_util signed ofmatch wildcards is %"PRId32"\n",ofmatch->wildcards);
+    //VLOG_DBG("VLOG At this point in ofp_util ofpfw is %"PRIu32"\n",ofpfw);
+    //VLOG_DBG("VLOG At this point in ofp_util OFPFW10_ALL is %"PRIu32"\n",OFPFW10_ALL);
 
     /* Initialize match->wc. */
     memset(&match->flow, 0, sizeof match->flow);
     ofputil_wildcard_from_ofpfw10(ofpfw, &match->wc);
 
     
-    VLOG_DBG("VLOG At this point in ofp_util e_attr1 in ofmatch is %"PRIu64"\n",ofmatch->e_attr1);
+    //VLOG_DBG("VLOG At this point in ofp_util e_attr1 in ofmatch is %"PRIu64"\n",ofmatch->e_attr1);
     
-    VLOG_DBG("VLOG At this point in ofp_util e_attr2 in ofmatch is %"PRIu64"\n",ofmatch->e_attr2);    
+    //VLOG_DBG("VLOG At this point in ofp_util e_attr2 in ofmatch is %"PRIu64"\n",ofmatch->e_attr2);    
 
     /* Initialize most of match->flow. */
     match->flow.nw_src = ofmatch->nw_src;
@@ -1706,7 +1706,7 @@ ofputil_decode_flow_mod(struct ofputil_flow_mod *fm,
 
             /* Get the ofp10_flow_mod. */
             ofm = ofpbuf_pull(&b, sizeof *ofm);
-            VLOG_DBG("VLOG - In decode flow_mod\n"); /*CEP*/    
+            //VLOG_DBG("VLOG - In decode flow_mod\n"); /*CEP*/    
             /* Translate the rule. */
             ofputil_match_from_ofp10_match(&ofm->match, &fm->match);
             ofputil_normalize_match(&fm->match);
@@ -2204,7 +2204,7 @@ ofputil_encode_flow_mod(const struct ofputil_flow_mod *fm,
     enum ofp_version version = ofputil_protocol_to_ofp_version(protocol);
     ovs_be16 raw_flags = ofputil_encode_flow_mod_flags(fm->flags, version);
     struct ofpbuf *msg;
-    VLOG_DBG("VLOG in ofputil_encode_flow_mod\n"); /*CEP*/
+    //VLOG_DBG("VLOG in ofputil_encode_flow_mod\n"); /*CEP*/
     switch (protocol) {
     case OFPUTIL_P_OF11_STD:
     case OFPUTIL_P_OF12_OXM:
@@ -2214,7 +2214,7 @@ ofputil_encode_flow_mod(const struct ofputil_flow_mod *fm,
     case OFPUTIL_P_OF16_OXM: {
         struct ofp11_flow_mod *ofm;
         int tailroom;
-        VLOG_DBG("VLOG in ofputil_encode_flow_mod case 1\n"); /*CEP*/ 
+        //VLOG_DBG("VLOG in ofputil_encode_flow_mod case 1\n"); /*CEP*/ 
         tailroom = ofputil_match_typical_len(protocol) + fm->ofpacts_len;
         msg = ofpraw_alloc(OFPRAW_OFPT11_FLOW_MOD, version, tailroom);
         ofm = ofpbuf_put_zeros(msg, sizeof *ofm);
@@ -2258,7 +2258,7 @@ ofputil_encode_flow_mod(const struct ofputil_flow_mod *fm,
     case OFPUTIL_P_OF10_STD:
     case OFPUTIL_P_OF10_STD_TID: {
         struct ofp10_flow_mod *ofm;
-VLOG_DBG("VLOG in ofputil_encode_flow_mod case 2\n"); /*CEP*/
+//VLOG_DBG("VLOG in ofputil_encode_flow_mod case 2\n"); /*CEP*/
         msg = ofpraw_alloc(OFPRAW_OFPT10_FLOW_MOD, OFP10_VERSION,
                            fm->ofpacts_len);
         ofm = ofpbuf_put_zeros(msg, sizeof *ofm);
@@ -2280,7 +2280,7 @@ VLOG_DBG("VLOG in ofputil_encode_flow_mod case 2\n"); /*CEP*/
     case OFPUTIL_P_OF10_NXM_TID: {
         struct nx_flow_mod *nfm;
         int match_len;
-VLOG_DBG("VLOG in ofputil_encode_flow_mod case 3\n"); /*CEP*/
+//VLOG_DBG("VLOG in ofputil_encode_flow_mod case 3\n"); /*CEP*/
         msg = ofpraw_alloc(OFPRAW_NXT_FLOW_MOD, OFP10_VERSION,
                            NXM_TYPICAL_LEN + fm->ofpacts_len);
         nfm = ofpbuf_put_zeros(msg, sizeof *nfm);
@@ -3118,7 +3118,7 @@ ofputil_append_flow_stats_reply(const struct ofputil_flow_stats *fs,
         ofs->packet_count = htonll(unknown_to_zero(fs->packet_count));
         ofs->byte_count = htonll(unknown_to_zero(fs->byte_count));
     } else if (raw == OFPRAW_OFPST10_FLOW_REPLY) {
-        VLOG_DBG("VLOG In ofputil_append_flow_stats_reply - OFPRAW_OFPST10_FLOW_REPLY\n"); /*CEP*/
+        //VLOG_DBG("VLOG In ofputil_append_flow_stats_reply - OFPRAW_OFPST10_FLOW_REPLY\n"); /*CEP*/
         struct ofp10_flow_stats *ofs;
 
         ofpbuf_put_uninit(reply, sizeof *ofs);
@@ -3141,13 +3141,13 @@ ofputil_append_flow_stats_reply(const struct ofputil_flow_stats *fs,
         put_32aligned_be64(&ofs->byte_count,
                            htonll(unknown_to_zero(fs->byte_count)));
     } else if (raw == OFPRAW_NXST_FLOW_REPLY) {
-        VLOG_DBG("VLOG In ofputil_append_flow_stats_reply - OFPRAW_NXST_FLOW_REPLY\n"); /*CEP*/
+        //VLOG_DBG("VLOG In ofputil_append_flow_stats_reply - OFPRAW_NXST_FLOW_REPLY\n"); /*CEP*/
         struct nx_flow_stats *nfs;
         int match_len;
 
         ofpbuf_put_uninit(reply, sizeof *nfs);
         match_len = nx_put_match(reply, &fs->match, 0, 0);
-        VLOG_DBG("VLOG In ofputil_append_flow_stats_reply - OFPRAW_NXST_FLOW_REPLY returns\n"); /*CEP*/
+        //VLOG_DBG("VLOG In ofputil_append_flow_stats_reply - OFPRAW_NXST_FLOW_REPLY returns\n"); /*CEP*/
         ofpacts_put_openflow_actions(fs->ofpacts, fs->ofpacts_len, reply,
                                      version);
         nfs = ofpbuf_at_assert(reply, start_ofs, sizeof *nfs);
@@ -3824,7 +3824,7 @@ ofputil_encode_nx_packet_in(const struct ofputil_packet_in *pin,
     struct nx_packet_in *npi;
     struct ofpbuf *msg;
     size_t match_len;
-    VLOG_DBG("VLOG In ofputil_encode_nx_packet_in\n"); /*CEP*/
+    //VLOG_DBG("VLOG In ofputil_encode_nx_packet_in\n"); /*CEP*/
     /* The final argument is just an estimate of the space required. */
     msg = ofpraw_alloc_xid(OFPRAW_NXT_PACKET_IN, version,
                            htonl(0), NXM_TYPICAL_LEN + 2 + pin->packet_len);
@@ -6696,7 +6696,7 @@ ofputil_append_flow_monitor_request(
     struct nx_flow_monitor_request *nfmr;
     size_t start_ofs;
     int match_len;
-    VLOG_DBG("VLOG In ofputil_append_flow_monitor_request\n"); /*CEP*/
+    //VLOG_DBG("VLOG In ofputil_append_flow_monitor_request\n"); /*CEP*/
     if (!msg->size) {
         ofpraw_put(OFPRAW_NXST_FLOW_MONITOR_REQUEST, OFP10_VERSION, msg);
     }
@@ -6874,7 +6874,7 @@ ofputil_append_flow_update(const struct ofputil_flow_update *update,
     } else {
         struct nx_flow_update_full *nfuf;
         int match_len;
-        VLOG_DBG("VLOG In ofputil_append_flow_update\n"); /*CEP*/
+        //VLOG_DBG("VLOG In ofputil_append_flow_update\n"); /*CEP*/
         ofpbuf_put_zeros(msg, sizeof *nfuf);
         match_len = nx_put_match(msg, update->match, htonll(0), htonll(0));
         ofpacts_put_openflow_actions(update->ofpacts, update->ofpacts_len, msg,
@@ -7309,8 +7309,8 @@ ofputil_normalize_match__(struct match *match, bool may_log)
 
     struct flow_wildcards wc;
 
-    VLOG_DBG("VLOG in ofputil_normalize_match__\n"); /*CEP*/
-    VLOG_DBG("VLOG %d\n",match->flow.tp_dst); /*CEP*/
+    //VLOG_DBG("VLOG in ofputil_normalize_match__\n"); /*CEP*/
+    //VLOG_DBG("VLOG %d\n",match->flow.tp_dst); /*CEP*/
 
 
     /* Figure out what fields may be matched. */
@@ -7323,22 +7323,22 @@ ofputil_normalize_match__(struct match *match, bool may_log)
            
             may_match |= MAY_TP_ADDR;
         } else if(match->flow.nw_proto == IPPROTO_UDP) {       /*CEP*/
-            VLOG_DBG("VLOG Point 2"); /*CEP*/
+            //VLOG_DBG("VLOG Point 2"); /*CEP*/
             may_match |= MAY_TP_ADDR;
             if(match->flow.e_attr1){
-                VLOG_DBG("VLOG set MAY_EVNT_ATTR1  %"PRId64"\n",match->flow.e_attr1);
+                //VLOG_DBG("VLOG set MAY_EVNT_ATTR1  %"PRId64"\n",match->flow.e_attr1);
                  may_match |= MAY_EVNT_ATTR1 | MAY_TP_ADDR; 
             }
             if(match->flow.e_attr2){
-                VLOG_DBG("VLOG set MAY_EVNT_ATTR2 %"PRId64"\n",match->flow.e_attr2);
+                //VLOG_DBG("VLOG set MAY_EVNT_ATTR2 %"PRId64"\n",match->flow.e_attr2);
                  may_match |= MAY_EVNT_ATTR2 | MAY_TP_ADDR; 
             }
             if(match->flow.e_type){
-                VLOG_DBG("VLOG set MAY_EVNT_TYP %"PRId64"\n",match->flow.e_type);
+                //VLOG_DBG("VLOG set MAY_EVNT_TYP %"PRId64"\n",match->flow.e_type);
                  may_match |= MAY_EVNT_TYP | MAY_TP_ADDR; 
             }
             if(match->flow.e_val1){
-                VLOG_DBG("VLOG set MAY_EVNT_VAL1 %"PRId64"\n",match->flow.e_val1);
+                //VLOG_DBG("VLOG set MAY_EVNT_VAL1 %"PRId64"\n",match->flow.e_val1);
                  may_match |= MAY_EVNT_VAL1 | MAY_TP_ADDR; 
             }            
                                                         
@@ -7346,7 +7346,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
            
         }
     } else if (match->flow.dl_type == htons(ETH_TYPE_IPV6)) {
-        VLOG_DBG("VLOG Point YYY"); /*CEP*/
+        //VLOG_DBG("VLOG Point YYY"); /*CEP*/
         may_match = MAY_NW_PROTO | MAY_IPVx | MAY_IPV6;
         if (match->flow.nw_proto == IPPROTO_TCP ||
             match->flow.nw_proto == IPPROTO_UDP ||
@@ -7362,7 +7362,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
         }
     } else if (match->flow.dl_type == htons(ETH_TYPE_ARP) ||
                match->flow.dl_type == htons(ETH_TYPE_RARP)) {
-        VLOG_DBG("VLOG Point ZZZ"); /*CEP*/
+        //VLOG_DBG("VLOG Point ZZZ"); /*CEP*/
         may_match = MAY_NW_PROTO | MAY_NW_ADDR | MAY_ARP_SHA | MAY_ARP_THA;
     } else if (eth_type_mpls(match->flow.dl_type)) {
         may_match = MAY_MPLS;
@@ -7373,31 +7373,31 @@ ofputil_normalize_match__(struct match *match, bool may_log)
     /* Clear the fields that may not be matched. */
     wc = match->wc;
     if (!(may_match & MAY_NW_ADDR)) {
-        VLOG_DBG("VLOG Point 3 - MAY_NW_ADDR"); /*CEP*/
+        //VLOG_DBG("VLOG Point 3 - MAY_NW_ADDR"); /*CEP*/
         wc.masks.nw_src = wc.masks.nw_dst = htonl(0);
     }
     if (!(may_match & MAY_TP_ADDR)) {
-        VLOG_DBG("VLOG Point 4 - MAY_TP_ADDR"); /*CEP*/
+        //VLOG_DBG("VLOG Point 4 - MAY_TP_ADDR"); /*CEP*/
         wc.masks.tp_src = wc.masks.tp_dst = htons(0);
     }
 
     if (!(may_match & MAY_EVNT_ATTR1)) {  /* CEP */
-        VLOG_DBG("VLOG Point 51 - MAY_EVNT_ATTR1"); /*CEP*/
+        //VLOG_DBG("VLOG Point 51 - MAY_EVNT_ATTR1"); /*CEP*/
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.e_attr1 = htonll(0);
     }
     if (!(may_match & MAY_EVNT_ATTR2)) {  /* CEP */
-        VLOG_DBG("VLOG Point 61 - MAY_EVNT_ATTR2"); /*CEP*/
+        //VLOG_DBG("VLOG Point 61 - MAY_EVNT_ATTR2"); /*CEP*/
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.e_attr2 = htonll(0);
     }
     if (!(may_match & MAY_EVNT_TYP)) {  /* CEP */
-        VLOG_DBG("VLOG Point 54 - MAY_EVNT_TYP"); /*CEP*/
+        //VLOG_DBG("VLOG Point 54 - MAY_EVNT_TYP"); /*CEP*/
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.e_type = htonll(0);
     }
     if (!(may_match & MAY_EVNT_VAL1)) {  /* CEP */
-        VLOG_DBG("VLOG Point 52 - MAY_EVNT_VAL1"); /*CEP*/
+        //VLOG_DBG("VLOG Point 52 - MAY_EVNT_VAL1"); /*CEP*/
         //wc.masks.tp_src = wc.masks.tp_dst = htons(0);
         wc.masks.e_val1 = htonll(0);
     }    
@@ -7429,7 +7429,7 @@ ofputil_normalize_match__(struct match *match, bool may_log)
 
     /* Log any changes. */
     if (!flow_wildcards_equal(&wc, &match->wc)) {
-        VLOG_DBG("VLOG Point 7 - flow_wildcards_equals"); /*CEP*/
+        //VLOG_DBG("VLOG Point 7 - flow_wildcards_equals"); /*CEP*/
         bool log = may_log && !VLOG_DROP_INFO(&bad_ofmsg_rl);
         char *pre = log ? match_to_string(match, OFP_DEFAULT_PRIORITY) : NULL;
 
@@ -10775,6 +10775,6 @@ ofputil_decode_table_status(const struct ofp_header *oh,
 int
 ofputil_dump_vlog(){
 
-    VLOG_DBG("VLOG In ofputil_dump_vlog \n");
+    //VLOG_DBG("VLOG In ofputil_dump_vlog \n");
     return 0;
 }

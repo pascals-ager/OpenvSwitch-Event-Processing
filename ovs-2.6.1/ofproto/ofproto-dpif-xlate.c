@@ -2482,9 +2482,11 @@ xlate_normal(struct xlate_ctx *ctx)
 
     /* Learn source MAC. */
     if (ctx->xin->may_learn) {
+        //VLOG_DBG("VLOG learning mac address \n");
         update_learning_table(ctx->xbridge, flow, wc, vlan, in_xbundle);
     }
     if (ctx->xin->xcache) {
+        //VLOG_DBG("VLOG xlate cache add entry \n");
         struct xc_entry *entry;
 
         /* Save enough info to update mac learning table later. */
@@ -2584,23 +2586,29 @@ xlate_normal(struct xlate_ctx *ctx)
         }
         ovs_rwlock_unlock(&ms->rwlock);
     } else {
+        //VLOG_DBG("VLOG snooping not enabled \n");
         ovs_rwlock_rdlock(&ctx->xbridge->ml->rwlock);
         mac = mac_learning_lookup(ctx->xbridge->ml, flow->dl_dst, vlan);
         mac_port = mac ? mac_entry_get_port(ctx->xbridge->ml, mac) : NULL;
         ovs_rwlock_unlock(&ctx->xbridge->ml->rwlock);
-
+         
         if (mac_port) {
+            VLOG_DBG("VLOG mac_port \n");
             struct xlate_cfg *xcfg = ovsrcu_get(struct xlate_cfg *, &xcfgp);
             struct xbundle *mac_xbundle = xbundle_lookup(xcfg, mac_port);
             if (mac_xbundle && mac_xbundle != in_xbundle) {
+                VLOG_DBG("VLOG forwarding to learned port \n");
                 xlate_report(ctx, "forwarding to learned port");
                 output_normal(ctx, mac_xbundle, vlan);
             } else if (!mac_xbundle) {
+                VLOG_DBG("VLOG learned port is unknown, dropping \n");
                 xlate_report(ctx, "learned port is unknown, dropping");
             } else {
+                VLOG_DBG("VLOG learned port is input port, dropping \n");
                 xlate_report(ctx, "learned port is input port, dropping");
             }
         } else {
+            VLOG_DBG("VLOG no learned MAC for destination, flooding \n");
             xlate_report(ctx, "no learned MAC for destination, flooding");
             xlate_normal_flood(ctx, in_xbundle, vlan);
         }
@@ -3969,31 +3977,34 @@ xlate_output_action(struct xlate_ctx *ctx,
     ofp_port_t prev_nf_output_iface = ctx->nf_output_iface;
 
     ctx->nf_output_iface = NF_OUT_DROP;
-    VLOG_DBG("VLOG In xlate_output_action\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action\n"); /*CEP*/
     switch (port) {
     case OFPP_IN_PORT:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_IN_PORT\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_IN_PORT\n"); /*CEP*/
         compose_output_action(ctx, ctx->xin->flow.in_port.ofp_port, NULL);
         break;
     case OFPP_TABLE:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_TABLE\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_TABLE\n"); /*CEP*/
         xlate_table_action(ctx, ctx->xin->flow.in_port.ofp_port,
                            0, may_packet_in, true);
         break;
-    case OFPP_NORMAL:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_NORMAL\n"); /*CEP*/
+    case OFPP_NORMAL:{    
+    if(ctx->xin->may_forward){
+        VLOG_DBG("VLOG In xlate_output_action OFPP_NORMAL\n"); /*CEP*/
         xlate_normal(ctx);
+        }
         break;
+    }
     case OFPP_FLOOD:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_FLOOD\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_FLOOD\n"); /*CEP*/
         flood_packets(ctx,  false);
         break;
     case OFPP_ALL:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_ALL\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_ALL\n"); /*CEP*/
         flood_packets(ctx, true);
         break;
     case OFPP_CONTROLLER:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_CONTROLLER\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_CONTROLLER\n"); /*CEP*/
         execute_controller_action(ctx, max_len,
                                   (ctx->in_group ? OFPR_GROUP
                                    : ctx->in_action_set ? OFPR_ACTION_SET
@@ -4005,7 +4016,7 @@ xlate_output_action(struct xlate_ctx *ctx,
         break;
     case OFPP_LOCAL:
     default:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_LOCAL\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_LOCAL\n"); /*CEP*/
         if (port != ctx->xin->flow.in_port.ofp_port) {
             compose_output_action(ctx, port, NULL);
         } else {
@@ -4015,11 +4026,14 @@ xlate_output_action(struct xlate_ctx *ctx,
     }
 
     if (prev_nf_output_iface == NF_OUT_FLOOD) {
+         VLOG_DBG("VLOG In xlate_output_action prev_nf_output_iface == NF_OUT_FLOOD\n");
         ctx->nf_output_iface = NF_OUT_FLOOD;
     } else if (ctx->nf_output_iface == NF_OUT_DROP) {
+        VLOG_DBG("VLOG In xlate_output_action ctx->nf_output_iface == NF_OUT_DROP\n");
         ctx->nf_output_iface = prev_nf_output_iface;
     } else if (prev_nf_output_iface != NF_OUT_DROP &&
                ctx->nf_output_iface != NF_OUT_FLOOD) {
+        VLOG_DBG("VLOG In xlate_output_action prev_nf_output_iface != NF_OUT_DROP and ctx->nf_output_iface != NF_OUT_FLOOD\n");
         ctx->nf_output_iface = NF_OUT_MULTI;
     }
 }
@@ -4472,7 +4486,8 @@ freeze_unroll_actions(const struct ofpact *a, const struct ofpact *end,
         case OFPACT_SET_MOV_MIN:
         case OFPACT_SET_MOV_MAX:
         case OFPACT_SET_MIN:
-        case OFPACT_SET_MAX:        
+        case OFPACT_SET_MAX:
+        case OFPACT_SET_TYPE:        
         case OFPACT_SET_QUEUE:
         case OFPACT_POP_QUEUE:
         case OFPACT_PUSH_MPLS:
@@ -4722,6 +4737,7 @@ recirc_for_mpls(const struct ofpact *a, struct xlate_ctx *ctx)
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:
+    case OFPACT_SET_TYPE:
     case OFPACT_REG_MOVE:
     case OFPACT_STACK_PUSH:
     case OFPACT_STACK_POP:
@@ -4764,8 +4780,12 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
 {
     struct flow_wildcards *wc = ctx->wc;
     struct flow *flow = &ctx->xin->flow;
+   dummyMaxItem = (struct MaxItem*) malloc(sizeof(struct MaxItem));
+   dummyMaxItem->data = -1;  
+   dummyMaxItem->key = -1;
     const struct ofpact *a;
-    VLOG_DBG("VLOG in do_xlate_actions\n"); /*CEP*/
+
+    //VLOG_DBG("VLOG in do_xlate_actions\n"); /*CEP*/
 
     if (ovs_native_tunneling_is_on(ctx->xbridge->ofproto)) {
         tnl_neigh_snoop(flow, wc, ctx->xbridge->name);
@@ -4777,9 +4797,9 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
         const struct ofpact_metadata *metadata;
         const struct ofpact_set_field *set_field;
         const struct mf_field *mf;
-        VLOG_DBG("VLOG in do_xlate_actions for each OFPACT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions for each OFPACT\n"); /*CEP*/
         if (ctx->error) {
-            VLOG_DBG("VLOG in do_xlate_actions ctx->error\n"); /*CEP*/
+            //VLOG_DBG("VLOG in do_xlate_actions ctx->error\n"); /*CEP*/
             break;
         }
 
@@ -4789,23 +4809,23 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             /* Check if need to store the remaining actions for later
              * execution. */
             if (ctx->freezing) {
-                VLOG_DBG("VLOG in do_xlate_actions ctx->freezing\n"); /*CEP*/
+                //VLOG_DBG("VLOG in do_xlate_actions ctx->freezing\n"); /*CEP*/
                 freeze_unroll_actions(a, ofpact_end(ofpacts, ofpacts_len),
                                       ctx);
             }
-            VLOG_DBG("VLOG in do_xlate_actions ctx->exit\n"); /*CEP*/
+            //VLOG_DBG("VLOG in do_xlate_actions ctx->exit\n"); /*CEP*/
             break;
         }
 
         switch (a->type) {
         case OFPACT_OUTPUT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_OUTPUT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_OUTPUT\n"); /*CEP*/
             xlate_output_action(ctx, ofpact_get_OUTPUT(a)->port,
                                 ofpact_get_OUTPUT(a)->max_len, true);
             break;
 
         case OFPACT_GROUP:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_GROUP\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_GROUP\n"); /*CEP*/
             if (xlate_group_action(ctx, ofpact_get_GROUP(a)->group_id)) {
                 /* Group could not be found. */
 
@@ -4816,7 +4836,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_CONTROLLER:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_CONTROLLER\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_CONTROLLER\n"); /*CEP*/
             controller = ofpact_get_CONTROLLER(a);
             if (controller->pause) {
                 ctx->pause = controller;
@@ -4833,14 +4853,14 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_ENQUEUE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_ENQUEUE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_ENQUEUE\n"); /*CEP*/
             memset(&wc->masks.skb_priority, 0xff,
                    sizeof wc->masks.skb_priority);
             xlate_enqueue_action(ctx, ofpact_get_ENQUEUE(a));
             break;
 
         case OFPACT_SET_VLAN_VID:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_VLAN_VID\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_VLAN_VID\n"); /*CEP*/
             wc->masks.vlan_tci |= htons(VLAN_VID_MASK | VLAN_CFI);
             if (flow->vlan_tci & htons(VLAN_CFI) ||
                 ofpact_get_SET_VLAN_VID(a)->push_vlan_if_needed) {
@@ -4851,7 +4871,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_VLAN_PCP:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_VLAN_PCP\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_VLAN_PCP\n"); /*CEP*/
             wc->masks.vlan_tci |= htons(VLAN_PCP_MASK | VLAN_CFI);
             if (flow->vlan_tci & htons(VLAN_CFI) ||
                 ofpact_get_SET_VLAN_PCP(a)->push_vlan_if_needed) {
@@ -4862,32 +4882,32 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_STRIP_VLAN:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_STRIP_VLAN\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_STRIP_VLAN\n"); /*CEP*/
             memset(&wc->masks.vlan_tci, 0xff, sizeof wc->masks.vlan_tci);
             flow->vlan_tci = htons(0);
             break;
 
         case OFPACT_PUSH_VLAN:
             /* XXX 802.1AD(QinQ) */
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_PUSH_VLAN\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_PUSH_VLAN\n"); /*CEP*/
             memset(&wc->masks.vlan_tci, 0xff, sizeof wc->masks.vlan_tci);
             flow->vlan_tci = htons(VLAN_CFI);
             break;
 
         case OFPACT_SET_ETH_SRC:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_ETH_SRC\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_ETH_SRC\n"); /*CEP*/
             WC_MASK_FIELD(wc, dl_src);
             flow->dl_src = ofpact_get_SET_ETH_SRC(a)->mac;
             break;
 
         case OFPACT_SET_ETH_DST:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_ETH_DST\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_ETH_DST\n"); /*CEP*/
             WC_MASK_FIELD(wc, dl_dst);
             flow->dl_dst = ofpact_get_SET_ETH_DST(a)->mac;
             break;
 
         case OFPACT_SET_IPV4_SRC:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IPV4_SRC\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IPV4_SRC\n"); /*CEP*/
             if (flow->dl_type == htons(ETH_TYPE_IP)) {
                 memset(&wc->masks.nw_src, 0xff, sizeof wc->masks.nw_src);
                 flow->nw_src = ofpact_get_SET_IPV4_SRC(a)->ipv4;
@@ -4895,7 +4915,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_IPV4_DST:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IPV4_DST\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IPV4_DST\n"); /*CEP*/
             if (flow->dl_type == htons(ETH_TYPE_IP)) {
                 memset(&wc->masks.nw_dst, 0xff, sizeof wc->masks.nw_dst);
                 flow->nw_dst = ofpact_get_SET_IPV4_DST(a)->ipv4;
@@ -4903,7 +4923,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_IP_DSCP:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IP_DSCP\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IP_DSCP\n"); /*CEP*/
             if (is_ip_any(flow)) {
                 wc->masks.nw_tos |= IP_DSCP_MASK;
                 flow->nw_tos &= ~IP_DSCP_MASK;
@@ -4912,7 +4932,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_IP_ECN:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IP_ECN\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IP_ECN\n"); /*CEP*/
             if (is_ip_any(flow)) {
                 wc->masks.nw_tos |= IP_ECN_MASK;
                 flow->nw_tos &= ~IP_ECN_MASK;
@@ -4921,7 +4941,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_IP_TTL:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IP_TTL\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_IP_TTL\n"); /*CEP*/
             if (is_ip_any(flow)) {
                 wc->masks.nw_ttl = 0xff;
                 flow->nw_ttl = ofpact_get_SET_IP_TTL(a)->ttl;
@@ -4929,7 +4949,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_L4_SRC_PORT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_L4_SRC_PORT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_L4_SRC_PORT\n"); /*CEP*/
             if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
                 memset(&wc->masks.nw_proto, 0xff, sizeof wc->masks.nw_proto);
                 memset(&wc->masks.tp_src, 0xff, sizeof wc->masks.tp_src);
@@ -4938,7 +4958,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_SET_L4_DST_PORT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_L4_DST_PORT\n"); /*CEP*/
+            VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_L4_DST_PORT\n"); /*CEP*/
             if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
                 memset(&wc->masks.nw_proto, 0xff, sizeof wc->masks.nw_proto);
                 memset(&wc->masks.tp_dst, 0xff, sizeof wc->masks.tp_dst);
@@ -4946,19 +4966,19 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             }
             break;
         case OFPACT_SET_MOV_MIN:{
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN\n"); /*CEP*/
         if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
                 memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
                 
                 flow->e_val1 = htonll(ofpact_get_SET_MOV_MIN(a)->attr);
             }
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            //VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            //VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
             if(htonll(flow->e_attr1) < htonll(flow->e_val1)){
                 
             }
             else{
-                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN else loop\n"); /*CEP*/
+                //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN else loop\n"); /*CEP*/
                 //parse and encode attr
                 //enum ofp_raw_action_type raw = OFPAT_RAW_SET_MOV_MIN;
                 //enum ofp_version ofp_version = OFP10_VERSION;
@@ -4977,62 +4997,78 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;    
         }
         case OFPACT_SET_MOV_MAX:{
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX\n"); /*CEP*/
-        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
-                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
-                
-                flow->e_val1 = htonll(ofpact_get_SET_MOV_MAX(a)->attr);
-            }
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
-            if(htonll(flow->e_attr1) > htonll(flow->e_val1)){
-                
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX\n"); /*CEP*/
+        mov_max= ofpact_get_SET_MOV_MAX(a)->attr;  /*set by rule*/
+            uint64_t cur_max;
+        item= search_max(type); /* whats in hash table*/
+        if(item!=NULL){                           
+                 cur_max = item->data;
+                    if(htonll(flow->e_attr1) > cur_max){
+                    delete_max(item);
+                    insert_max(type, htonll(flow->e_attr1));
+                        }
+                }                     
+        else {
+            cur_max = mov_max;
+            insert_max(type, mov_max);       
+         }
+            
+            VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX mov_max is %"PRIu64"\n",mov_max);
+            VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX cur_max is %"PRIu64"\n",cur_max);
+            if(htonll(flow->e_attr1) < cur_max){
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX -DROP\n");
             }
             else{
+                 VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX -NORMAL\n");
                 xlate_normal(ctx);
                  
             }/*CEP*/ 
             break;   
         }
+
+        case OFPACT_SET_TYPE:{
+            type = htonll(ofpact_get_SET_TYPE(a)->attr);
+            break;
+        }
+
         case OFPACT_SET_MIN:{
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN\n"); /*CEP*/
-        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN\n"); /*CEP*/
+        /*if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
                 memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
                 
                 flow->e_val1 = htonll(ofpact_get_SET_MIN(a)->attr);
-            }
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
-            if(htonll(flow->e_attr1) <= htonll(flow->e_val1)){
-                
-            }
-            else{
+            } */
+            //VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            //VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            if(htonll(flow->e_attr1) >= ofpact_get_SET_MIN(a)->attr){
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN - NORMAL\n"); /*CEP*/
                 xlate_normal(ctx);
-                
+                break;
             }
+               VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN - DROP\n"); /*CEP*/ 
             break;/*CEP*/      
         }
         case OFPACT_SET_MAX:{
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX\n"); /*CEP*/
-        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX\n"); /*CEP*/
+       /* if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
                 memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
                 
                 flow->e_val1 = htonll(ofpact_get_SET_MAX(a)->attr);
-            }
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
-            if(htonll(flow->e_attr1) >= htonll(flow->e_val1)){
-                
-            }
-            else{
+            } */
+
+            //VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
+            //VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+            if(htonll(flow->e_attr1) <= ofpact_get_SET_MAX(a)->attr){
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX - NORMAL\n"); /*CEP*/
                 xlate_normal(ctx);
-                 
-            }/*CEP*/  
+                break;
+            }
+               VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX - DROP\n"); /*CEP*/
             break;    
         }
 
         case OFPACT_RESUBMIT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_RESUBMIT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_RESUBMIT\n"); /*CEP*/
             /* Freezing complicates resubmit.  Some action in the flow
              * entry found by resubmit might trigger freezing.  If that
              * happens, then we do not want to execute the resubmit again after
@@ -5044,32 +5080,32 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             continue;
 
         case OFPACT_SET_TUNNEL:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_TUNNEL\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_TUNNEL\n"); /*CEP*/
             flow->tunnel.tun_id = htonll(ofpact_get_SET_TUNNEL(a)->tun_id);
             break;
 
         case OFPACT_SET_QUEUE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_QUEUE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_QUEUE\n"); /*CEP*/
             memset(&wc->masks.skb_priority, 0xff,
                    sizeof wc->masks.skb_priority);
             xlate_set_queue_action(ctx, ofpact_get_SET_QUEUE(a)->queue_id);
             break;
 
         case OFPACT_POP_QUEUE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_POP_QUEUE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_POP_QUEUE\n"); /*CEP*/
             memset(&wc->masks.skb_priority, 0xff,
                    sizeof wc->masks.skb_priority);
             flow->skb_priority = ctx->orig_skb_priority;
             break;
 
         case OFPACT_REG_MOVE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_REG_MOVE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_REG_MOVE\n"); /*CEP*/
             mf_subfield_copy(&ofpact_get_REG_MOVE(a)->src,
                              &ofpact_get_REG_MOVE(a)->dst, flow, wc);
             break;
 
         case OFPACT_SET_FIELD:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_FIELD\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_FIELD\n"); /*CEP*/
             set_field = ofpact_get_SET_FIELD(a);
             mf = set_field->field;
 
@@ -5083,52 +5119,52 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_STACK_PUSH:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_STACK_PUSH\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_STACK_PUSH\n"); /*CEP*/
             nxm_execute_stack_push(ofpact_get_STACK_PUSH(a), flow, wc,
                                    &ctx->stack);
             break;
 
         case OFPACT_STACK_POP:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_STACK_POP\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_STACK_POP\n"); /*CEP*/
             nxm_execute_stack_pop(ofpact_get_STACK_POP(a), flow, wc,
                                   &ctx->stack);
             break;
 
         case OFPACT_PUSH_MPLS:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_PUSH_MPLS\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_PUSH_MPLS\n"); /*CEP*/
             compose_mpls_push_action(ctx, ofpact_get_PUSH_MPLS(a));
             break;
 
         case OFPACT_POP_MPLS:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_POP_MPLS\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_POP_MPLS\n"); /*CEP*/
             compose_mpls_pop_action(ctx, ofpact_get_POP_MPLS(a)->ethertype);
             break;
 
         case OFPACT_SET_MPLS_LABEL:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MPLS_LABEL\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MPLS_LABEL\n"); /*CEP*/
             compose_set_mpls_label_action(
                 ctx, ofpact_get_SET_MPLS_LABEL(a)->label);
             break;
 
         case OFPACT_SET_MPLS_TC:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MPLS_TC\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MPLS_TC\n"); /*CEP*/
             compose_set_mpls_tc_action(ctx, ofpact_get_SET_MPLS_TC(a)->tc);
             break;
 
         case OFPACT_SET_MPLS_TTL:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MPLS_TTL\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MPLS_TTL\n"); /*CEP*/
             compose_set_mpls_ttl_action(ctx, ofpact_get_SET_MPLS_TTL(a)->ttl);
             break;
 
         case OFPACT_DEC_MPLS_TTL:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_DEC_MPLS_TTL\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_DEC_MPLS_TTL\n"); /*CEP*/
             if (compose_dec_mpls_ttl_action(ctx)) {
                 return;
             }
             break;
 
         case OFPACT_DEC_TTL:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_DEC_TTL\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_DEC_TTL\n"); /*CEP*/
             wc->masks.nw_ttl = 0xff;
             if (compose_dec_ttl(ctx, ofpact_get_DEC_TTL(a))) {
                 return;
@@ -5136,33 +5172,33 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
 
         case OFPACT_NOTE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_NOTE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_NOTE\n"); /*CEP*/
             /* Nothing to do. */
             break;
 
         case OFPACT_MULTIPATH:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_MULTIPATH\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_MULTIPATH\n"); /*CEP*/
             multipath_execute(ofpact_get_MULTIPATH(a), flow, wc);
             break;
 
         case OFPACT_BUNDLE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_BUNDLE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_BUNDLE\n"); /*CEP*/
             xlate_bundle_action(ctx, ofpact_get_BUNDLE(a));
             break;
 
         case OFPACT_OUTPUT_REG:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_OUTPUT_REG\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_OUTPUT_REG\n"); /*CEP*/
             xlate_output_reg_action(ctx, ofpact_get_OUTPUT_REG(a));
             break;
 
         case OFPACT_OUTPUT_TRUNC:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_OUTPUT_TRUNC\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_OUTPUT_TRUNC\n"); /*CEP*/
             xlate_output_trunc_action(ctx, ofpact_get_OUTPUT_TRUNC(a)->port,
                                 ofpact_get_OUTPUT_TRUNC(a)->max_len);
             break;
 
         case OFPACT_LEARN:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_LEARN\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_LEARN\n"); /*CEP*/
             xlate_learn_action(ctx, ofpact_get_LEARN(a));
             break;
 
@@ -5171,19 +5207,19 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
              * kind of "set membership match".  Such a flow should not actually
              * get executed, but it could via, say, a "packet-out", even though
              * that wouldn't be useful.  Log it to help debugging. */
-            VLOG_DBG("VLOG in do_xlate_actions OFPACT_CONJUNCTION\n"); /*CEP*/
+            //VLOG_DBG("VLOG in do_xlate_actions OFPACT_CONJUNCTION\n"); /*CEP*/
             static struct vlog_rate_limit rl = VLOG_RATE_LIMIT_INIT(1, 1);
             VLOG_INFO_RL(&rl, "executing no-op conjunction action");
             break;
         }
 
         case OFPACT_EXIT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_EXIT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_EXIT\n"); /*CEP*/
             ctx->exit = true;
             break;
 
         case OFPACT_UNROLL_XLATE: {
-            VLOG_DBG("VLOG in do_xlate_actions OFPACT_UNROLL_XLATE\n"); /*CEP*/
+            //VLOG_DBG("VLOG in do_xlate_actions OFPACT_UNROLL_XLATE\n"); /*CEP*/
             struct ofpact_unroll_xlate *unroll = ofpact_get_UNROLL_XLATE(a);
 
             /* Restore translation context data that was stored earlier. */
@@ -5192,37 +5228,37 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;
         }
         case OFPACT_FIN_TIMEOUT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_FIN_TIMEOUT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_FIN_TIMEOUT\n"); /*CEP*/
             memset(&wc->masks.nw_proto, 0xff, sizeof wc->masks.nw_proto);
             xlate_fin_timeout(ctx, ofpact_get_FIN_TIMEOUT(a));
             break;
 
         case OFPACT_CLEAR_ACTIONS:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_CLEAR_ACTIONS\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_CLEAR_ACTIONS\n"); /*CEP*/
             ofpbuf_clear(&ctx->action_set);
             ctx->xin->flow.actset_output = OFPP_UNSET;
             ctx->action_set_has_group = false;
             break;
 
         case OFPACT_WRITE_ACTIONS:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_WRITE_ACTIONS\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_WRITE_ACTIONS\n"); /*CEP*/
             xlate_write_actions(ctx, ofpact_get_WRITE_ACTIONS(a));
             break;
 
         case OFPACT_WRITE_METADATA:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_WRITE_METADATA\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_WRITE_METADATA\n"); /*CEP*/
             metadata = ofpact_get_WRITE_METADATA(a);
             flow->metadata &= ~metadata->mask;
             flow->metadata |= metadata->metadata & metadata->mask;
             break;
 
         case OFPACT_METER:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_METER\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_METER\n"); /*CEP*/
             /* Not implemented yet. */
             break;
 
         case OFPACT_GOTO_TABLE: {
-            VLOG_DBG("VLOG in do_xlate_actions OFPACT_GOTO_TABLE\n"); /*CEP*/
+            //VLOG_DBG("VLOG in do_xlate_actions OFPACT_GOTO_TABLE\n"); /*CEP*/
             struct ofpact_goto_table *ogt = ofpact_get_GOTO_TABLE(a);
 
             ovs_assert(ctx->table_id < ogt->table_id);
@@ -5233,23 +5269,23 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
         }
 
         case OFPACT_SAMPLE:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_SAMPLE\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SAMPLE\n"); /*CEP*/
             xlate_sample_action(ctx, ofpact_get_SAMPLE(a));
             break;
 
         case OFPACT_CT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_CT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_CT\n"); /*CEP*/
             compose_conntrack_action(ctx, ofpact_get_CT(a));
             break;
 
         case OFPACT_NAT:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_NAT\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_NAT\n"); /*CEP*/
             /* This will be processed by compose_conntrack_action(). */
             ctx->ct_nat_action = ofpact_get_NAT(a);
             break;
 
         case OFPACT_DEBUG_RECIRC:
-        VLOG_DBG("VLOG in do_xlate_actions OFPACT_DEBUG_RECIRC\n"); /*CEP*/
+        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_DEBUG_RECIRC\n"); /*CEP*/
             ctx_trigger_freeze(ctx);
             a = ofpact_next(a);
             break;
@@ -5258,7 +5294,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
         /* Check if need to store this and the remaining actions for later
          * execution. */
         if (!ctx->error && ctx->exit && ctx_first_frozen_action(ctx)) {
-            VLOG_DBG("VLOG in do_xlate_actions freeze_unroll_actions\n"); /*CEP*/
+            //VLOG_DBG("VLOG in do_xlate_actions freeze_unroll_actions\n"); /*CEP*/
             freeze_unroll_actions(a, ofpact_end(ofpacts, ofpacts_len), ctx);
             break;
         }
@@ -5291,6 +5327,7 @@ xlate_in_init(struct xlate_in *xin, struct ofproto_dpif *ofproto,
     xin->resubmits = 0;
     xin->wc = wc;
     xin->odp_actions = odp_actions;
+    xin->may_forward = true;
 
     /* Do recirc lookup. */
     xin->frozen_state = NULL;
@@ -5532,7 +5569,7 @@ xlate_wc_finish(struct xlate_ctx *ctx)
 enum xlate_error
 xlate_actions(struct xlate_in *xin, struct xlate_out *xout)
 {
-    VLOG_DBG("VLOG in xlate_actions\n"); /*CEP*/
+    //VLOG_DBG("VLOG in xlate_actions\n"); /*CEP*/
     *xout = (struct xlate_out) {
         .slow = 0,
         .recircs = RECIRC_REFS_EMPTY_INITIALIZER,
@@ -5759,7 +5796,7 @@ xlate_actions(struct xlate_in *xin, struct xlate_out *xout)
             && (!in_port || may_receive(in_port, &ctx))) {
             const struct ofpact *ofpacts;
             size_t ofpacts_len;
-
+            /* xin ofpacts CEP*/ 
             if (xin->ofpacts) {
                 ofpacts = xin->ofpacts;
                 ofpacts_len = xin->ofpacts_len;
@@ -6153,4 +6190,78 @@ xlate_cache_delete(struct xlate_cache *xcache)
     xlate_cache_clear(xcache);
     ofpbuf_uninit(&xcache->entries);
     free(xcache);
+}
+
+
+uint64_t hashCode(uint64_t key) {
+   return key % SIZE;
+}
+
+struct MaxItem *search_max(uint64_t key) {
+   //get the hash 
+   uint64_t hashIndex = hashCode(key);  
+    
+   //move in array until an empty 
+   while(hashArray[hashIndex] != NULL) {
+    
+      if(hashArray[hashIndex]->key == key)
+         return hashArray[hashIndex]; 
+            
+      //go to next cell
+      ++hashIndex;
+        
+      //wrap around the table
+      hashIndex %= SIZE;
+   }        
+    
+   return NULL;        
+}
+
+void insert_max(uint64_t key,uint64_t data) {
+
+   struct MaxItem *item = (struct MaxItem*) malloc(sizeof(struct MaxItem));
+   item->data = data;  
+   item->key = key;
+
+   //get the hash 
+   uint64_t hashIndex = hashCode(key);
+
+   //move in array until an empty or deleted cell
+   while(hashArray[hashIndex] != NULL && hashArray[hashIndex]->key != -1) {
+      //go to next cell
+      ++hashIndex;
+        
+      //wrap around the table
+      hashIndex %= SIZE;
+   }
+    
+   hashArray[hashIndex] = item;
+}
+
+struct MaxItem* delete_max(struct MaxItem* item) {
+   uint64_t key = item->key;
+
+
+   //get the hash 
+   uint64_t hashIndex = hashCode(key);
+
+   //move in array until an empty
+   while(hashArray[hashIndex] != NULL) {
+    
+      if(hashArray[hashIndex]->key == key) {
+         struct MaxItem* temp = hashArray[hashIndex]; 
+            
+         //assign a dummy item at deleted position
+         hashArray[hashIndex] = dummyMaxItem; 
+         return temp;
+      }
+        
+      //go to next cell
+      ++hashIndex;
+        
+      //wrap around the table
+      hashIndex %= SIZE;
+   }      
+    
+   return NULL;        
 }

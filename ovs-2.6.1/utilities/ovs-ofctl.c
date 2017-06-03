@@ -246,7 +246,7 @@ parse_options(int argc, char *argv[])
         int c;
 
         c = getopt_long(argc, argv, short_options, long_options, NULL);
-        VLOG_DBG("VLOG After getopt_long c - %d\n",c);/*CEP*/
+        //VLOG_DBG("VLOG After getopt_long c - %d\n",c);/*CEP*/
         if (c == -1) {
             break;
         }

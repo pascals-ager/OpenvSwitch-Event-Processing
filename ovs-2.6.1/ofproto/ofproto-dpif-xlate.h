@@ -14,7 +14,7 @@
 
 #ifndef OFPROTO_DPIF_XLATE_H
 #define OFPROTO_DPIF_XLATE_H 1
-
+#define SIZE 20  /*CEP - support for 20 event types*/
 #include "dp-packet.h"
 #include "flow.h"
 #include "openvswitch/meta-flow.h"
@@ -148,6 +148,9 @@ struct xlate_in {
 
     /* The frozen state to be resumed, as returned by xlate_lookup(). */
     const struct frozen_state *frozen_state;
+
+    /*CEP test*/
+    bool may_forward;
 };
 
 void xlate_ofproto_set(struct ofproto_dpif *, const char *name, struct dpif *,
@@ -221,4 +224,20 @@ void xlate_cache_delete(struct xlate_cache *);
 void xlate_txn_start(void);
 void xlate_txn_commit(void);
 
+/*CEP*/
+
+struct MaxItem {
+   uint64_t data;   /*max e_attr1*/
+   uint64_t key;  /*e_type*/
+};
+
+struct MaxItem *search_max(uint64_t);
+void insert_max(uint64_t ,uint64_t );
+struct MaxItem* delete_max(struct MaxItem* );
+struct MaxItem* hashArray[SIZE]; 
+struct MaxItem* dummyMaxItem;
+struct MaxItem* item;
+uint64_t hashCode(uint64_t);
+uint64_t type;
+uint64_t mov_max;
 #endif /* ofproto-dpif-xlate.h */

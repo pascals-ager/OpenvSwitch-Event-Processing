@@ -1028,7 +1028,7 @@ upcall_receive(struct upcall *upcall, const struct dpif_backer *backer,
                const ovs_u128 *ufid, const unsigned pmd_id)
 {
     int error;
-    VLOG_DBG("VLOG in upcall_receive");/*CEP*/
+    //VLOG_DBG("VLOG in upcall_receive");/*CEP*/
     error = xlate_lookup(backer, flow, &upcall->ofproto, &upcall->ipfix,
                          &upcall->sflow, NULL, &upcall->in_port);
     if (error) {
@@ -1072,21 +1072,21 @@ upcall_xlate(struct udpif *udpif, struct upcall *upcall,
     stats.n_bytes = dp_packet_size(upcall->packet);
     stats.used = time_msec();
     stats.tcp_flags = ntohs(upcall->flow->tcp_flags);
-    VLOG_DBG("VLOG In upcall_xlate\n"); /*CEP*/
+    //VLOG_DBG("VLOG In upcall_xlate\n"); /*CEP*/
 
     xlate_in_init(&xin, upcall->ofproto, upcall->flow, upcall->in_port, NULL,
                   stats.tcp_flags, upcall->packet, wc, odp_actions);
 
     if (upcall->type == DPIF_UC_MISS) {
         xin.resubmit_stats = &stats;
-        VLOG_DBG("VLOG In upcall_xlate DPIF_UC_MISS\n"); /*CEP*/
+        //VLOG_DBG("VLOG In upcall_xlate DPIF_UC_MISS\n"); /*CEP*/
         if (xin.frozen_state) {
             /* We may install a datapath flow only if we get a reference to the
              * recirculation context (otherwise we could have recirculation
              * upcalls using recirculation ID for which no context can be
              * found).  We may still execute the flow's actions even if we
              * don't install the flow. */
-            VLOG_DBG("VLOG In upcall_xlate xin.frozen_state\n"); /*CEP*/
+            //VLOG_DBG("VLOG In upcall_xlate xin.frozen_state\n"); /*CEP*/
             upcall->recirc = recirc_id_node_from_state(xin.frozen_state);
             upcall->have_recirc_ref = recirc_id_node_try_ref_rcu(upcall->recirc);
         }
@@ -1096,7 +1096,7 @@ upcall_xlate(struct udpif *udpif, struct upcall *upcall,
          * already been taken care of, or there's a flow in the datapath which
          * this packet was accounted to.  Presumably the revalidators will deal
          * with pushing its stats eventually. */
-      VLOG_DBG("VLOG In upcall_xlate Not in xin.frozen_state\n"); /*CEP*/
+      //VLOG_DBG("VLOG In upcall_xlate Not in xin.frozen_state\n"); /*CEP*/
     }
 
     upcall->dump_seq = seq_read(udpif->dump_seq);
@@ -1114,12 +1114,12 @@ upcall_xlate(struct udpif *udpif, struct upcall *upcall,
     upcall->xout_initialized = true;
 
     if (!upcall->xout.slow) {
-      VLOG_DBG("VLOG In upcall_xlate !upcall->xout.slow\n"); /*CEP*/
+      //VLOG_DBG("VLOG In upcall_xlate !upcall->xout.slow\n"); /*CEP*/
         ofpbuf_use_const(&upcall->put_actions,
                          odp_actions->data, odp_actions->size);
     } else {
         /* upcall->put_actions already initialized by upcall_receive(). */
-       VLOG_DBG("VLOG In upcall_xlate will compose_slow_path\n"); /*CEP*/
+       //VLOG_DBG("VLOG In upcall_xlate will compose_slow_path\n"); /*CEP*/
         compose_slow_path(udpif, &upcall->xout, upcall->flow,
                           upcall->flow->in_port.odp_port,
                           &upcall->put_actions);
@@ -1129,7 +1129,7 @@ upcall_xlate(struct udpif *udpif, struct upcall *upcall,
      * going to create new datapath flows for actual datapath misses, there is
      * no point in creating a ukey otherwise. */
     if (upcall->type == DPIF_UC_MISS) {
-      VLOG_DBG("VLOG In upcall_xlate DPIF_UC_MISS will ukey_create_from_upcall\n"); /*CEP*/
+      //VLOG_DBG("VLOG In upcall_xlate DPIF_UC_MISS will ukey_create_from_upcall\n"); /*CEP*/
         upcall->ukey = ukey_create_from_upcall(upcall, wc);
     }
 }
@@ -1194,7 +1194,7 @@ upcall_cb(const struct dp_packet *packet, const struct flow *flow, ovs_u128 *ufi
     int error;
 
     atomic_read_relaxed(&enable_megaflows, &megaflow);
-    VLOG_DBG("VLOG in upcall_cb\n"); /*CEP*/
+    //VLOG_DBG("VLOG in upcall_cb\n"); /*CEP*/
     error = upcall_receive(&upcall, udpif->backer, packet, type, userdata,
                            flow, 0, ufid, pmd_id);
     if (error) {
@@ -1207,30 +1207,30 @@ upcall_cb(const struct dp_packet *packet, const struct flow *flow, ovs_u128 *ufi
     }
 
     if (upcall.xout.slow && put_actions) {
-        VLOG_DBG("VLOG in upcall_cb, upcall.xout.slow && put_actions\n"); /*CEP*/
+        //VLOG_DBG("VLOG in upcall_cb, upcall.xout.slow && put_actions\n"); /*CEP*/
         ofpbuf_put(put_actions, upcall.put_actions.data,
                    upcall.put_actions.size);
     }
 
     if (OVS_UNLIKELY(!megaflow)) {
-        VLOG_DBG("VLOG in upcall_cb, missed megaflow\n"); /*CEP*/
+        //VLOG_DBG("VLOG in upcall_cb, missed megaflow\n"); /*CEP*/
         flow_wildcards_init_for_packet(wc, flow);
     }
 
     if (!should_install_flow(udpif, &upcall)) {
-      VLOG_DBG("VLOG in upcall_cb, error = ENOSPC\n"); /*CEP*/
+      //VLOG_DBG("VLOG in upcall_cb, error = ENOSPC\n"); /*CEP*/
         error = ENOSPC;
         goto out;
     }
 
     if (upcall.ukey && !ukey_install(udpif, upcall.ukey)) {
-        VLOG_DBG("VLOG in upcall_cb, ukey installation fails\n"); /*CEP*/
+        //VLOG_DBG("VLOG in upcall_cb, ukey installation fails\n"); /*CEP*/
         VLOG_WARN_RL(&rl, "upcall_cb failure: ukey installation fails");
         error = ENOSPC;
     }
 out:
     if (!error) {
-        VLOG_DBG("VLOG in upcall_cb, error !errorS\n"); /*CEP*/
+        //VLOG_DBG("VLOG in upcall_cb, error !errorS\n"); /*CEP*/
         upcall.ukey_persists = true;
     }
     upcall_uninit(&upcall);
@@ -1245,16 +1245,16 @@ process_upcall(struct udpif *udpif, struct upcall *upcall,
     const struct dp_packet *packet = upcall->packet;
     const struct flow *flow = upcall->flow;
 
-    VLOG_DBG("VLOG In process_upcall\n"); /*CEP*/
+    //VLOG_DBG("VLOG In process_upcall\n"); /*CEP*/
 
     switch (classify_upcall(upcall->type, userdata)) {
     case MISS_UPCALL:
-    VLOG_DBG("VLOG In process_upcall MISS_UPCALL \n"); /*CEP*/
+    //VLOG_DBG("VLOG In process_upcall MISS_UPCALL \n"); /*CEP*/
         upcall_xlate(udpif, upcall, odp_actions, wc);
         return 0;
 
     case SFLOW_UPCALL:
-    VLOG_DBG("VLOG In process_upcall SFLOW_UPCALL \n"); /*CEP*/
+    //VLOG_DBG("VLOG In process_upcall SFLOW_UPCALL \n"); /*CEP*/
         if (upcall->sflow) {
             union user_action_cookie cookie;
             const struct nlattr *actions;
@@ -1289,7 +1289,7 @@ process_upcall(struct udpif *udpif, struct upcall *upcall,
         break;
 
     case IPFIX_UPCALL:
-    VLOG_DBG("VLOG In process_upcall IPFIX_UPCALL \n"); /*CEP*/
+    //VLOG_DBG("VLOG In process_upcall IPFIX_UPCALL \n"); /*CEP*/
         if (upcall->ipfix) {
             union user_action_cookie cookie;
             struct flow_tnl output_tunnel_key;
@@ -1310,7 +1310,7 @@ process_upcall(struct udpif *udpif, struct upcall *upcall,
         break;
 
     case FLOW_SAMPLE_UPCALL:
-    VLOG_DBG("VLOG In process_upcall FLOW_SAMPLE_UPCALL \n"); /*CEP*/
+    //VLOG_DBG("VLOG In process_upcall FLOW_SAMPLE_UPCALL \n"); /*CEP*/
         if (upcall->ipfix) {
             union user_action_cookie cookie;
             struct flow_tnl output_tunnel_key;
@@ -1333,7 +1333,7 @@ process_upcall(struct udpif *udpif, struct upcall *upcall,
         break;
 
     case BAD_UPCALL:
-     VLOG_DBG("VLOG In process_upcall BAD_UPCALL \n"); /*CEP*/
+     //VLOG_DBG("VLOG In process_upcall BAD_UPCALL \n"); /*CEP*/
         break;
     }
 

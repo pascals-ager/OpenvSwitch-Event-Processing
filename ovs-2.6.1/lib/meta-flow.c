@@ -2527,7 +2527,7 @@ static void
 mf_format_integer_string(const struct mf_field *mf, const uint8_t *valuep,
                          const uint8_t *maskp, struct ds *s)
 {
-    VLOG_DBG("VLOG In meta-flow mf_format_integer_string Point 2\n");
+    //VLOG_DBG("VLOG In meta-flow mf_format_integer_string Point 2\n");
     if (mf->string == MFS_HEXADECIMAL) {
         ds_put_hex(s, valuep, mf->n_bytes);
     } else {
