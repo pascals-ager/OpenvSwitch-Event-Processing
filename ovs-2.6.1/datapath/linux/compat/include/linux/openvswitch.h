@@ -452,8 +452,8 @@ struct ovs_key_udp {
 
 
 struct ovs_key_eattr {
-	__be64 e_attr1;
-	__be64 e_attr2;
+	 __be64 e_attr1;
+	 __be64 e_attr2;
 };
 
 struct ovs_key_etype {
