@@ -668,17 +668,17 @@ match_set_tp_dst_masked(struct match *match, ovs_be16 port, ovs_be16 mask)
 
 void
 match_set_event_attr1(struct match *match, ovs_be64 e_attr1){
-    dzlog_info("DZLOG In match_set_event_attr1");
+    //dzlog_info("DZLOG In match_set_event_attr1");
     match_set_event_attr1_masked(match, e_attr1, OVS_BE64_MAX);
 }
 void
 match_set_event_attr1_masked(struct match *match, ovs_be64 e_attr1, ovs_be64 mask){
-    dzlog_info("DZLOG In match_set_event_attr1_masked\n"); 
-    dzlog_info("DZLOG the payload is %"PRIu64"",e_attr1);
-    dzlog_info("DZLOG the mask is %"PRIu64"",mask);
+    //dzlog_info("DZLOG In match_set_event_attr1_masked\n"); 
+    //dzlog_info("DZLOG the payload is %"PRIu64"",e_attr1);
+    //dzlog_info("DZLOG the mask is %"PRIu64"",mask);
     match->flow.e_attr1 = e_attr1 & mask;
     match->wc.masks.e_attr1 = mask;
-    dzlog_info("DZLOG the flow e_attr1 is %"PRIu64"/n",match->flow.e_attr1);
+    //dzlog_info("DZLOG the flow e_attr1 is %"PRIu64"/n",match->flow.e_attr1);
 }
 void
 match_set_event_attr2(struct match *match, ovs_be64 e_attr2){

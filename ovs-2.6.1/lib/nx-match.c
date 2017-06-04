@@ -289,7 +289,7 @@ static enum ofperr
 nx_pull_header__(struct ofpbuf *b, bool allow_cookie, uint64_t *header,
                  const struct mf_field **field)
 {
-    //dzlog_info("DZLOG in nx_pull_header__"); /* CEP */
+    ////dzlog_info("DZLOG in nx_pull_header__"); /* CEP */
     if (b->size < 4) {
         goto bad_len;
     }
@@ -338,12 +338,12 @@ copy_entry_value(const struct mf_field *field, union mf_value *value,
 {
     int copy_len;
     void *copy_dst;
-    //dzlog_info("DZLOG in copy_entry_value field : %s", field->name); /* CEP */
+    ////dzlog_info("DZLOG in copy_entry_value field : %s", field->name); /* CEP */
     copy_dst = value;
     copy_len = MIN(width, field ? field->n_bytes : sizeof *value);
 
     if (field && field->variable_len) {
-        //dzlog_info("DZLOG in copy_entry_value field && field->variable_len"); /*CEP*/
+        ////dzlog_info("DZLOG in copy_entry_value field && field->variable_len"); /*CEP*/
         memset(value, 0, field->n_bytes);
         copy_dst = &value->u8 + field->n_bytes - copy_len;
     }
@@ -361,7 +361,7 @@ nx_pull_entry__(struct ofpbuf *b, bool allow_cookie, uint64_t *header,
     unsigned int payload_len;
     const uint8_t *payload;
     int width;
-    //dzlog_info("DZLOG in nx_pull_entry__"); /* CEP */
+    ////dzlog_info("DZLOG in nx_pull_entry__"); /* CEP */
     header_error = nx_pull_header__(b, allow_cookie, header, &field);
     if (header_error && header_error != OFPERR_OFPBMC_BAD_FIELD) {
         return header_error;
@@ -377,7 +377,7 @@ nx_pull_entry__(struct ofpbuf *b, bool allow_cookie, uint64_t *header,
     }
 
     width = nxm_field_bytes(*header);
-    //dzlog_info("DZLOG in nx_pull_entry__ field bytes: %d", width); /* CEP */
+    ////dzlog_info("DZLOG in nx_pull_entry__ field bytes: %d", width); /* CEP */
     if (nxm_hasmask(*header)
         && !is_mask_consistent(*header, payload, payload + width)) {
         return OFPERR_OFPBMC_BAD_WILDCARDS;
@@ -457,21 +457,21 @@ nx_pull_match_entry(struct ofpbuf *b, bool allow_cookie,
 {
     enum ofperr error;
     uint64_t header;
-    //dzlog_info("DZLOG in nx_pull_match_entry"); /* CEP */
+    ////dzlog_info("DZLOG in nx_pull_match_entry"); /* CEP */
 
     error = nx_pull_entry__(b, allow_cookie, &header, field, value, mask);
-    //dzlog_info("DZLOG nx_pull_match_entry field name - %s", (*field)->name); /* CEP */
+    ////dzlog_info("DZLOG nx_pull_match_entry field name - %s", (*field)->name); /* CEP */
     if (error) {
         return error;
     }
     if (field && *field) {
         if (!mf_is_mask_valid(*field, mask)) {
-            //dzlog_info("bad mask for field %s", (*field)->name);
+            ////dzlog_info("bad mask for field %s", (*field)->name);
             VLOG_DBG_RL(&rl, "bad mask for field %s", (*field)->name);
             return OFPERR_OFPBMC_BAD_MASK;
         }
         if (!mf_is_value_valid(*field, value)) {
-            //dzlog_info("bad value for field %s", (*field)->name);
+            ////dzlog_info("bad value for field %s", (*field)->name);
             VLOG_DBG_RL(&rl, "bad value for field %s", (*field)->name);
             return OFPERR_OFPBMC_BAD_VALUE;
         }
@@ -484,7 +484,7 @@ nx_pull_raw(const uint8_t *p, unsigned int match_len, bool strict,
             struct match *match, ovs_be64 *cookie, ovs_be64 *cookie_mask)
 {
     ovs_assert((cookie != NULL) == (cookie_mask != NULL));
-    //dzlog_info("DZLOG in nx_pull_raw"); /* CEP */
+    ////dzlog_info("DZLOG in nx_pull_raw"); /* CEP */
     match_init_catchall(match);
     if (cookie) {
         *cookie = *cookie_mask = htonll(0);
@@ -497,7 +497,7 @@ nx_pull_raw(const uint8_t *p, unsigned int match_len, bool strict,
         union mf_value value;
         union mf_value mask;
         enum ofperr error;
-        //dzlog_info("DZLOG in nx_pull_raw"); /* CEP */
+        ////dzlog_info("DZLOG in nx_pull_raw"); /* CEP */
         error = nx_pull_match_entry(&b, cookie != NULL, &field, &value, &mask);
         if (error) {
             if (error == OFPERR_OFPBMC_BAD_FIELD && !strict) {
@@ -518,7 +518,7 @@ nx_pull_raw(const uint8_t *p, unsigned int match_len, bool strict,
             error = OFPERR_OFPBMC_DUP_FIELD;
         } else {
             char *err_str;
-            //dzlog_info("DZLOG Back in nx_pull_raw - next mf_set"); /* CEP */
+            ////dzlog_info("DZLOG Back in nx_pull_raw - next mf_set"); /* CEP */
             mf_set(field, &value, &mask, match, &err_str);
             if (err_str) {
                 VLOG_DBG_RL(&rl, "error parsing OXM at offset %"PRIdPTR" "
@@ -545,7 +545,7 @@ nx_pull_match__(struct ofpbuf *b, unsigned int match_len, bool strict,
                 ovs_be64 *cookie, ovs_be64 *cookie_mask)
 {
     uint8_t *p = NULL;
-    //dzlog_info("DZLOG in nx_pull_match__ match-len : %u, space in message : %"PRIu32"", match_len,b->size); /* CEP */
+    ////dzlog_info("DZLOG in nx_pull_match__ match-len : %u, space in message : %"PRIu32"", match_len,b->size); /* CEP */
     if (match_len) {
         p = ofpbuf_try_pull(b, ROUND_UP(match_len, 8));
         if (!p) {
@@ -702,7 +702,7 @@ void
 nxm_put__(struct ofpbuf *b, enum mf_field_id field, enum ofp_version version,
           const void *value, const void *mask, size_t n_bytes)
 {
-    //dzlog_info("DZLOG In nxm_put__ field - %u, size - %zu\n",field, n_bytes); /*CEP*/
+    ////dzlog_info("DZLOG In nxm_put__ field - %u, size - %zu\n",field, n_bytes); /*CEP*/
     nx_put_header_len(b, field, version, !!mask, n_bytes);
     ofpbuf_put(b, value, n_bytes);
     if (mask) {
@@ -1164,7 +1164,7 @@ nx_put_match(struct ofpbuf *b, const struct match *match,
 {
     //VLOG_DBG("VLOG Advith is in nx_put_match\n");  /* CEP */
     int match_len = nx_put_raw(b, 0, match, cookie, cookie_mask);
-    //dzlog_info("VLOG nx_put_raw returns match_len -%d",match_len);  /* CEP */
+    ////dzlog_info("VLOG nx_put_raw returns match_len -%d",match_len);  /* CEP */
     ofpbuf_put_zeros(b, PAD_SIZE(match_len, 8));
     return match_len;
 }

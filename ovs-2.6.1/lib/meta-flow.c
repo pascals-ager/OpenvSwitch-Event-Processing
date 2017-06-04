@@ -1078,21 +1078,21 @@ mf_set_value(const struct mf_field *mf,
         break;
 
     case MFF_EVNT_ATTR1:
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_ATTR1\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_ATTR1\n"); /*CEP*/
         match_set_event_attr1(match, value->be64); 
         break;        
     case MFF_EVNT_ATTR2:
            /*CEP*/
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_ATTR2\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_ATTR2\n"); /*CEP*/
         match_set_event_attr2(match, value->be64);
         break;
     case MFF_EVNT_TYP:
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_TYP\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_TYP\n"); /*CEP*/
         match_set_event_type(match, value->be64);
         break;
      case MFF_EVNT_VAL1:
            /*CEP*/
-        dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_VAL1\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set_value MFF_EVNT_VAL1\n"); /*CEP*/
         match_set_event_val1(match, value->be64);
         break;            
     case MFF_N_IDS:
@@ -1832,13 +1832,13 @@ mf_set(const struct mf_field *mf,
        struct match *match, char **err_str)
 {
     if (!mask || is_all_ones(mask, mf->n_bytes)) {
-        dzlog_info("DZLOG In meta-flow mf_set is_all_ones - next mf_set_value\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set is_all_ones - next mf_set_value\n"); /*CEP*/
         mf_set_value(mf, value, match, err_str);
         return mf->usable_protocols_exact;
     } else if (is_all_zeros(mask, mf->n_bytes) && !mf_is_tun_metadata(mf)) {
         /* Tunnel metadata matches on the existence of the field itself, so
          * it still needs to be encoded even if the value is wildcarded. */
-        dzlog_info("DZLOG In meta-flow mf_set is_all_zeros - next mf_set_wild\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set is_all_zeros - next mf_set_wild\n"); /*CEP*/
         mf_set_wild(mf, match, err_str);
         return OFPUTIL_P_ANY;
     }
@@ -2033,11 +2033,11 @@ mf_set(const struct mf_field *mf,
         break;
 
     case MFF_EVNT_ATTR1:
-        dzlog_info("DZLOG In meta-flow mf_set MFF_EVNT_ATTR1\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set MFF_EVNT_ATTR1\n"); /*CEP*/
         match_set_event_attr1_masked(match, value->be64, mask->be64);
         break;
     case MFF_EVNT_ATTR2:
-        dzlog_info("DZLOG In meta-flow mf_set MFF_EVNT_ATTR2\n"); /*CEP*/
+        //dzlog_info("DZLOG In meta-flow mf_set MFF_EVNT_ATTR2\n"); /*CEP*/
         match_set_event_attr2_masked(match, value->be64, mask->be64);
         break;
     case MFF_EVNT_TYP:
@@ -2224,7 +2224,7 @@ mf_from_integer_string(const struct mf_field *mf, const char *s,
     int err;
     int i; /*CEP*/
 
-    dzlog_info("DZLOG in meta-flow mf_from_integer_string %s",mf->name);  /*CEP*/
+    //dzlog_info("DZLOG in meta-flow mf_from_integer_string %s",mf->name);  /*CEP*/
 
     err = parse_int_string(s, valuep, mf->n_bytes, &tail); 
     if (err || (*tail != '\0' && *tail != '/')) {
@@ -2243,7 +2243,7 @@ mf_from_integer_string(const struct mf_field *mf, const char *s,
     }
     /*CEP*/
     for (i = mf->n_bytes - 1; i >= 0; i--) {
-        dzlog_info("DZLOG in meta-flow mf_from_integer_string valuep[%d]:%d - maskp[%d]:%d",i,valuep[i],i,maskp[i]);
+        //dzlog_info("DZLOG in meta-flow mf_from_integer_string valuep[%d]:%d - maskp[%d]:%d",i,valuep[i],i,maskp[i]);
         
     }
 

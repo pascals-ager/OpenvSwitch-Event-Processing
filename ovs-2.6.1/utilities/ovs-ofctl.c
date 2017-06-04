@@ -139,7 +139,7 @@ main(int argc, char *argv[])
 
     dzlog_init("/etc/zlog.conf","my_cat");
 
-    dzlog_info("I am using DZLOG\n");
+    //dzlog_info("I am using DZLOG\n");
     struct ovs_cmdl_context ctx = { .argc = 0, };
     set_program_name(argv[0]);
     service_start(&argc, &argv);

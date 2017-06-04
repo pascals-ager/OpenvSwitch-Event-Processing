@@ -281,7 +281,7 @@ parse_ofp_str__(struct ofputil_flow_mod *fm, int command, char *string,
     char *name, *value;
 
     *usable_protocols = OFPUTIL_P_ANY;
-    dzlog_info("DZLOG in parse_ofp_str__\n");
+    //dzlog_info("DZLOG in parse_ofp_str__\n");
 
     if (command == -2) {
         size_t len;

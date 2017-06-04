@@ -2031,7 +2031,7 @@ decode_OFPAT_RAW_SET_TP_DST(ovs_be16 port,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_TP_DST\n");
+    //dzlog_info("DZLOG In decode_OFPAT_RAW_SET_TP_DST\n");
     ofpact_put_SET_L4_DST_PORT(out)->port = ntohs(port);
     return 0;
 }
@@ -2041,7 +2041,7 @@ decode_OFPAT_RAW_SET_MOV_MIN(ovs_be64 attr,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MOV_MIN\n");
+    //dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MOV_MIN\n");
     ofpact_put_SET_MOV_MIN(out)->attr = ntohll(attr);
     return 0;
 }  /*CEP*/
@@ -2051,7 +2051,7 @@ decode_OFPAT_RAW_SET_MOV_MAX(ovs_be64 attr,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MOV_MAX\n");
+    //dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MOV_MAX\n");
     ofpact_put_SET_MOV_MAX(out)->attr = ntohll(attr);
     return 0;
 }  /*CEP*/
@@ -2061,7 +2061,7 @@ decode_OFPAT_RAW_SET_MIN(ovs_be64 attr,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MIN\n");
+    //dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MIN\n");
     ofpact_put_SET_MIN(out)->attr = ntohll(attr);
     return 0;
 }  /*CEP*/
@@ -2071,7 +2071,7 @@ decode_OFPAT_RAW_SET_TYPE(ovs_be64 attr,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_TYPE\n");
+    //dzlog_info("DZLOG In decode_OFPAT_RAW_SET_TYPE\n");
     ofpact_put_SET_TYPE(out)->attr = ntohll(attr);
     return 0;
 }  /*CEP*/    
@@ -2081,7 +2081,7 @@ decode_OFPAT_RAW_SET_MAX(ovs_be64 attr,
                             enum ofp_version ofp_version OVS_UNUSED,
                             struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MAX\n");
+    //dzlog_info("DZLOG In decode_OFPAT_RAW_SET_MAX\n");
     ofpact_put_SET_MAX(out)->attr = ntohll(attr);
     return 0;
 }  /*CEP*/    
@@ -2092,7 +2092,7 @@ encode_SET_L4_port(const struct ofpact_l4_port *l4_port,
                    enum mf_field_id field, struct ofpbuf *out)
 {
     uint16_t port = l4_port->port;
-    dzlog_info("DZLOG In encode_SET_L4_port\n");
+    //dzlog_info("DZLOG In encode_SET_L4_port\n");
     if (ofp_version >= OFP12_VERSION && field != MFF_N_IDS) {
         put_set_field(out, ofp_version, field, port);
     } else {
@@ -2107,7 +2107,7 @@ encode_SET_MOV_MIN(const struct ofpact_attr *ofpact_attr,
     //enum mf_field_id field = MFF_EVNT_VAL1;
     enum ofp_raw_action_type raw = OFPAT_RAW_SET_MOV_MIN;
     uint64_t attr = ofpact_attr->attr; 
-    dzlog_info("DZLOG In encode_SET_MOV_MIN\n");
+    //dzlog_info("DZLOG In encode_SET_MOV_MIN\n");
     ofpact_put_raw(out, ofp_version, raw, attr);
 } /*CEP*/
 
@@ -2118,7 +2118,7 @@ encode_SET_MOV_MAX(const struct ofpact_attr *ofpact_attr,
     //enum mf_field_id field = MFF_EVNT_VAL1;
     enum ofp_raw_action_type raw = OFPAT_RAW_SET_MOV_MAX;
     uint64_t attr = ofpact_attr->attr; 
-    dzlog_info("DZLOG In encode_SET_MOV_MAX\n");
+    //dzlog_info("DZLOG In encode_SET_MOV_MAX\n");
     ofpact_put_raw(out, ofp_version, raw, attr);
 } /*CEP*/
 
@@ -2129,7 +2129,7 @@ encode_SET_MIN(const struct ofpact_attr *ofpact_attr,
     //enum mf_field_id field = MFF_EVNT_VAL1;
     enum ofp_raw_action_type raw = OFPAT_RAW_SET_MIN;
     uint64_t attr = ofpact_attr->attr; 
-    dzlog_info("DZLOG In encode_SET_MIN ofp-version - %d",ofp_version);
+    //dzlog_info("DZLOG In encode_SET_MIN ofp-version - %d",ofp_version);
     ofpact_put_raw(out, ofp_version, raw, attr);
 } /*CEP*/
 
@@ -2140,7 +2140,7 @@ encode_SET_TYPE(const struct ofpact_attr *ofpact_attr,
     //enum mf_field_id field = MFF_EVNT_VAL1;
     enum ofp_raw_action_type raw = OFPAT_RAW_SET_TYPE;
     uint64_t attr = ofpact_attr->attr; 
-    dzlog_info("DZLOG In encode_SET_TYPE ofp-version - %d",ofp_version);
+    //dzlog_info("DZLOG In encode_SET_TYPE ofp-version - %d",ofp_version);
     ofpact_put_raw(out, ofp_version, raw, attr);
 } /*CEP*/    
 
@@ -2151,7 +2151,7 @@ encode_SET_MAX(const struct ofpact_attr *ofpact_attr,
     //enum mf_field_id field = MFF_EVNT_VAL1;
     enum ofp_raw_action_type raw = OFPAT_RAW_SET_MAX;
     uint64_t attr = ofpact_attr->attr; 
-    dzlog_info("DZLOG In encode_SET_MAX\n");
+    //dzlog_info("DZLOG In encode_SET_MAX\n");
     ofpact_put_raw(out, ofp_version, raw, attr);
 } /*CEP*/    
 
@@ -2175,7 +2175,7 @@ encode_SET_L4_DST_PORT(const struct ofpact_l4_port *l4_port,
                        enum ofp_version ofp_version,
                        struct ofpbuf *out)
 {
-    dzlog_info("DZLOG In encode_SET_L4_port\n");
+    //dzlog_info("DZLOG In encode_SET_L4_port\n");
     uint8_t proto = l4_port->flow_ip_proto;
     enum mf_field_id field = (proto == IPPROTO_TCP ? MFF_TCP_DST
                               : proto == IPPROTO_UDP ? MFF_UDP_DST
@@ -2205,8 +2205,8 @@ static char * OVS_WARN_UNUSED_RESULT
 parse_SET_MOV_MIN(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
 {
-    dzlog_info("DZLOG In parse_SET_MOV_MIN: arg - %s\n",arg);
-    //dzlog_info("DZLOG In parse_SET_MOV_MIN: usable_protocols - %d\n",usable_protocols);
+    //dzlog_info("DZLOG In parse_SET_MOV_MIN: arg - %s\n",arg);
+    ////dzlog_info("DZLOG In parse_SET_MOV_MIN: usable_protocols - %d\n",usable_protocols);
     return str_to_u64(arg, &ofpact_put_SET_MOV_MIN(ofpacts)->attr);
 } /*CEP*/
 
@@ -2215,7 +2215,7 @@ static char * OVS_WARN_UNUSED_RESULT
 parse_SET_MOV_MAX(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
 {
-    dzlog_info("DZLOG In parse_SET_MOV_MAX\n");
+    //dzlog_info("DZLOG In parse_SET_MOV_MAX\n");
     return str_to_u64(arg, &ofpact_put_SET_MOV_MAX(ofpacts)->attr);
 } /*CEP*/
 
@@ -2223,7 +2223,7 @@ static char * OVS_WARN_UNUSED_RESULT
 parse_SET_MIN(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
 {
-    dzlog_info("DZLOG In parse_SET_MIN\n");
+    //dzlog_info("DZLOG In parse_SET_MIN\n");
     return str_to_u64(arg, &ofpact_put_SET_MIN(ofpacts)->attr);
 } /*CEP*/
 
@@ -2231,7 +2231,7 @@ static char * OVS_WARN_UNUSED_RESULT
 parse_SET_TYPE(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
 {
-    dzlog_info("DZLOG In parse_SET_TYPE\n");
+    //dzlog_info("DZLOG In parse_SET_TYPE\n");
     return str_to_u64(arg, &ofpact_put_SET_TYPE(ofpacts)->attr);
 } /*CEP*/    
 
@@ -2239,7 +2239,7 @@ static char * OVS_WARN_UNUSED_RESULT
 parse_SET_MAX(char *arg, struct ofpbuf *ofpacts,
                       enum ofputil_protocol *usable_protocols OVS_UNUSED)
 {
-    dzlog_info("DZLOG In parse_SET_MAX\n");
+    //dzlog_info("DZLOG In parse_SET_MAX\n");
     return str_to_u64(arg, &ofpact_put_SET_MAX(ofpacts)->attr);
 } /*CEP*/    
 
@@ -8028,7 +8028,7 @@ ofpacts_parse__(char *str, struct ofpbuf *ofpacts,
     char *key, *value;
     bool drop = false;
     char *pos;
-    dzlog_info("VLOG ofpacts_parse__");
+    //dzlog_info("VLOG ofpacts_parse__");
     pos = str;
     while (ofputil_parse_key_value(&pos, &key, &value)) {
         enum ovs_instruction_type inst = OVSINST_OFPIT11_APPLY_ACTIONS;

@@ -2835,7 +2835,7 @@ ofputil_encode_flow_stats_request(const struct ofputil_flow_stats_request *fsr,
 
     case OFPUTIL_P_OF10_STD:
     case OFPUTIL_P_OF10_STD_TID: {
-        dzlog_info("DZLOG In ofputil_encode_flow_stats_request\n"); /*CEP*/
+        //dzlog_info("DZLOG In ofputil_encode_flow_stats_request\n"); /*CEP*/
         struct ofp10_flow_stats_request *ofsr;
 
         raw = (fsr->aggregate
@@ -2851,7 +2851,7 @@ ofputil_encode_flow_stats_request(const struct ofputil_flow_stats_request *fsr,
 
     case OFPUTIL_P_OF10_NXM:
     case OFPUTIL_P_OF10_NXM_TID: {
-        dzlog_info("DZLOG In ofputil_encode_flow_stats_request - case OFPUTIL_P_OF10_NXM\n"); /*CEP*/
+        //dzlog_info("DZLOG In ofputil_encode_flow_stats_request - case OFPUTIL_P_OF10_NXM\n"); /*CEP*/
         struct nx_flow_stats_request *nfsr;
         int match_len;
 
@@ -2907,7 +2907,7 @@ ofputil_decode_flow_stats_reply(struct ofputil_flow_stats *fs,
     size_t instructions_len;
     enum ofperr error;
     enum ofpraw raw;
-    dzlog_info("DZLOG In ofputil_decode_flow_stats_reply\n");/*CEP*/
+    //dzlog_info("DZLOG In ofputil_decode_flow_stats_reply\n");/*CEP*/
     error = (msg->header ? ofpraw_decode(&raw, msg->header)
              : ofpraw_pull(&raw, msg));
     if (error) {
@@ -2973,7 +2973,7 @@ ofputil_decode_flow_stats_reply(struct ofputil_flow_stats *fs,
         size_t length;
 
 
-        dzlog_info("DZLOG In ofputil_decode_flow_stats_reply - OFPRAW_OFPST10_FLOW_REPLY\n");/*CEP*/
+        //dzlog_info("DZLOG In ofputil_decode_flow_stats_reply - OFPRAW_OFPST10_FLOW_REPLY\n");/*CEP*/
         ofs = ofpbuf_try_pull(msg, sizeof *ofs);
 
 
@@ -3008,7 +3008,7 @@ ofputil_decode_flow_stats_reply(struct ofputil_flow_stats *fs,
     } else if (raw == OFPRAW_NXST_FLOW_REPLY) {
         const struct nx_flow_stats *nfs;
         size_t match_len, length;
-        dzlog_info("DZLOG In ofputil_decode_flow_stats_reply - OFPRAW_NXST_FLOW_REPLY\n");/*CEP*/
+        //dzlog_info("DZLOG In ofputil_decode_flow_stats_reply - OFPRAW_NXST_FLOW_REPLY\n");/*CEP*/
         nfs = ofpbuf_try_pull(msg, sizeof *nfs);
         if (!nfs) {
             VLOG_WARN_RL(&bad_ofmsg_rl, "NXST_FLOW reply has %"PRIu32" leftover "
@@ -7528,7 +7528,7 @@ ofputil_parse_key_value(char **stringp, char **keyp, char **valuep)
     /* Skip white space and delimiters.  If that brings us to the end of the
      * input string, we are done and there are no more key-value pairs. */
     *stringp += strspn(*stringp, ", \t\r\n");
-    dzlog_info("VLOG ofputil_parse_key_value %s",*stringp); /*CEP*/
+    //dzlog_info("VLOG ofputil_parse_key_value %s",*stringp); /*CEP*/
     if (**stringp == '\0') {
         *keyp = *valuep = NULL;
         return false;
@@ -7571,7 +7571,7 @@ ofputil_parse_key_value(char **stringp, char **keyp, char **valuep)
 
     *keyp = key;
     *valuep = value;
-    dzlog_info("VLOG ofputil_parse_key_value key:value %s:%s",*keyp,*valuep); /*CEP*/
+    //dzlog_info("VLOG ofputil_parse_key_value key:value %s:%s",*keyp,*valuep); /*CEP*/
     
     return true;
 }
