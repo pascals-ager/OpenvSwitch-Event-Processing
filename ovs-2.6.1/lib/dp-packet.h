@@ -74,9 +74,9 @@ static inline void dp_packet_set_base(struct dp_packet *, void *);
 
 static inline uint32_t dp_packet_size(const struct dp_packet *);
 /* Advith */
-static inline uint16_t dp_packet_data_ofs(const struct dp_packet *);
-static inline uint16_t dp_packet_l4_ofs(const struct dp_packet *);
-static inline uint32_t dp_packet_cutlen(const struct dp_packet *);
+//static inline uint16_t dp_packet_data_ofs(const struct dp_packet *);
+//static inline uint16_t dp_packet_l4_ofs(const struct dp_packet *);
+//static inline uint32_t dp_packet_cutlen(const struct dp_packet *);
 
 static inline void dp_packet_set_size(struct dp_packet *, uint32_t);
 
@@ -491,7 +491,7 @@ dp_packet_size(const struct dp_packet *b)
 }
 
 /*Thesis Advith*/
-static inline uint16_t
+/*static inline uint16_t
 dp_packet_data_ofs(const struct dp_packet *b)
 {
     return b->data_ofs;
@@ -508,7 +508,7 @@ static inline uint32_t
 dp_packet_cutlen(const struct dp_packet *b)
 {
     return b->cutlen;
-}
+}*/
 
 static inline void
 dp_packet_set_size(struct dp_packet *b, uint32_t v)

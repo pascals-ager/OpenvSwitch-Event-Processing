@@ -4316,7 +4316,7 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
     size_t encap;
     const struct flow *flow = parms->flow;
     const struct flow *data = export_mask ? parms->mask : parms->flow;
-    VLOG_DBG("VLOG In odp_flow_key_from_flow__\n"); /*CEP*/
+    //VLOG_DBG("VLOG In odp_flow_key_from_flow__\n"); /*CEP*/
 
     nl_msg_put_u32(buf, OVS_KEY_ATTR_PRIORITY, data->skb_priority);
 
@@ -4443,9 +4443,9 @@ odp_flow_key_from_flow__(const struct odp_flow_key_parms *parms,
             get_tp_key(data, udp_key);
             
             if(flow->e_attr1 || flow->e_attr2 ){
-                VLOG_DBG("VLOG e_attr1 in flow: %"PRIu64"\n",htonll(flow->e_attr1)); /*CEP*/
-                VLOG_DBG("VLOG e_attr2 in flow: %"PRIu64"\n",htonll(flow->e_attr2)); /*CEP*/
-                VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",htons(flow->tp_dst)); /*CEP*/
+                //VLOG_DBG("VLOG e_attr1 in flow: %"PRIu64"\n",htonll(flow->e_attr1)); /*CEP*/
+                //VLOG_DBG("VLOG e_attr2 in flow: %"PRIu64"\n",htonll(flow->e_attr2)); /*CEP*/
+                //VLOG_DBG("VLOG tp_dst in flow: %"PRIu16"\n",htons(flow->tp_dst)); /*CEP*/
                 struct ovs_key_eattr *eattr_key;  /* CEP */
                 eattr_key = nl_msg_put_unspec_uninit(buf, OVS_KEY_ATTR_EVNT,
                                                sizeof *eattr_key);   /* CEP */ 
@@ -4770,7 +4770,7 @@ check_expectations(uint64_t present_attrs, int out_of_range_attr,
 {
     uint64_t missing_attrs;
     uint64_t extra_attrs;
-    VLOG_DBG("VLOG Checking expectations\n");
+    //VLOG_DBG("VLOG Checking expectations\n");
     missing_attrs = expected_attrs & ~present_attrs;
     if (missing_attrs) {
         static struct vlog_rate_limit rl = VLOG_RATE_LIMIT_INIT(10, 10);
@@ -4834,7 +4834,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
     const void *check_start = NULL;
     size_t check_len = 0;
     enum ovs_key_attr expected_bit = 0xff;
-    VLOG_DBG("VLOG In parse_l2_5_onward\n");
+    //VLOG_DBG("VLOG In parse_l2_5_onward\n");
 
     if (eth_type_mpls(src_flow->dl_type)) {
         if (!is_mask || present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_MPLS)) {
@@ -4970,13 +4970,13 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
                    src_flow->dl_type == htons(ETH_TYPE_IPV6))
                && !(src_flow->nw_frag & FLOW_NW_FRAG_LATER)) {
         if (!is_mask) {
-            VLOG_DBG("VLOG In parse_l2_5_onward - is_mask\n");
+            //VLOG_DBG("VLOG In parse_l2_5_onward - is_mask\n");
             expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_UDP;
             expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_EVNT;
             expected_attrs |= UINT64_C(1) << OVS_KEY_ATTR_EVNT_TYP;
         }
         if (present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_UDP)) {
-            VLOG_DBG("VLOG In parse_l2_5_onward - OVS_KEY_ATTR_UDP\n");
+            //VLOG_DBG("VLOG In parse_l2_5_onward - OVS_KEY_ATTR_UDP\n");
             const union ovs_key_tp *udp_key;
 
             udp_key = nl_attr_get(attrs[OVS_KEY_ATTR_UDP]);
@@ -4984,7 +4984,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
             expected_bit = OVS_KEY_ATTR_UDP;
         }
         if (present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_EVNT)) {
-            VLOG_DBG("VLOG In parse_l2_5_onward-OVS_KEY_ATTR_EVNT\n");
+            //VLOG_DBG("VLOG In parse_l2_5_onward-OVS_KEY_ATTR_EVNT\n");
             const struct ovs_key_eattr *eattr_key;
 
             eattr_key = nl_attr_get(attrs[OVS_KEY_ATTR_EVNT]);
@@ -4992,7 +4992,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
             //expected_bit = OVS_KEY_ATTR_EVNT;
         }
            if (present_attrs & (UINT64_C(1) << OVS_KEY_ATTR_EVNT_TYP)) {
-            VLOG_DBG("VLOG In parse_l2_5_onward-OVS_KEY_ATTR_EVNT_TYP\n");
+            //VLOG_DBG("VLOG In parse_l2_5_onward-OVS_KEY_ATTR_EVNT_TYP\n");
             const struct ovs_key_etype *etype_key;
 
             etype_key = nl_attr_get(attrs[OVS_KEY_ATTR_EVNT_TYP]);
@@ -5074,7 +5074,7 @@ parse_l2_5_onward(const struct nlattr *attrs[OVS_KEY_ATTR_MAX + 1],
         if ((flow->tp_src || flow->tp_dst) && flow->nw_proto != 0xff) {
             return ODP_FIT_ERROR;
         } else {
-            VLOG_DBG("VLOG In parse_l2_5_onward - is_mask && expected_bit != OVS_KEY_ATTR_UNSPEC\n");
+            //VLOG_DBG("VLOG In parse_l2_5_onward - is_mask && expected_bit != OVS_KEY_ATTR_UNSPEC\n");
             expected_attrs |= UINT64_C(1) << expected_bit;
         }
     }

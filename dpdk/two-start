@@ -1,0 +1,6 @@
+qemu-system-x86_64 -m 4096 -hda /home/advith/two.qcow2 -boot c -enable-kvm -no-reboot -net none -k de \
+-chardev socket,id=char2,path=/usr/local/var/run/openvswitch/vhost-user2 \
+-netdev type=vhost-user,id=mynet2,chardev=char2,vhostforce \
+-device virtio-net-pci,mac=00:00:00:00:00:02,netdev=mynet2 \
+-object memory-backend-file,id=mem,size=4096M,mem-path=/dev/hugepages,share=on -numa node,memdev=mem -mem-prealloc
+

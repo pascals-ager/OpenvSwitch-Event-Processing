@@ -2597,18 +2597,18 @@ xlate_normal(struct xlate_ctx *ctx)
             struct xlate_cfg *xcfg = ovsrcu_get(struct xlate_cfg *, &xcfgp);
             struct xbundle *mac_xbundle = xbundle_lookup(xcfg, mac_port);
             if (mac_xbundle && mac_xbundle != in_xbundle) {
-                VLOG_DBG("VLOG forwarding to learned port \n");
+                //VLOG_DBG("VLOG forwarding to learned port \n");
                 xlate_report(ctx, "forwarding to learned port");
                 output_normal(ctx, mac_xbundle, vlan);
             } else if (!mac_xbundle) {
-                VLOG_DBG("VLOG learned port is unknown, dropping \n");
+                //VLOG_DBG("VLOG learned port is unknown, dropping \n");
                 xlate_report(ctx, "learned port is unknown, dropping");
             } else {
-                VLOG_DBG("VLOG learned port is input port, dropping \n");
+                //VLOG_DBG("VLOG learned port is input port, dropping \n");
                 xlate_report(ctx, "learned port is input port, dropping");
             }
         } else {
-            VLOG_DBG("VLOG no learned MAC for destination, flooding \n");
+            //VLOG_DBG("VLOG no learned MAC for destination, flooding \n");
             xlate_report(ctx, "no learned MAC for destination, flooding");
             xlate_normal_flood(ctx, in_xbundle, vlan);
         }
@@ -3990,7 +3990,7 @@ xlate_output_action(struct xlate_ctx *ctx,
         break;
     case OFPP_NORMAL:{    
     if(ctx->xin->may_forward){
-        VLOG_DBG("VLOG In xlate_output_action OFPP_NORMAL\n"); /*CEP*/
+        //VLOG_DBG("VLOG In xlate_output_action OFPP_NORMAL\n"); /*CEP*/
         xlate_normal(ctx);
         }
         break;
@@ -4012,7 +4012,7 @@ xlate_output_action(struct xlate_ctx *ctx,
                                   0, NULL, 0);
         break;
     case OFPP_NONE:
-    VLOG_DBG("VLOG In xlate_output_action OFPP_NONE\n"); /*CEP*/
+    //VLOG_DBG("VLOG In xlate_output_action OFPP_NONE\n"); /*CEP*/
         break;
     case OFPP_LOCAL:
     default:
@@ -4026,14 +4026,14 @@ xlate_output_action(struct xlate_ctx *ctx,
     }
 
     if (prev_nf_output_iface == NF_OUT_FLOOD) {
-         VLOG_DBG("VLOG In xlate_output_action prev_nf_output_iface == NF_OUT_FLOOD\n");
+         //VLOG_DBG("VLOG In xlate_output_action prev_nf_output_iface == NF_OUT_FLOOD\n");
         ctx->nf_output_iface = NF_OUT_FLOOD;
     } else if (ctx->nf_output_iface == NF_OUT_DROP) {
-        VLOG_DBG("VLOG In xlate_output_action ctx->nf_output_iface == NF_OUT_DROP\n");
+        //VLOG_DBG("VLOG In xlate_output_action ctx->nf_output_iface == NF_OUT_DROP\n");
         ctx->nf_output_iface = prev_nf_output_iface;
     } else if (prev_nf_output_iface != NF_OUT_DROP &&
                ctx->nf_output_iface != NF_OUT_FLOOD) {
-        VLOG_DBG("VLOG In xlate_output_action prev_nf_output_iface != NF_OUT_DROP and ctx->nf_output_iface != NF_OUT_FLOOD\n");
+        //VLOG_DBG("VLOG In xlate_output_action prev_nf_output_iface != NF_OUT_DROP and ctx->nf_output_iface != NF_OUT_FLOOD\n");
         ctx->nf_output_iface = NF_OUT_MULTI;
     }
 }

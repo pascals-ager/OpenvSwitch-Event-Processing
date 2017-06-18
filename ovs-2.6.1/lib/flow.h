@@ -43,11 +43,15 @@ struct match;
 
 
 #ifndef ATTR_PARAM
-#define ATTR_PARAM 3
+#define ATTR_PARAM 4
 #endif
 
 #ifndef ATTR_DELIMITER
 #define ATTR_DELIMITER "2c"
+#endif
+
+#ifndef ATTR_STAMP
+#define ATTR_STAMP "434550"  //CEP
 #endif
 /*CEP*/
 
@@ -74,8 +78,8 @@ extern const uint8_t flow_segment_u64s[];
     DIV_ROUND_UP(FLOW_U64_OFFREM(FIELD) + MEMBER_SIZEOF(struct flow, FIELD), \
                  sizeof(uint64_t))
 
-int flow_parse_str(const char *, const char * );
-int flow_extract_str(const char *, int, char *);
+int flow_parse_str(const char *, const char * ,char *);
+//void flow_extract_str(const char *, uint32_t length , char *);
 void flow_strip_hex(char * , char c);
 void flow_string_convert(char *);
 

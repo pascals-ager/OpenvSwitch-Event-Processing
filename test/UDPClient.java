@@ -29,7 +29,7 @@ int val = 0;
                 add("FUTURE");
                 add("SHORT");     
         }}; */
-      while(counter <= 100){ 
+      while(counter <= 100000){ 
         
 
 	BufferedReader inFromUser =
@@ -40,21 +40,21 @@ int val = 0;
       // byte[] receiveData = new byte[1024];
 
 
-        Date date = new Date();
+//        Date date = new Date();
         //String s = catalogue.get(2);
          //StringBuilder sentence = new StringBuilder(list.get(new Random().nextInt(list.size()))); //new Random().nextInt(list.size())
         StringBuilder sentence = new StringBuilder("SHORT");
          sentence.append(",");
          sentence.append(new Random().nextInt(10));//sentence.append(new Random().nextInt(2000));
          sentence.append(",");
-         sentence.append(counter);
+         sentence.append(new Date().getTime());
 
          //date.getTime()
 
        sendData = sentence.toString().getBytes();
        DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, 9877);
 
-       System.out.println("Sending packet: "+sentence);
+//       System.out.println("Sending packet: "+sentence);
       //logger.info("Sending packet");
 
        clientSocket.send(sendPacket);
@@ -67,7 +67,7 @@ int val = 0;
        //String modifiedSentence = new String(receivePacket.getData());
        //System.out.println("FROM SERVER:" + modifiedSentence);
        clientSocket.close();
-       Thread.sleep(1000);
+	       Thread.sleep(1);
 
     }
 }

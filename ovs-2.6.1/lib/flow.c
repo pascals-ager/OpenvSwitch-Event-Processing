@@ -317,38 +317,43 @@ BUILD_MESSAGE("FLOW_WC_SEQ changed: miniflow_extract() will have runtime "
     miniflow_push_macs_(MF, offsetof(struct flow, FIELD), VALUEP)
 
 
-int flow_parse_str(const char * tmp, const char *token){
-    if(strstr(tmp,token)){
-      int len = strstr(tmp,token) - tmp;
-      return len;
-    }
-    return 0;
-} 
+int flow_parse_str(const char * tmp, const char *token, char *p){
 
+    int length,i;
+   char *k= strstr(tmp,token);
+   if(k!= '\0'){
 
-int flow_extract_str( const char *temp, int length, char * p){
-   if(length){
-       int i;
-       //VLOG_DBG("VLOG temp string here is %s",temp);
-    for (i=0;i<length;i++,temp++){
-        //VLOG_DBG("VLOG Iterator i - %d, temp value - %c\n",i,*temp);
-       *p = *temp;
-       //VLOG_DBG("VLOG value of *p - %c\n",*p);
+    length = (strlen(tmp) - strlen(k)); 
+   }
+   else length = 0;
+    if(length){
+    for (i=0;i<length;i++,tmp++){
+        ////VLOG_DBG("VLOG Iterator i - %d, temp value - %c\n",i,*temp);
+       *p = *tmp;
+       ////VLOG_DBG("VLOG value of *p - %c\n",*p);
         p++; 
         }
+        return length;
     }
-    else{ 
-        int i= strlen(temp);
-        while(i != 0){        
-            *p = *temp; 
-            p++;     
-            temp++;
-            i --;
-        }
+    else{
+        strcpy(p,tmp);
+        return 0;
     }
-    return 1;
- }  
+return 0;
 
+}
+
+/*void flow_extract_str( const char *temp, uint32_t length, char * p){   
+       int i;
+       ////VLOG_DBG("VLOG temp string here is %s",temp);
+    for (i=0;i<length;i++,temp++){
+        ////VLOG_DBG("VLOG Iterator i - %d, temp value - %c\n",i,*temp);
+       *p = *temp;
+       ////VLOG_DBG("VLOG value of *p - %c\n",*p);
+        p++; 
+        }
+    }  */
+ 
 
 void flow_strip_hex(char * str, char c){
      int i = 0;
@@ -363,6 +368,7 @@ void flow_strip_hex(char * str, char c){
 
 
 void flow_string_convert(char *str){
+    ////VLOG_DBG("VLOG In flow_string_convert is %s",str); 
     char s[10];
     int num = 0;
     char *pr = str, *pm=str, *pw=s;
@@ -370,7 +376,7 @@ void flow_string_convert(char *str){
     while (*pr){
     memcpy(ps,pr,2);
     num = (int) strtol(ps, NULL, 16);
-    //VLOG_DBG("VLOG num here is %d",num);
+    ////VLOG_DBG("VLOG num here is %d",num);
     sprintf(pw, "%d", num);
     pr+=2;
     pw+=2;
@@ -842,95 +848,127 @@ miniflow_extract(struct dp_packet *packet, struct miniflow *dst)
         } else if (OVS_LIKELY(nw_proto == IPPROTO_UDP)) {
             if (OVS_LIKELY(size >= UDP_HEADER_LEN)) {
                 const struct udp_header *udp = data;
-                size_t l4_size = dp_packet_l4_size(packet); /*CEP*/
-                const void *  payload = dp_packet_get_udp_payload(packet);
 
-            if (payload) {
+                
+                   size_t l4_size = dp_packet_l4_size(packet); 
+                   const void *  payload = dp_packet_get_udp_payload(packet);
+                    struct ds string = DS_EMPTY_INITIALIZER;
+                    ds_put_hex(&string,payload,l4_size-8);
+                    //char *stream = ds_steal_cstr(&string);    
+                           
+          if (payload) {
                     struct ds string = DS_EMPTY_INITIALIZER;
                     ds_put_hex(&string,payload,l4_size-8);
                     char *stream = ds_steal_cstr(&string);
                     int i=0; 
                     stream += 2;
-                    char * data[ATTR_PARAM];
+                    char  * data[ATTR_PARAM];
                     uint64_t event[ATTR_PARAM]={0};
+                    //VLOG_DBG("VLOG data here is %s",stream);       
 
-                    for(i = 0; i < ATTR_PARAM; i++){
-                        data[i]=(char *)calloc(8, sizeof(char *));
-                    }
 
-                    char **p = data;  
+                for(i=0;i<ATTR_PARAM;i++){
+                    data[i]=(char *)xcalloc(100, sizeof(char *)); 
 
-                     for(i=0;i<ATTR_PARAM;i++){                        
-                        int length = flow_parse_str(stream,ATTR_DELIMITER);
-                        //VLOG_DBG("VLOG length here is %d",length); 
-                        if(flow_extract_str(stream, length, *p)){
-                        stream += length +2;
-                        ++p;
-                        }
-                        else break;
-                        if(i){
-                            //VLOG_DBG("VLOG data[%d] is %s",i, data[i]); 
-                            flow_strip_hex(data[i],'3');
-                            sscanf(data[i],"%"PRIu64"",&event[i]);
+                    //VLOG_DBG("VLOG FOR LOOP");                      
+                    int length = flow_parse_str(stream,ATTR_DELIMITER,data[i]);
+                    //int length=8;
+                    char * stamp=data[i];
+
+                       //VLOG_DBG("VLOG length here is %d",length);
+                       //VLOG_DBG("VLOG stamp here is %s",stamp); 
+                        if(length){
+                            if(i==0){
+                            if(!strcmp(stamp,ATTR_STAMP)){
+                              //VLOG_DBG("VLOG IN ONE\n");
+                            //VLOG_DBG("------------------------VLOG stamp data to be manipulated$
+                             ////VLOG_DBG("VLOG data[0] is %s",data[i]);   
+                             flow_string_convert(data[i]);
+                             sscanf(data[i],"%"PRIu64"",&event[i]);
                             }
-                        else{
-                             //VLOG_DBG("VLOG data[0] is %s",data[i]);   
+                            else { 
+                                //VLOG_DBG("VLOG IN BREAK");
+                                //free(stamp);                         
+                                free(data[i]);
+                                break; 
+                                }
+
+                        }
+                        else if(i == 1){ 
+                             //VLOG_DBG("VLOG IN TWO\n");
+                            //VLOG_DBG("------------------------VLOG stamp data to be manipulated$
+                             //VLOG_DBG("VLOG data[%d] is %s",i,data[i]);   
                              flow_string_convert(data[i]);
                              sscanf(data[i],"%"PRIu64"",&event[i]);
                         }
-                        
-                        //VLOG_DBG("VLOG event[%d] %"PRIu64"\n",i,event[i]);
-
+                        else {
+                                //VLOG_DBG("VLOG N THREE\n");
+                                //VLOG_DBG("VLOG data[%d] is %s",i,data[i]);
+                                flow_strip_hex(data[i],'3');
+                                sscanf(data[i],"%"PRIu64"",&event[i]);
                         }
+                        stream += length +2;
+                        //VLOG_DBG("VLOG came here is %s\n",stream);
+                      }
+                    else {                        
+                        if(i==0){
+                            if(!strcmp(stamp,ATTR_STAMP)){
+                            //VLOG_DBG("VLOG IN FOUR\n");
+                            //VLOG_DBG("------------------------VLOG stamp data to be manipulated$
+                             ////VLOG_DBG("VLOG data[0] is %s",data[i]);   
+                             flow_string_convert(data[i]);
+                             sscanf(data[i],"%"PRIu64"",&event[i]);
+                             //free(stamp);
+                             free(data[i]);
+                            }
+                             break;
+                        }
+                        else if(i == 1){ 
+                             //VLOG_DBG("VLOG IN FIVE\n");
+                            ////VLOG_DBG("VLOG data[%d] is %s",i, data[i]); 
+                            //VLOG_DBG("------------------------VLOG stamp data to be manipulated$
+                             flow_string_convert(data[i]);
+                             sscanf(data[i],"%"PRIu64"",&event[i]);
+                             //free(stamp);
+                            free(data[i]);
+                            break;
+                            }
+                        else{
+                             //VLOG_DBG("VLOG IN SIX\n");
+                             //VLOG_DBG("VLOG data[%d] is %s",i,data[i]);   
+                            //VLOG_DBG("------------------------VLOG stamp data to be manipulated %s@
+                            flow_strip_hex(data[i],'3');
+                             sscanf(data[i],"%"PRIu64"",&event[i]);
+                             //free(stamp);
+                             free(data[i]);
+                             break;
+                            }
+                      }                           
+                 }  
 
-                    for(i = 0; i < ATTR_PARAM; i++){
-                        free(data[i]);
-                    }
                                                     
 
-                    //uint64_t check = 2161727821137838080;   /*30*/
-                    //uint64_t mate  = 2233785415175766016;  /*31*/
-/*
-                       
-                    const char seperator[2] = "c";
-                    char *token;
-                    char tmp[100];
-                    uint64_t event[2]={0};
-  
-  
-                    for(i=0,j=0;stream[i]!='\0';i++){
-                        if(i%2!=0 && stream[i]!='x'){
-                        tmp[j++]=stream[i];
-                            }
-                        }
-    
-                    token=strtok(tmp,seperator);
-                    while( token != NULL && counter < 2 ){     
-                        event[counter]=atoi(token);
-                        token = strtok(NULL, seperator);
-                        counter ++;
-                    }
-                */
-                    //VLOG_DBG("NEW %"PRId64" - %"PRId64"\n",event[0],event[1]); /*CEP*/
+                   //VLOG_DBG("VLOG DID I COME HERE");
 
-                    miniflow_push_be64(mf, e_type, htonll(event[0]));                   
-                    miniflow_push_be64(mf, e_attr1, htonll(event[1]));
-                    miniflow_push_be64(mf, e_attr2, htonll(event[2]));
-                    //miniflow_push_be64(mf, e_val1, htonll(0));
+                    miniflow_push_be64(mf, e_type, htonll(event[1]));                   
+                    miniflow_push_be64(mf, e_attr1, htonll(event[2]));
+                    miniflow_push_be64(mf, e_attr2, htonll(event[3]));
+ 
 
             
-            VLOG_DBG("VLOG In flow_extract  event[0] - %"PRIu64"\n",event[0]);
-            VLOG_DBG("VLOG In flow_extract  event[1] - %"PRIu64"\n",event[1]);
-            VLOG_DBG("VLOG In flow_extract  event[2] - %"PRIu64"\n",event[2]);
-            //VLOG_DBG("VLOG In flow_extract htonll event[1] - %"PRIu64"\n",htonll(event[1]));
-            //VLOG_DBG("VLOG In flow_extract event[2] - %"PRIu64"\n",event[2]);                                                                                                 
-            //VLOG_DBG("VLOG In flow_extract htonll event[2] - %"PRIu64"\n",htonll(event[2]));
+            //VLOG_DBG("VLOG In flow_extract  event[0] - %"PRIu64"\n",event[0]);
+            //VLOG_DBG("VLOG In flow_extract  event[1] - %"PRIu64"\n",event[1]);
+            //VLOG_DBG("VLOG In flow_extract  event[2] - %"PRIu64"\n",event[2]);
+            //VLOG_DBG("VLOG In flow_extract  event[3] - %"PRIu64"\n",event[3]);
 
-                    ds_destroy(&string);            
+                    ds_destroy(&string); 
+
+                    //VLOG_DBG("VLOG Destroyed string");
             }
 
-            //VLOG_DBG("VLOG In flow_extract udp-src - %d\n",udp->udp_src);
-            //VLOG_DBG("VLOG In flow_extract udp-dst - %d\n",udp->udp_dst);
+
+
+               //VLOG_DBG("VLOG Outside  payload loop");
                 miniflow_push_be16(mf, tp_src, udp->udp_src);
                 miniflow_push_be16(mf, tp_dst, udp->udp_dst);
                 miniflow_pad_to_64(mf, tp_dst);

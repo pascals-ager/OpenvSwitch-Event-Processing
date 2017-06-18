@@ -1,4 +1,4 @@
-cd /usr/src/cep/ovs-2.6.1
+cd /home/advith/cep/thesis-advith-cep/ovs-2.6.1
 mkdir -p /usr/local/etc/openvswitch 
 rm /usr/local/etc/openvswitch/conf.db 
 mkdir -p /usr/local/var/run/openvswitch
@@ -13,20 +13,31 @@ ovsdb-server --remote=punix:/usr/local/var/run/openvswitch/db.sock \
                  --pidfile --detach
 
 export DB_SOCK=/usr/local/var/run/openvswitch/db.sock
+ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true				 
+#ovs-vsctl --no-wait set Open_vswitch . other_config:emc-insert-inv-prob=0
+ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="4096,4096"
+ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-extra=--vhost-owner libvirt-qemu:kvm --vhost-perm 0666
+ovs-vswitchd --pidfile --detach 
 ovs-vsctl --no-wait init
-ovs-vswitchd --pidfile --detach
+#ovs-vswitchd --pidfile --detach
 #ovs-vsctl -- --bootstrap set-ssl /usr/src/cep/sc-privkey.pem \
  # /usr/src/cep/sc-cert.pem \
   #/usr/local/var/lib/openvswitch/pki/controllerca/cacert.pem
-
 ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 
-#ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
+ovs-vsctl add-port br0 vhost-user1 -- set Interface vhost-user1 type=dpdkvhostuser
+ovs-vsctl add-port br0 vhost-user2 -- set Interface vhost-user2 type=dpdkvhostuser 
+ovs-vsctl add-port br0 vhost-user3 -- set Interface vhost-user3 type=dpdkvhostuser 
 
-ovs-vsctl set bridge br0 protocols=OpenFlow10
-cd ..
+#    options:dpdk-devargs=0000:00:0a.0
+#ovs-vsctl add-port br0 dpdk-p1 -- set Interface dpdk-p1 type=dpdk \
+ #   options:dpdk-devargs=0000:00:09.0
 
-sh veth-setup.sh
+	#ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
+#ovs-vsctl set bridge ovsbr0 protocols=OpenFlow10
+
+
+#sh veth-setup.sh
 
 #ryu-manager --ctl-privkey /usr/src/cep/controller-privkey.pem \
 #             --ctl-cert /usr/src/cep/controller-cert.pem \

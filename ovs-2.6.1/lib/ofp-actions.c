@@ -7774,7 +7774,7 @@ ofpact_outputs_to_port(const struct ofpact *ofpact, ofp_port_t port)
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:{
-        VLOG_DBG("VLOG ofpact_outputs_to_port %"PRIu32"\n",port);    
+        //VLOG_DBG("VLOG ofpact_outputs_to_port %"PRIu32"\n",port);    
         return ofpact_get_OUTPUT(ofpact)->port == port; 
     }
     case OFPACT_OUTPUT_REG:

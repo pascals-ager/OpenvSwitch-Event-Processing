@@ -1,0 +1,5 @@
+ovs-ofctl add-flow br0  priority=1112,dl_type=0x0800,nw_proto=17,nw_src=10.1.1.2,nw_dst=10.1.1.3,tp_dst=9877,e_type=84698384,actions=mod_nw_dst:10.1.1.1,NORMAL
+
+--
+
+ovs-ofctl add-flow br0  priority=1112,dl_type=0x0800,nw_proto=17,nw_src=10.1.1.2,nw_dst=10.2.1.3,tp_dst=9877,e_type=84698384,actions=mod_nw_dst:10.1.1.1,NORMAL

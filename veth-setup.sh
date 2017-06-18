@@ -2,7 +2,7 @@
 ip netns add ns1
 ip netns add ns2
 # create the switch
-
+ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 
 # PORT 1
 # create a port pair
