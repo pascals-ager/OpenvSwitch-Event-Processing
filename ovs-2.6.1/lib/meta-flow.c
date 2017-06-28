@@ -1782,13 +1782,13 @@ mf_set_wild(const struct mf_field *mf, struct match *match, char **err_str)
 
     case MFF_EVNT_ATTR1:
            /*CEP*/
-        match->wc.masks.e_attr1 = htons(0);  /*CEP*/ 
-        match->flow.e_attr1 = htons(0);      /*CEP*/
+        match->wc.masks.e_attr1 = htonll(0);  /*CEP*/ 
+        match->flow.e_attr1 = htonll(0);      /*CEP*/
            break;
     case MFF_EVNT_ATTR2:
            /*CEP*/
-        match->wc.masks.e_attr2 = htons(0);  /*CEP*/ 
-        match->flow.e_attr2 = htons(0);      /*CEP*/    
+        match->wc.masks.e_attr2 = htonll(0);  /*CEP*/ 
+        match->flow.e_attr2 = htonll(0);      /*CEP*/    
            break;  
     case MFF_EVNT_TYP:
            /*CEP*/

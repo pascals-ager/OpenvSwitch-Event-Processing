@@ -1667,7 +1667,7 @@ enum OVS_PACKED_ENUM mf_field_id {
      * Maskable: bitwise.
      * Formatting: decimal.
      * Prerequisites: UDP.
-     * Access: read-only.
+     * Access: read/write.
      * NXM: NXM_OF_EVNT_TYP(113) since v2.6.
      * OXM: OXM_OF_EVNT_TYP(46) since OF1.2 and v2.6.
      * OF1.0: exact match.

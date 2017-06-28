@@ -193,10 +193,12 @@ OFPAT_SET_NW_TOS = 8    # IP ToS (DSCP field, 6 bits).
 OFPAT_SET_TP_SRC = 9    # TCP/UDP source port.
 OFPAT_SET_TP_DST = 10   # TCP/UDP destination port.
 OFPAT_ENQUEUE = 11      # Output to queue.
-OFPAT_SET_MOV_MIN = 12  # moving min value for attribute1.
+OFPAT_SET_WIN_MAX = 12  # window moving max value for attribute1.
 OFPAT_SET_MOV_MAX = 13  # moving max value for attribute1.
 OFPAT_SET_MIN = 14      # min value for attribute1.
 OFPAT_SET_MAX = 15      # moving max value for attribute1.
+OFPAT_SET_WIN = 16      # window value
+OFPAT_SET_CMP = 17      # window value
 OFPAT_VENDOR = 0xffff
 #cep
 OFP_ACTION_OUTPUT_PACK_STR = '!HHHH'

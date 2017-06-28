@@ -4483,11 +4483,12 @@ freeze_unroll_actions(const struct ofpact *a, const struct ofpact *end,
         case OFPACT_SET_IP_TTL:
         case OFPACT_SET_L4_SRC_PORT:
         case OFPACT_SET_L4_DST_PORT:
-        case OFPACT_SET_MOV_MIN:
+        case OFPACT_SET_WIN_MAX:
         case OFPACT_SET_MOV_MAX:
         case OFPACT_SET_MIN:
         case OFPACT_SET_MAX:
-        case OFPACT_SET_TYPE:        
+        case OFPACT_SET_CMP:        
+        case OFPACT_SET_WIN:        
         case OFPACT_SET_QUEUE:
         case OFPACT_POP_QUEUE:
         case OFPACT_PUSH_MPLS:
@@ -4733,11 +4734,12 @@ recirc_for_mpls(const struct ofpact *a, struct xlate_ctx *ctx)
     case OFPACT_SET_IP_TTL:
     case OFPACT_SET_L4_SRC_PORT:
     case OFPACT_SET_L4_DST_PORT:
-    case OFPACT_SET_MOV_MIN:
+    case OFPACT_SET_WIN_MAX:
     case OFPACT_SET_MOV_MAX:
     case OFPACT_SET_MIN:
     case OFPACT_SET_MAX:
-    case OFPACT_SET_TYPE:
+    case OFPACT_SET_CMP:     
+    case OFPACT_SET_WIN:
     case OFPACT_REG_MOVE:
     case OFPACT_STACK_PUSH:
     case OFPACT_STACK_POP:
@@ -4783,6 +4785,9 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
    dummyMaxItem = (struct MaxItem*) malloc(sizeof(struct MaxItem));
    dummyMaxItem->data = -1;  
    dummyMaxItem->key = -1;
+   dummyWindowItem = (struct WindowItem*) malloc(sizeof(struct WindowItem));
+   dummyWindowItem->counter = -1;  
+   dummyWindowItem->key = -1;   
     const struct ofpact *a;
 
     //VLOG_DBG("VLOG in do_xlate_actions\n"); /*CEP*/
@@ -4965,39 +4970,25 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
                 flow->tp_dst = htons(ofpact_get_SET_L4_DST_PORT(a)->port);
             }
             break;
-        case OFPACT_SET_MOV_MIN:{
-        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN\n"); /*CEP*/
-        if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
-                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
-                
-                flow->e_val1 = htonll(ofpact_get_SET_MOV_MIN(a)->attr);
-            }
-            //VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            //VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
-            if(htonll(flow->e_attr1) < htonll(flow->e_val1)){
-                
-            }
+
+        case OFPACT_SET_WIN:{
+            VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_WIN-window -NORMAL\n");
+            type = htonll(flow->e_type);
+            window= ofpact_get_SET_WIN(a)->attr;
+            winItem=search_window(type);
+            if(winItem == NULL){
+                   insert_window(type, window, 0);
+                   }                        
             else{
-                //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MIN else loop\n"); /*CEP*/
-                //parse and encode attr
-                //enum ofp_raw_action_type raw = OFPAT_RAW_SET_MOV_MIN;
-                //enum ofp_version ofp_version = OFP10_VERSION;
-                uint64_t attr = flow->e_val1; 
-                struct ofpbuf b;
-                ofpbuf_init(&b, 32);
-                char * str = (char *)malloc(20);
-                sprintf(str,"%"PRIu64"",attr);
-                char * tmp = str_to_u64(str, &ofpact_put_SET_MOV_MIN(&b)->attr);
-                //VLOG_DBG("VLOG using tmp - %s\n",tmp);
-                //ofpact_put_raw(&b, 1, raw, attr);
-                xlate_normal(ctx);
-                free(str);
-                free(tmp);
-            }/*CEP*/
-            break;    
-        }
+                delete_window(winItem);
+                insert_window(type, window, ++(winItem->counter));
+            }       
+            break;
+        }            
+
         case OFPACT_SET_MOV_MAX:{
         //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX\n"); /*CEP*/
+            type = htonll(flow->e_type);//htonll(ofpact_get_MOV_MAX(a)->attr);
         mov_max= ofpact_get_SET_MOV_MAX(a)->attr;  /*set by rule*/
             uint64_t cur_max;
         item= search_max(type); /* whats in hash table*/
@@ -5007,11 +4998,11 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
                     delete_max(item);
                     insert_max(type, htonll(flow->e_attr1));
                         }
-                }                     
-        else {
+                    }                     
+        else{
             cur_max = mov_max;
             insert_max(type, mov_max);       
-         }
+            }
             
             VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX mov_max is %"PRIu64"\n",mov_max);
             VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MOV_MAX cur_max is %"PRIu64"\n",cur_max);
@@ -5026,21 +5017,77 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
             break;   
         }
 
-        case OFPACT_SET_TYPE:{
-            type = htonll(ofpact_get_SET_TYPE(a)->attr);
-            break;
-        }
+        case OFPACT_SET_WIN_MAX:{
+            VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_WIN_MAX-window");
+            type = htonll(flow->e_type);
+            mov_max= ofpact_get_SET_WIN_MAX(a)->attr;  /*set by rule*/
+            uint64_t cur_max;
+            winItem=search_window(type);
+            item= search_max(type); /* whats in hash table*/
+            if(winItem->window <= winItem->counter ){ 
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_WIN_MAX-window==counter");
+                 if(item!=NULL){ 
+                cur_max = item->data; 
+                }
+                else{
+                    cur_max = mov_max;
+                    
+                }
+                VLOG_DBG("VLOG cur_max is %"PRIu64"\n",cur_max);
+                VLOG_DBG("VLOG window is %"PRIu64"\n",winItem->window);
+                VLOG_DBG("VLOG window is %"PRIu64"\n",winItem->counter);
+            }
+            else if(winItem->window > winItem->counter){ 
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_WIN_MAX-window > counter");
+                  if(item!=NULL){                           
+                 cur_max = item->data;
+                    if(htonll(flow->e_attr1) > cur_max){
+                    delete_max(item);
+                    insert_max(type, htonll(flow->e_attr1));
+                        }
+                    }                     
+                else{
+                    cur_max = mov_max;
+                    insert_max(type, mov_max);       
+                    }
+                VLOG_DBG("VLOG cur_max is %"PRIu64"\n",cur_max);
+                VLOG_DBG("VLOG window is %"PRIu64"\n",winItem->window);
+                VLOG_DBG("VLOG window is %"PRIu64"\n",winItem->counter);                    
+                }
+            if(htonll(flow->e_attr1) < cur_max){
+                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_WIN_MAX-window -DROP\n");
+                break;
+            }
+            else{
+                 VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_WIN_MAX-window -NORMAL\n");
+                xlate_normal(ctx);
+                 
+            }           
 
-        case OFPACT_SET_MIN:{
-        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN\n"); /*CEP*/
-        /*if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
-                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
+
+            break;
+  
+        }        
+
+
+
+        case OFPACT_SET_CMP:{
+            
+            uint64_t mode = ofpact_get_SET_CMP(a)->attr;
+            uint64_t attr1 = htonll(flow->e_attr1);
+            uint64_t attr2 = htonll(flow->e_attr2);
+
+                switch(mode){
+                    case 0: if(attr1 == attr2) {xlate_normal(ctx);} break;
+                    case 1: if(attr1 > attr2)  {xlate_normal(ctx);} break;
+                    case 2: if(attr1 < attr2)  {xlate_normal(ctx);} break;
+                    default: break;
+                }
                 
-                flow->e_val1 = htonll(ofpact_get_SET_MIN(a)->attr);
-            } */
-            //VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            //VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
-            if(htonll(flow->e_attr1) >= ofpact_get_SET_MIN(a)->attr){
+
+        }
+        case OFPACT_SET_MIN:{
+                if(htonll(flow->e_attr1) >= ofpact_get_SET_MIN(a)->attr){
                 VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN - NORMAL\n"); /*CEP*/
                 xlate_normal(ctx);
                 break;
@@ -5048,16 +5095,7 @@ do_xlate_actions(const struct ofpact *ofpacts, size_t ofpacts_len,
                VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MIN - DROP\n"); /*CEP*/ 
             break;/*CEP*/      
         }
-        case OFPACT_SET_MAX:{
-        //VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX\n"); /*CEP*/
-       /* if (is_ip_any(flow) && !(flow->nw_frag & FLOW_NW_FRAG_LATER)) {
-                memset(&wc->masks.e_val1, 0xff, sizeof wc->masks.e_val1);
-                
-                flow->e_val1 = htonll(ofpact_get_SET_MAX(a)->attr);
-            } */
-
-            //VLOG_DBG("VLOG in do_xlate_actions flow->e_val1 is %"PRIu64"\n",htonll(flow->e_val1));
-            //VLOG_DBG("VLOG in do_xlate_actions flow->e_attr1 is %"PRIu64"\n",htonll(flow->e_attr1));
+        case OFPACT_SET_MAX:{        
             if(htonll(flow->e_attr1) <= ofpact_get_SET_MAX(a)->attr){
                 VLOG_DBG("VLOG in do_xlate_actions OFPACT_SET_MAX - NORMAL\n"); /*CEP*/
                 xlate_normal(ctx);
@@ -6253,6 +6291,79 @@ struct MaxItem* delete_max(struct MaxItem* item) {
             
          //assign a dummy item at deleted position
          hashArray[hashIndex] = dummyMaxItem; 
+         return temp;
+      }
+        
+      //go to next cell
+      ++hashIndex;
+        
+      //wrap around the table
+      hashIndex %= SIZE;
+   }      
+    
+   return NULL;        
+}
+
+
+
+
+struct WindowItem *search_window(uint64_t key) {
+   //get the hash 
+   uint64_t hashIndex = hashCode(key);  
+    
+   //move in array until an empty 
+   while(hashWinArray[hashIndex] != NULL) {
+    
+      if(hashWinArray[hashIndex]->key == key)
+         return hashWinArray[hashIndex]; 
+            
+      //go to next cell
+      ++hashIndex;
+        
+      //wrap around the table
+      hashIndex %= SIZE;
+   }        
+    
+   return NULL;        
+}
+
+void insert_window(uint64_t key, uint64_t window, uint64_t counter) {
+
+   struct WindowItem *winItem = (struct WindowItem*) malloc(sizeof(struct WindowItem));
+   winItem->window = window; 
+   winItem->counter = counter;  
+   winItem->key = key;
+
+   //get the hash 
+   uint64_t hashIndex = hashCode(key);
+
+   //move in array until an empty or deleted cell
+   while(hashWinArray[hashIndex] != NULL && hashWinArray[hashIndex]->key != -1) {
+      //go to next cell
+      ++hashIndex;
+        
+      //wrap around the table
+      hashIndex %= SIZE;
+   }
+    
+   hashWinArray[hashIndex] = winItem;
+}
+
+struct WindowItem* delete_window(struct WindowItem* winItem) {
+   uint64_t key = winItem->key;
+
+
+   //get the hash 
+   uint64_t hashIndex = hashCode(key);
+
+   //move in array until an empty
+   while(hashWinArray[hashIndex] != NULL) {
+    
+      if(hashWinArray[hashIndex]->key == key) {
+         struct WindowItem* temp = hashWinArray[hashIndex]; 
+            
+         //assign a dummy item at deleted position
+         hashWinArray[hashIndex] = dummyWindowItem; 
          return temp;
       }
         

@@ -1704,7 +1704,7 @@ ofputil_decode_flow_mod(struct ofputil_flow_mod *fm,
             /* Standard OpenFlow 1.0 flow_mod. */
             const struct ofp10_flow_mod *ofm;
 
-            /* Get the ofp10_flow_mod. */
+            /* Get the ofp10_flow_mod. */ 
             ofm = ofpbuf_pull(&b, sizeof *ofm);
             //VLOG_DBG("VLOG - In decode flow_mod\n"); /*CEP*/    
             /* Translate the rule. */

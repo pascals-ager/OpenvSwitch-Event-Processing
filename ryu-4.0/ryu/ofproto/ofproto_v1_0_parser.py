@@ -746,10 +746,12 @@ class OFPActionAttrVal(OFPAction):
         LOG.debug('VLOG In OFPActionAttrVal OFPAction PARSER')
         type_, len_, val = struct.unpack_from(
             ofproto.OFP_ACTION_ATTR_VAL_STR, buf, offset)
-        assert type_ in (ofproto.OFPAT_SET_MOV_MIN,
+        assert type_ in (ofproto.OFPAT_SET_WIN_MAX,
                          ofproto.OFPAT_SET_MOV_MAX,
                          ofproto.OFPAT_SET_MIN,
-                         ofproto.OFPAT_SET_MAX)
+                         ofproto.OFPAT_SET_MAX,
+                         ofproto.OFPAT_SET_WIN,
+                         ofproto.OFPAT_SET_CMP)
         assert len_ == ofproto.OFP_ACTION_ATTR_VAL_SIZE
         return cls(val)
 
@@ -830,11 +832,11 @@ class OFPActionSetMax(OFPActionAttrVal):
         LOG.debug('VLOG In OFPActionSetMax OFPActionAttrVal')
         super(OFPActionSetMax, self).__init__(val) 
 
-@OFPAction.register_action_type(ofproto.OFPAT_SET_MOV_MIN,
+@OFPAction.register_action_type(ofproto.OFPAT_SET_WIN_MAX,
                                 ofproto.OFP_ACTION_ATTR_VAL_SIZE)
-class OFPActionSetMovMin(OFPActionAttrVal):
+class OFPActionSetWinMax(OFPActionAttrVal):
     """
-    Set the Moving Minimum value for attribute1
+    Set the Window Maxima value for attribute1
 
     This action indicates the moving minimum value to be set.
 
@@ -845,8 +847,42 @@ class OFPActionSetMovMin(OFPActionAttrVal):
     ================ ======================================================
     """
     def __init__(self, val):
-        LOG.debug('VLOG In OFPActionSetMax OFPActionAttrVal')
-        super(OFPActionSetMovMin, self).__init__(val)         
+        LOG.debug('VLOG In OFPActionSetWinMax OFPActionAttrVal')
+        super(OFPActionSetWinMax, self).__init__(val)
+
+@OFPAction.register_action_type(ofproto.OFPAT_SET_WIN,
+                                ofproto.OFP_ACTION_ATTR_VAL_SIZE)
+class OFPActionSetWin(OFPActionAttrVal):
+    """
+    Set the Window value for attribute1
+
+    This action indicates the moving minimum value to be set.
+
+    ================ ======================================================
+    Attribute        Description
+    ================ ======================================================
+    val              Attribute 1.
+    ================ ======================================================
+    """
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionSetWin OFPActionAttrVal')
+        super(OFPActionSetWin, self).__init__(val)
+
+class OFPActionSetCmp(OFPActionAttrVal):
+    """
+    Set the Compare value for attributes
+
+    This action indicates the moving minimum value to be set.
+
+    ================ ======================================================
+    Attribute        Description
+    ================ ======================================================
+    val              Compare.
+    ================ ======================================================
+    """
+    def __init__(self, val):
+        LOG.debug('VLOG In OFPActionSetCmp OFPActionAttrVal')
+        super(OFPActionSetCmp, self).__init__(val)                       
 
 @OFPAction.register_action_type(ofproto.OFPAT_SET_MOV_MAX,
                                 ofproto.OFP_ACTION_ATTR_VAL_SIZE)

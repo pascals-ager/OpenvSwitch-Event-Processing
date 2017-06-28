@@ -1,4 +1,4 @@
-cd /home/advith/cep/thesis-advith-cep/ovs-2.6.1
+cd /usr/src/cep/ovs-2.6.1
 mkdir -p /usr/local/etc/openvswitch 
 rm /usr/local/etc/openvswitch/conf.db 
 mkdir -p /usr/local/var/run/openvswitch
@@ -16,9 +16,9 @@ export DB_SOCK=/usr/local/var/run/openvswitch/db.sock
 #ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-init=true				 
 #ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-socket-mem="4096,4096"
 #ovs-vsctl --no-wait set Open_vSwitch . other_config:dpdk-extra=--vhost-owner libvirt-qemu:kvm --vhost-perm 0666
-ovs-vswitchd --pidfile --detach 
+#ovs-vswitchd --pidfile --detach 
 ovs-vsctl --no-wait init
-#ovs-vswitchd --pidfile --detach
+ovs-vswitchd --pidfile --detach
 #ovs-vsctl -- --bootstrap set-ssl /usr/src/cep/sc-privkey.pem \
  # /usr/src/cep/sc-cert.pem \
   #/usr/local/var/lib/openvswitch/pki/controllerca/cacert.pem

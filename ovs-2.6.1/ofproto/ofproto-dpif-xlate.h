@@ -237,7 +237,23 @@ struct MaxItem* delete_max(struct MaxItem* );
 struct MaxItem* hashArray[SIZE]; 
 struct MaxItem* dummyMaxItem;
 struct MaxItem* item;
+uint64_t mov_max;
+
 uint64_t hashCode(uint64_t);
 uint64_t type;
-uint64_t mov_max;
+
+struct WindowItem {
+    uint64_t window;
+   uint64_t counter;   /* window*/
+   uint64_t key;  /*e_type*/
+};
+
+struct WindowItem *search_window(uint64_t);
+void insert_window(uint64_t ,uint64_t, uint64_t );
+struct WindowItem* delete_window(struct WindowItem* );
+struct WindowItem* hashWinArray[SIZE]; 
+struct WindowItem* dummyWindowItem;
+struct WindowItem* winItem;
+uint64_t window;
+uint64_t counter;
 #endif /* ofproto-dpif-xlate.h */

@@ -80,14 +80,22 @@ def to_actions(dp, acts):
             LOG.debug('VLOG In to_actions SET_MAX')
             val = int(a.get('val', 0))
             actions.append(dp.ofproto_parser.OFPActionSetMax(val))   
-        elif action_type == 'SET_MOV_MIN':
-            LOG.debug('VLOG In to_actions SET_MOV_MIN')
+        elif action_type == 'SET_WIN_MAX':
+            LOG.debug('VLOG In to_actions SET_WIN_MAX')
             val = int(a.get('val', 0))
-            actions.append(dp.ofproto_parser.OFPActionSetMovMin(val))   
+            actions.append(dp.ofproto_parser.OFPActionSetWinMax(val))   
         elif action_type == 'SET_MOV_MAX':
             LOG.debug('VLOG In to_actions SET_MOV_MAX')
             val = int(a.get('val', 0))
-            actions.append(dp.ofproto_parser.OFPActionSetMovMax(val))                                            
+            actions.append(dp.ofproto_parser.OFPActionSetMovMax(val))
+        elif action_type == 'SET_WIN':
+            LOG.debug('VLOG In to_actions SET_WIN')
+            val = int(a.get('val', 0))
+            actions.append(dp.ofproto_parser.OFPActionSetWin(val))
+        elif action_type == 'SET_CMP':
+            LOG.debug('VLOG In to_actions SET_CMP')
+            val = int(a.get('val', 0))
+            actions.append(dp.ofproto_parser.OFPActionSetCmp(val))                                                                  
         elif action_type == 'ENQUEUE':
             port = UTIL.ofp_port_from_user(
                 a.get('port', ofproto_v1_0.OFPP_NONE))
@@ -136,12 +144,18 @@ def actions_to_str(acts):
         elif action_type == ofproto_v1_0.OFPAT_SET_MAX:
             LOG.debug('VLOG In actions_to_str SET_MAX')
             buf = 'SET_MAX:' + str(a.val)   
-        elif action_type == ofproto_v1_0.OFPAT_SET_MOV_MIN:
-            LOG.debug('VLOG In actions_to_str SET_MOV_MIN')
-            buf = 'SET_MOV_MIN:' + str(a.val)   
+        elif action_type == ofproto_v1_0.OFPAT_SET_WIN_MAX:
+            LOG.debug('VLOG In actions_to_str SET_WIN_MAX')
+            buf = 'SET_WIN_MAX:' + str(a.val)   
         elif action_type == ofproto_v1_0.OFPAT_SET_MOV_MAX:
             LOG.debug('VLOG In actions_to_str SET_MOV_MAX')
-            buf = 'SET_MOV_MAX:' + str(a.val)                                                  
+            buf = 'SET_MOV_MAX:' + str(a.val)
+        elif action_type == ofproto_v1_0.OFPAT_SET_WIN:
+            LOG.debug('VLOG In actions_to_str SET_WIN')
+            buf = 'SET_WIN:' + str(a.val)  
+        elif action_type == ofproto_v1_0.OFPAT_SET_CMP:
+            LOG.debug('VLOG In actions_to_str SET_CMP')
+            buf = 'SET_CMP:' + str(a.val)                                                                       
         elif action_type == ofproto_v1_0.OFPAT_ENQUEUE:
             port = UTIL.ofp_port_to_user(a.port)
             queue = UTIL.ofp_queue_to_user(a.queue_id)
