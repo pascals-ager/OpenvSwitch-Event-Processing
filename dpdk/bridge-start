@@ -1,4 +1,4 @@
-qemu-system-x86_64 -m 4096 -hda /home/advith/bridge.qcow2 -boot c -enable-kvm -no-reboot -net none \
+qemu-system-x86_64 -m 4096 -hda /home/advith/bridge.qcow2 -boot c -enable-kvm -no-reboot -net none -k de \
 -chardev socket,id=char3,path=/usr/local/var/run/openvswitch/vhost-user3 \
 -netdev type=vhost-user,id=mynet3,chardev=char3,vhostforce \
 -device virtio-net-pci,mac=00:00:00:00:00:03,netdev=mynet3 \

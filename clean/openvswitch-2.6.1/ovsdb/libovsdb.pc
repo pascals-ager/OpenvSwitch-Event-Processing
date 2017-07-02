@@ -7,5 +7,5 @@ Name: libovsdb
 Description: OVSDB library of Open vSwitch
 Version: 2.6.1
 Libs: -L${libdir} -lovsdb
-Libs.private: -latomic -lpthread -lrt -lm 
+Libs.private: -ldpdk -ldl -latomic -lpthread -lrt -lm  
 Cflags: -I${includedir}/openvswitch

@@ -168,7 +168,7 @@ host_triplet = x86_64-pc-linux-gnu
 #	$(top_srcdir)/datapath-windows/include \
 #	$(PTHREAD_INCLUDES) $(MSVC_CFLAGS)
 #am__append_2 = $(PTHREAD_LDFLAGS) $(MSVC64_LDFLAGS)
-#am__append_3 = -D_FILE_OFFSET_BITS=64
+am__append_3 = -D_FILE_OFFSET_BITS=64
 #am__append_4 = -DNDEBUG
 #am__append_5 = -fomit-frame-pointer
 bin_PROGRAMS = utilities/ovs-appctl$(EXEEXT) \
@@ -242,13 +242,13 @@ am__append_18 = \
 	lib/route-table.c \
 	lib/route-table.h
 
-#am__append_19 = \
-#       lib/netdev-dpdk.c \
-#       lib/netdev-dpdk.h
+am__append_19 = \
+       lib/netdev-dpdk.c \
+       lib/netdev-dpdk.h
 
-am__append_20 = \
-	lib/netdev-nodpdk.c \
-	lib/netdev-dpdk.h
+#am__append_20 = \
+#	lib/netdev-nodpdk.c \
+#	lib/netdev-dpdk.h
 
 #am__append_21 = \
 #	lib/dpif-netlink.c \
@@ -300,7 +300,7 @@ am__append_38 = $(bugtool_scripts)
 am__append_39 = utilities/bugtool/ovs-bugtool.in
 am__append_40 = bugtool-install-data-local
 am__append_41 = bugtool-uninstall-local
-#am__append_42 = tests/test-dpdkr
+am__append_42 = tests/test-dpdkr
 am__append_43 = \
 	tests/test-unix-socket.c
 
@@ -503,8 +503,8 @@ am__objects_3 = lib/dpif-netlink.lo lib/if-notifier.lo \
 	lib/netdev-linux.lo lib/netlink-conntrack.lo \
 	lib/netlink-notifier.lo lib/netlink-socket.lo \
 	lib/rtnetlink.lo lib/route-table.lo
-#am__objects_4 = lib/netdev-dpdk.lo
-am__objects_5 = lib/netdev-nodpdk.lo
+am__objects_4 = lib/netdev-dpdk.lo
+#am__objects_5 = lib/netdev-nodpdk.lo
 #am__objects_6 = lib/dpif-netlink.lo lib/netdev-windows.lo \
 #	lib/netlink-conntrack.lo lib/netlink-notifier.lo \
 #	lib/netlink-socket.lo
@@ -652,7 +652,7 @@ vtep_libvtep_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CC \
 	$(AM_CFLAGS) $(CFLAGS) $(vtep_libvtep_la_LDFLAGS) $(LDFLAGS) \
 	-o $@
 am__EXEEXT_1 = utilities/nlmon$(EXEEXT)
-#am__EXEEXT_2 = tests/test-dpdkr$(EXEEXT)
+am__EXEEXT_2 = tests/test-dpdkr$(EXEEXT)
 am__EXEEXT_3 = utilities/ovs-vlan-bug-workaround$(EXEEXT)
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS) $(sbin_PROGRAMS)
 am_ovn_controller_vtep_ovn_controller_vtep_OBJECTS =  \
@@ -751,11 +751,11 @@ am_tests_ovstest_OBJECTS = tests/ovstest.$(OBJEXT) \
 tests_ovstest_OBJECTS = $(am_tests_ovstest_OBJECTS)
 tests_ovstest_DEPENDENCIES = lib/libopenvswitch.la ovn/lib/libovn.la
 am__tests_test_dpdkr_SOURCES_DIST = tests/dpdk/ring_client.c
-#am_tests_test_dpdkr_OBJECTS =  \
-#	tests/dpdk/ring_client.$(OBJEXT)
+am_tests_test_dpdkr_OBJECTS =  \
+	tests/dpdk/ring_client.$(OBJEXT)
 tests_test_dpdkr_OBJECTS = $(am_tests_test_dpdkr_OBJECTS)
-#tests_test_dpdkr_DEPENDENCIES =  \
-#	lib/libopenvswitch.la $(am__DEPENDENCIES_1)
+tests_test_dpdkr_DEPENDENCIES =  \
+	lib/libopenvswitch.la $(am__DEPENDENCIES_1)
 am_tests_test_lib_OBJECTS = tests/test-lib.$(OBJEXT)
 tests_test_lib_OBJECTS = $(am_tests_test_lib_OBJECTS)
 tests_test_lib_DEPENDENCIES = lib/libopenvswitch.la
@@ -1459,7 +1459,7 @@ DBDIR = ${sysconfdir}/${PACKAGE}
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 DLLTOOL = false
-DPDK_vswitchd_LDFLAGS = 
+DPDK_vswitchd_LDFLAGS = -Wl,--whole-archive,-ldpdk,--no-whole-archive
 DSYMUTIL = 
 DUMPBIN = 
 ECHO_C = 
@@ -1485,7 +1485,7 @@ KBUILD =
 LD = /usr/bin/ld -m elf_x86_64
 LDFLAGS = 
 LIBOBJS = 
-LIBS = -latomic -lpthread -lrt -lm 
+LIBS = -ldpdk -ldl -latomic -lpthread -lrt -lm  
 LIBTOOL = $(SHELL) $(top_builddir)/libtool
 LIPO = 
 LN_S = ln -s
@@ -1510,8 +1510,8 @@ OBJDUMP = objdump
 OBJEXT = o
 OTOOL = 
 OTOOL64 = 
-OVS_CFLAGS =  --coverage -Werror
-OVS_LDFLAGS =  --coverage
+OVS_CFLAGS =  --coverage -I/usr/src/dpdk-stable-16.11.2/x86_64-native-linuxapp-gcc/include -Werror
+OVS_LDFLAGS =  --coverage -L/usr/src/dpdk-stable-16.11.2/x86_64-native-linuxapp-gcc/lib
 PACKAGE = openvswitch
 PACKAGE_BUGREPORT = bugs@openvswitch.org
 PACKAGE_NAME = openvswitch
@@ -1546,7 +1546,7 @@ SSL_LIBS = -lssl -lcrypto
 STRIP = strip
 VERSION = 2.6.1
 VSTUDIO_CONFIG = 
-WARNING_FLAGS =  -Wall -Wextra -Wno-sign-compare -Wpointer-arith -Wformat-security -Wswitch-enum -Wunused-parameter -Wbad-function-cast -Wcast-align -Wmissing-prototypes -Wmissing-field-initializers -fno-strict-aliasing
+WARNING_FLAGS =  -Wall -Wextra -Wno-sign-compare -Wpointer-arith -Wformat-security -Wswitch-enum -Wunused-parameter -Wbad-function-cast -Wcast-align -Wmissing-prototypes -Wmissing-field-initializers -fno-strict-aliasing -mssse3
 abs_builddir = /home/advith/cep/thesis-advith-cep/clean/openvswitch-2.6.1
 abs_srcdir = /home/advith/cep/thesis-advith-cep/clean/openvswitch-2.6.1
 abs_top_builddir = /home/advith/cep/thesis-advith-cep/clean/openvswitch-2.6.1
@@ -2507,10 +2507,10 @@ tests_test_lib_SOURCES = \
 
 tests_test_lib_LDADD = lib/libopenvswitch.la
 IDLTEST_IDL_FILES = tests/idltest.ovsschema tests/idltest.ann
-#tests_test_dpdkr_SOURCES = \
-#	tests/dpdk/ring_client.c
+tests_test_dpdkr_SOURCES = \
+	tests/dpdk/ring_client.c
 
-#tests_test_dpdkr_LDADD = lib/libopenvswitch.la $(LIBS)
+tests_test_dpdkr_LDADD = lib/libopenvswitch.la $(LIBS)
 tests_ovstest_SOURCES = tests/ovstest.c tests/ovstest.h \
 	tests/test-aes128.c tests/test-atomic.c tests/test-bundle.c \
 	tests/test-byte-order.c tests/test-classifier.c \

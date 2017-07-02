@@ -25,7 +25,7 @@
 #define ATOMIC_ALWAYS_LOCK_FREE_8B 1
 
 /* System uses the DPDK module. */
-/* #undef DPDK_NETDEV */
+#define DPDK_NETDEV 1
 
 /* DPDK pdump enabled in OVS. */
 /* #undef DPDK_PDUMP */

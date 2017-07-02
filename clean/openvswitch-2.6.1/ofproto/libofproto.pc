@@ -7,5 +7,5 @@ Name: libofproto
 Description: OpenFlow library of Open vSwitch
 Version: 2.6.1
 Libs: -L${libdir} -lofproto
-Libs.private: -latomic -lpthread -lrt -lm 
+Libs.private: -ldpdk -ldl -latomic -lpthread -lrt -lm  
 Cflags: -I${includedir}/openvswitch

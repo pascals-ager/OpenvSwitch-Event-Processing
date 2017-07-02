@@ -27,7 +27,7 @@ List<Integer> latency = new ArrayList<Integer>();
 //logger.setUseParentHandlers(false);
           DatagramSocket serverSocket = new DatagramSocket(9877);
              byte[] receiveData = new byte[1024];
-             while(counter<=100000)
+             while(counter<=1000)
                 {
                   
                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);

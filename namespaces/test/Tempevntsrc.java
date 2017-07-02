@@ -42,7 +42,7 @@ int val = 0;
 	BufferedReader inFromUser =
           new BufferedReader(new InputStreamReader(System.in));
        DatagramSocket clientSocket = new DatagramSocket();
-       InetAddress IPAddress = InetAddress.getByName("10.1.1.3");
+       InetAddress IPAddress = InetAddress.getByName("10.1.1.1");
        byte[] sendData = new byte[1024];
       // byte[] receiveData = new byte[1024];
 
@@ -56,7 +56,7 @@ int val = 0;
 	//sentence.append(list.get(new Random().nextInt(list.size())));
 sentence.append(",");
          //sentence.append(new Random().nextInt(100));//s
- sentence.append(60);
+ sentence.append(5);
          sentence.append(",");
  sentence.append(90);
          sentence.append(",");         

@@ -17,7 +17,7 @@ old_library='libofproto.a'
 inherited_linker_flags=''
 
 # Libraries that this one depends upon.
-dependency_libs=' /home/advith/cep/thesis-advith-cep/clean/openvswitch-2.6.1/lib/libsflow.la -latomic -lpthread -lrt -lm'
+dependency_libs=' -L/usr/src/dpdk-stable-16.11.2/x86_64-native-linuxapp-gcc/lib /home/advith/cep/thesis-advith-cep/clean/openvswitch-2.6.1/lib/libsflow.la -ldpdk -ldl -latomic -lpthread -lrt -lm'
 
 # Names of additional weak libraries provided by this library
 weak_library_names=''

@@ -1,0 +1,2 @@
+qemu-system-x86_64 -m 4096 -hda /home/advith/two.qcow2 -boot c -k de -enable-kvm -no-reboot -net nic -net user
+

@@ -1,1 +1,1 @@
-qemu-system-x86_64 -m 4096 -hda /home/advith/bridge.qcow2 -boot c -enable-kvm -no-reboot -net nic -net user -k de
+qemu-system-x86_64 -m 4096 -hda /home/advith/bridge.qcow2 -boot c -k de -enable-kvm -no-reboot -net nic -net user -k de

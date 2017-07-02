@@ -1,4 +1,4 @@
-cd /usr/src/cep/ovs-2.6.1
+cd /home/advith/cep/thesis-advith-cep/ovs-2.6.1
 mkdir -p /usr/local/etc/openvswitch 
 rm /usr/local/etc/openvswitch/conf.db 
 mkdir -p /usr/local/var/run/openvswitch
