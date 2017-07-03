@@ -1,0 +1,259 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{MMA{\etalchar{+}}01}
+
+\bibitem[BM]{buchmannactive}
+AP~Buchmann and K~Moody.
+\newblock An active functionality service for open distributed heterogeneous
+  environments.
+
+\bibitem[BSW07]{bethencourt2007ciphertext}
+John Bethencourt, Amit Sahai, and Brent Waters.
+\newblock Ciphertext-policy attribute-based encryption.
+\newblock In {\em 2007 IEEE symposium on security and privacy (SP'07)}, pages
+  321--334. IEEE, 2007.
+
+\bibitem[Buc14]{buchmannEP}
+Alejandro Buchmann.
+\newblock {\em Event Processing}.
+\newblock TU Darmstadt, Darmstadt, 2014.
+
+\bibitem[CB13]{can2013sort}
+Ahmet~Burak Can and Bharat Bhargava.
+\newblock Sort: A self-organizing trust model for peer-to-peer systems.
+\newblock {\em Ieee transactions on dependable and secure computing},
+  10(1):14--27, 2013.
+
+\bibitem[Cha06]{chandy2006event}
+K~Mani Chandy.
+\newblock Event-driven applications: Costs, benefits and design approaches.
+\newblock {\em Gartner Application Integration and Web Services Summit}, 2006,
+  2006.
+
+\bibitem[CSM{\etalchar{+}}05]{consolvo2005location}
+Sunny Consolvo, Ian~E Smith, Tara Matthews, Anthony LaMarca, Jason Tabert, and
+  Pauline Powledge.
+\newblock Location disclosure to social relations: why, when, \& what people
+  want to share.
+\newblock In {\em Proceedings of the SIGCHI conference on Human factors in
+  computing systems}, pages 81--90. ACM, 2005.
+
+\bibitem[FKK13]{friedman2013power}
+Roy Friedman, Alex Kogan, and Yevgeny Krivolapov.
+\newblock On power and throughput tradeoffs of wifi and bluetooth in
+  smartphones.
+\newblock {\em IEEE Transactions on Mobile Computing}, 12(7):1363--1376, 2013.
+
+\bibitem[G{\etalchar{+}}00]{gambetta2000can}
+Diego Gambetta et~al.
+\newblock Can we trust trust.
+\newblock {\em Trust: Making and breaking cooperative relations}, 13:213--237,
+  2000.
+
+\bibitem[G{\etalchar{+}}02]{giordano2002mobile}
+Silvia Giordano et~al.
+\newblock Mobile ad hoc networks.
+\newblock {\em Handbook of wireless networks and mobile computing}, pages
+  325--346, 2002.
+
+\bibitem[GK09]{gilbert2009predicting}
+Eric Gilbert and Karrie Karahalios.
+\newblock Predicting tie strength with social media.
+\newblock In {\em Proceedings of the SIGCHI conference on human factors in
+  computing systems}, pages 211--220. ACM, 2009.
+
+\bibitem[GLC{\etalchar{+}}08]{gaonkar2008micro}
+Shravan Gaonkar, Jack Li, Romit~Roy Choudhury, Landon Cox, and Al~Schmidt.
+\newblock Micro-blog: sharing and querying content through mobile phones and
+  social participation.
+\newblock In {\em Proceedings of the 6th international conference on Mobile
+  systems, applications, and services}, pages 174--186. ACM, 2008.
+
+\bibitem[Goo]{devAndroid}
+Google.
+\newblock Android developer resource.
+
+\bibitem[HSB09]{hinze2009event}
+Annika Hinze, Kai Sachs, and Alejandro Buchmann.
+\newblock Event-based applications and enabling technologies.
+\newblock In {\em Proceedings of the Third ACM International Conference on
+  Distributed Event-Based Systems}, page~1. ACM, 2009.
+
+\bibitem[KC06]{khalil2006context}
+Ashraf Khalil and Kay Connelly.
+\newblock Context-aware telephony: privacy preferences and sharing patterns.
+\newblock In {\em Proceedings of the 2006 20th anniversary conference on
+  Computer supported cooperative work}, pages 469--478. ACM, 2006.
+
+\bibitem[KKR10]{koch2010cordies}
+Gerald~G Koch, Boris Koldehofe, and Kurt Rothermel.
+\newblock Cordies: expressive event correlation in distributed systems.
+\newblock In {\em Proceedings of the Fourth ACM International Conference on
+  Distributed Event-Based Systems}, pages 26--37. ACM, 2010.
+
+\bibitem[Luc08]{luckham2008power}
+David Luckham.
+\newblock The power of events: An introduction to complex event processing in
+  distributed enterprise systems.
+\newblock In {\em International Workshop on Rules and Rule Markup Languages for
+  the Semantic Web}, pages 3--3. Springer, 2008.
+
+\bibitem[MC84]{marsden1984measuring}
+Peter~V Marsden and Karen~E Campbell.
+\newblock Measuring tie strength.
+\newblock {\em Social forces}, 63(2):482--501, 1984.
+
+\bibitem[Mis08]{Mishra2008}
+Amitabh Mishra.
+\newblock {Introduction to Ad hoc Networks}.
+\newblock {\em Wireless Networks}, pages 1--53, 2008.
+
+\bibitem[ML00]{myers2000protecting}
+Andrew~C Myers and Barbara Liskov.
+\newblock Protecting privacy using the decentralized label model.
+\newblock {\em ACM Transactions on Software Engineering and Methodology
+  (TOSEM)}, 9(4):410--442, 2000.
+
+\bibitem[MMA{\etalchar{+}}01]{mui2001ratings}
+Lik Mui, Mojdeh Mohtashemi, Cheewee Ang, Peter Szolovits, and Ari Halberstadt.
+\newblock Ratings in distributed systems: A bayesian approach.
+\newblock In {\em Proceedings of the Workshop on Information Technologies and
+  Systems (WITS)}, pages 1--7, 2001.
+
+\bibitem[MPE{\etalchar{+}}10]{migliavacca2010defcon}
+Matteo Migliavacca, Ioannis Papagiannis, David~M Eyers, Brian Shand, Jean
+  Bacon, and Peter Pietzuch.
+\newblock Defcon: high-performance event processing with information security.
+\newblock In {\em Proceedings of the 2010 USENIX conference on USENIX annual
+  technical conference}, pages 1--1. USENIX Association, 2010.
+
+\bibitem[OGH05]{olson2005study}
+Judith~S Olson, Jonathan Grudin, and Eric Horvitz.
+\newblock A study of preferences for sharing and privacy.
+\newblock In {\em CHI'05 extended abstracts on Human factors in computing
+  systems}, pages 1985--1988. ACM, 2005.
+
+\bibitem[OKR{\etalchar{+}}14]{ottenwalder2014mcep}
+Beate Ottenw{\"a}lder, Boris Koldehofe, Kurt Rothermel, Kirak Hong, David
+  Lillethun, and Umakishore Ramachandran.
+\newblock Mcep: a mobility-aware complex event processing system.
+\newblock {\em ACM Transactions on Internet Technology (TOIT)}, 14(1):6, 2014.
+
+\bibitem[PBR{\etalchar{+}}15]{porter2015practical}
+Donald~E Porter, Michael~D Bond, Indrajit Roy, Kathryn~S Mckinley, and Emmett
+  Witchel.
+\newblock Practical fine-grained information flow control using laminar.
+\newblock {\em ACM Transactions on Programming Languages and Systems (TOPLAS)},
+  37(1):4, 2015.
+
+\bibitem[QHC06]{quercia2006b}
+Daniele Quercia, Stephen Hailes, and Licia Capra.
+\newblock B-trust: Bayesian trust framework for pervasive computing.
+\newblock In {\em International Conference on Trust Management}, pages
+  298--312. Springer, 2006.
+
+\bibitem[QMK12]{qureshi2012distributed}
+Basit Qureshi, Geyong Min, and Demetres Kouvatsos.
+\newblock A distributed reputation and trust management scheme for mobile
+  peer-to-peer networks.
+\newblock {\em Computer communications}, 35(5):608--618, 2012.
+
+\bibitem[Reh97]{rehaman1997s}
+A~Abdul Rehaman.
+\newblock S hailes using recommendations for managing trust in distributed
+  systems.
+\newblock {\em Proceedings of IEEE malaysia ICC, Kaulalampur, November1997},
+  1997.
+
+\bibitem[Rie07]{ries2007certain}
+Sebastian Ries.
+\newblock Certain trust: a trust model for users and agents.
+\newblock In {\em Proceedings of the 2007 ACM symposium on Applied computing},
+  pages 1599--1604. ACM, 2007.
+
+\bibitem[SKR11]{schilling2011efficient}
+Bjorn Schilling, Boris Koldehofe, and Kurt Rothermel.
+\newblock Efficient and distributed rule placement in heavy constraint-driven
+  event systems.
+\newblock In {\em High Performance Computing and Communications (HPCC), 2011
+  IEEE 13th International Conference on}, pages 355--364. IEEE, 2011.
+
+\bibitem[SKRR13]{schilling2013access}
+Bj{\"o}rn Schilling, Boris Koldehofe, Kurt Rotherme, and Umakishore
+  Ramachandran.
+\newblock Access policy consolidation for event processing systems.
+\newblock In {\em Networked Systems (NetSys), 2013 Conference on}, pages
+  92--101. IEEE, 2013.
+
+\bibitem[SP15]{starks2015operator}
+Fabrice Starks and Thomas~Peter Plagemann.
+\newblock Operator placement for efficient distributed complex event processing
+  in manets.
+\newblock In {\em Wireless and Mobile Computing, Networking and Communications
+  (WiMob), 2015 IEEE 11th International Conference on}, pages 83--90. IEEE,
+  2015.
+
+\bibitem[SPB10]{saadi2010t2d}
+Rachid Saadi, Jean-Marc Pierson, and Lionel Brunie.
+\newblock T2d: A peer to peer trust management system based on disposition to
+  trust.
+\newblock In {\em Proceedings of the 2010 ACM Symposium on Applied Computing},
+  pages 1472--1478. ACM, 2010.
+
+\bibitem[SS13]{saleh2013distributed}
+Omran Saleh and Kai-Uwe Sattler.
+\newblock Distributed complex event processing in sensor networks.
+\newblock In {\em 2013 IEEE 14th International Conference on Mobile Data
+  Management}, volume~2, pages 23--26. IEEE, 2013.
+
+\bibitem[ST07]{sklavos2007system}
+N~Sklavos and K~Touliou.
+\newblock A system-level analysis of power consumption \& optimizations in 3g
+  mobile devices.
+\newblock In {\em New Technologies, Mobility and Security}, pages 217--227.
+  Springer, 2007.
+
+\bibitem[TBF{\etalchar{+}}03]{terpstra2003peer}
+Wesley~W Terpstra, Stefan Behnel, Ludger Fiege, Andreas Zeidler, and
+  Alejandro~P Buchmann.
+\newblock A peer-to-peer approach to content-based publish/subscribe.
+\newblock In {\em Proceedings of the 2nd international workshop on Distributed
+  event-based systems}, pages 1--8. ACM, 2003.
+
+\bibitem[THVW05]{tran2005trust}
+Huu Tran, Michael Hitchens, Vijay Varadharajan, and Paul Watters.
+\newblock A trust based access control framework for p2p file-sharing systems.
+\newblock In {\em Proceedings of the 38th Annual Hawaii International
+  Conference on System Sciences}, pages 302c--302c. IEEE, 2005.
+
+\bibitem[TSC15]{tahta2015gentrust}
+Ugur~Eray Tahta, Sevil Sen, and Ahmet~Burak Can.
+\newblock Gentrust: A genetic trust management model for peer-to-peer systems.
+\newblock {\em Applied Soft Computing}, 34:693--704, 2015.
+
+\bibitem[TZN11]{tysowski2011peer}
+Piotr~K Tysowski, Pengxiang Zhao, and Kshirasagar Naik.
+\newblock Peer to peer content sharing on ad hoc networks of smartphones.
+\newblock In {\em 2011 7th International Wireless Communications and Mobile
+  Computing Conference}, pages 1445--1450. IEEE, 2011.
+
+\bibitem[VWC13]{vidyalakshmi2013decentralized}
+BS~Vidyalakshmi, Raymond~K Wong, and Chi-Hung Chi.
+\newblock Decentralized trust driven access control for mobile content sharing.
+\newblock In {\em 2013 IEEE International Congress on Big Data}, pages
+  239--246. IEEE, 2013.
+
+\bibitem[XJ13]{xing2013trust}
+Michael Xing and Christine Julien.
+\newblock Trust-based, privacy-preserving context aggregation and sharing in
+  mobile ubiquitous computing.
+\newblock In {\em International Conference on Mobile and Ubiquitous Systems:
+  Computing, Networking, and Services}, pages 316--329. Springer, 2013.
+
+\bibitem[YML{\etalchar{+}}13]{yang2013energy}
+Jin Yang, Tianli Mo, Lipyeow Lim, Kai-Uwe Sattler, and Archan Misra.
+\newblock Energy-efficient collaborative query processing framework for mobile
+  sensing services.
+\newblock In {\em 2013 IEEE 14th International Conference on Mobile Data
+  Management}, volume~1, pages 147--156. IEEE, 2013.
+
+\end{thebibliography}

@@ -1,0 +1,303 @@
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{MHM{\etalchar{+}}14}
+
+\bibitem[ABQ13]{aniello2013adaptive}
+Leonardo Aniello, Roberto Baldoni, and Leonardo Querzoni.
+\newblock Adaptive online scheduling in storm.
+\newblock In {\em Proceedings of the 7th ACM international conference on
+  Distributed event-based systems}, pages 207--218. ACM, 2013.
+
+\bibitem[Bel05]{bellard2005qemu}
+Fabrice Bellard.
+\newblock Qemu, a fast and portable dynamic translator.
+\newblock In {\em USENIX Annual Technical Conference, FREENIX Track}, pages
+  41--46, 2005.
+
+\bibitem[BF{\c{C}}12]{backman2012managing}
+Nathan Backman, Rodrigo Fonseca, and Uǧur {\c{C}}etintemel.
+\newblock Managing parallelism for stream processing in the cloud.
+\newblock In {\em Proceedings of the 1st International Workshop on Hot Topics
+  in Cloud Data Processing}, page~1. ACM, 2012.
+
+\bibitem[BMZA12]{bonomi2012fog}
+Flavio Bonomi, Rodolfo Milito, Jiang Zhu, and Sateesh Addepalli.
+\newblock Fog computing and its role in the internet of things.
+\newblock In {\em Proceedings of the first edition of the MCC workshop on
+  Mobile cloud computing}, pages 13--16. ACM, 2012.
+
+\bibitem[BRE{\etalchar{+}}15]{beifuss2015study}
+Alexander Beifu{\ss}, Daniel Raumer, Paul Emmerich, Torsten~M Runge, Florian
+  Wohlfart, Bernd~E Wolfinger, and Georg Carle.
+\newblock A study of networking software induced latency.
+\newblock In {\em Networked Systems (NetSys), 2015 International Conference and
+  Workshops on}, pages 1--8. IEEE, 2015.
+
+\bibitem[CDTW00]{Chen}
+Jianjun Chen, David~J. DeWitt, Feng Tian, and Yuan Wang.
+\newblock Niagaracq: A scalable continuous query system for internet databases.
+\newblock {\em SIGMOD Rec.}, 29(2):379--390, May 2000.
+
+\bibitem[CFP{\etalchar{+}}07]{casado}
+Martin Casado, Michael~J Freedman, Justin Pettit, Jianying Luo, Nick McKeown,
+  and Scott Shenker.
+\newblock Ethane: Taking control of the enterprise.
+\newblock In {\em ACM SIGCOMM Computer Communication Review}, volume~37, pages
+  1--12. ACM, 2007.
+
+\bibitem[CM12]{cugola2012processing}
+Gianpaolo Cugola and Alessandro Margara.
+\newblock Processing flows of information: From data stream to complex event
+  processing.
+\newblock {\em ACM Computing Surveys (CSUR)}, 44(3):15, 2012.
+
+\bibitem[CM13]{Cugola}
+Gianpaolo Cugola and Alessandro Margara.
+\newblock Deployment strategies for distributed complex event processing.
+\newblock {\em Computing}, 95(2):129--156, February 2013.
+
+\bibitem[CQ09]{chakravarthy}
+Sharma Chakravarthy and Jiang Qingchun.
+\newblock {\em Stream data processing: a quality of service perspective:
+  modeling, scheduling, load shedding, and complex event processing},
+  volume~36.
+\newblock Springer Science \& Business Media, 2009.
+
+\bibitem[CV14]{chatzistergiou2014fast}
+Andreas Chatzistergiou and Stratis~D Viglas.
+\newblock Fast heuristics for near-optimal task allocation in data stream
+  processing over clusters.
+\newblock In {\em Proceedings of the 23rd ACM International Conference on
+  Conference on Information and Knowledge Management}, pages 1579--1588. ACM,
+  2014.
+
+\bibitem[CYY16]{cui2016big}
+Laizhong Cui, F~Richard Yu, and Qiao Yan.
+\newblock When big data meets software-defined networking: Sdn for big data and
+  big data for sdn.
+\newblock {\em IEEE Network}, 30(1):58--65, 2016.
+
+\bibitem[DPD]{DPDK}
+Intel DPDK.
+\newblock Intel data plane development kit.
+
+\bibitem[EMIH15]{el2015software}
+Amr El-Mougy, Mohamed Ibnkahla, and Lobna Hegazy.
+\newblock Software-defined wireless network architectures for the
+  internet-of-things.
+\newblock In {\em Local Computer Networks Conference Workshops (LCN Workshops),
+  2015 IEEE 40th}, pages 804--811. IEEE, 2015.
+
+\bibitem[FGHN15]{flauzac2015sdn}
+Olivier Flauzac, Carlos Gonz{\'a}lez, Abdelhak Hachani, and Florent Nolot.
+\newblock Sdn based architecture for iot and improvement of the security.
+\newblock In {\em Advanced Information Networking and Applications Workshops
+  (WAINA), 2015 IEEE 29th International Conference on}, pages 688--693. IEEE,
+  2015.
+
+\bibitem[Fou12]{OFSwitchSpecification}
+The Open~Networking Foundation.
+\newblock Openflow switch specification, Jun 2012.
+
+\bibitem[GEW{\etalchar{+}}15]{gallenmüller2015comparison}
+Sebastian Gallenmüller, Paul Emmerich, Florian Wohlfart, Daniel Raumer, and
+  Georg Carle.
+\newblock Comparison of frameworks for high-performance packet io.
+\newblock In {\em Architectures for Networking and Communications Systems
+  (ANCS), 2015 ACM/IEEE Symposium on}, pages 29--38. IEEE, 2015.
+
+\bibitem[HGJL15]{han2015network}
+Bo~Han, Vijay Gopalakrishnan, Lusheng Ji, and Seungjoon Lee.
+\newblock Network function virtualization: Challenges and opportunities for
+  innovations.
+\newblock {\em IEEE Communications Magazine}, 53(2):90--97, 2015.
+
+\bibitem[HP15]{halpern2015service}
+Joel Halpern and Carlos Pignataro.
+\newblock Service function chaining (sfc) architecture.
+\newblock Technical report, 2015.
+
+\bibitem[HRW15]{hwang2015netvm}
+Jinho Hwang, K~K\_ Ramakrishnan, and Timothy Wood.
+\newblock Netvm: high performance and flexible networking using virtualization
+  on commodity platforms.
+\newblock {\em IEEE Transactions on Network and Service Management},
+  12(1):34--47, 2015.
+
+\bibitem[HSB09]{Hinze:2009:EAE:1619258.1619260}
+Annika Hinze, Kai Sachs, and Alejandro Buchmann.
+\newblock Event-based applications and enabling technologies.
+\newblock In {\em Proceedings of the Third ACM International Conference on
+  Distributed Event-Based Systems}, DEBS '09, pages 1:1--1:15, New York, NY,
+  USA, 2009. ACM.
+
+\bibitem[JKM{\etalchar{+}}13]{Jain}
+Sushant Jain, Alok Kumar, Subhasree Mandal, Joon Ong, Leon Poutievski, Arjun
+  Singh, Subbaiah Venkata, Jim Wanderer, Junlan Zhou, Min Zhu, Jon Zolla, Urs
+  H\"{o}lzle, Stephen Stuart, and Amin Vahdat.
+\newblock B4: Experience with a globally-deployed software defined wan.
+\newblock In {\em Proceedings of the ACM SIGCOMM 2013 Conference on SIGCOMM},
+  SIGCOMM '13, pages 3--14, New York, NY, USA, 2013. ACM.
+
+\bibitem[Kaf14]{kafka2014high}
+Apache Kafka.
+\newblock A high-throughput, distributed messaging system.
+\newblock {\em URL: kafka. apache. org as of}, 5(1), 2014.
+
+\bibitem[KG15]{Krishnan2015}
+S.~P.~T. Krishnan and Jose L.~Ugia Gonzalez.
+\newblock {\em Google Cloud Pub/Sub}, pages 277--292.
+\newblock Apress, Berkeley, CA, 2015.
+
+\bibitem[KKL{\etalchar{+}}07]{kivity2007kvm}
+Avi Kivity, Yaniv Kamay, Dor Laor, Uri Lublin, and Anthony Liguori.
+\newblock kvm: the linux virtual machine monitor.
+\newblock In {\em Proceedings of the Linux symposium}, volume~1, pages
+  225--230, 2007.
+
+\bibitem[KN17]{kim2017study}
+Jin-Hong Kim and Jung-Chan Na.
+\newblock A study on one-way communication using pf\_ring zc.
+\newblock In {\em Advanced Communication Technology (ICACT), 2017 19th
+  International Conference on}, pages 301--304. IEEE, 2017.
+
+\bibitem[LF98]{luckham1998complex}
+David~C Luckham and Brian Frasca.
+\newblock Complex event processing in distributed systems.
+\newblock {\em Computer Systems Laboratory Technical Report CSL-TR-98-754.
+  Stanford University, Stanford}, 28, 1998.
+
+\bibitem[MAB{\etalchar{+}}08]{OpenFlow-White-Paper}
+Nick McKeown, Tom Anderson, Hari Balakrishnan, Guru Parulkar, Larry Peterson,
+  Jennifer Rexford, Scott Shenker, and Jonathan Turner.
+\newblock Openflow: Enabling innovation in campus networks.
+\newblock {\em SIGCOMM Comput. Commun. Rev.}, 38(2):69--74, March 2008.
+
+\bibitem[MAR{\etalchar{+}}14]{martins2014clickos}
+Joao Martins, Mohamed Ahmed, Costin Raiciu, Vladimir Olteanu, Michio Honda,
+  Roberto Bifulco, and Felipe Huici.
+\newblock Clickos and the art of network function virtualization.
+\newblock In {\em Proceedings of the 11th USENIX Conference on Networked
+  Systems Design and Implementation}, pages 459--473. USENIX Association, 2014.
+
+\bibitem[MHM{\etalchar{+}}14]{mekky2014application}
+Hesham Mekky, Fang Hao, Sarit Mukherjee, Zhi-Li Zhang, and TV~Lakshman.
+\newblock Application-aware data plane processing in sdn.
+\newblock In {\em Proceedings of the third workshop on Hot topics in software
+  defined networking}, pages 13--18. ACM, 2014.
+
+\bibitem[NWL13]{ning2013virtualization}
+Fengfeng Ning, Chuliang Weng, and Yuan Luo.
+\newblock Virtualization i/o optimization based on shared memory.
+\newblock In {\em Big Data, 2013 IEEE International Conference on}, pages
+  70--77. IEEE, 2013.
+
+\bibitem[OFA]{OFArchive}
+OFArchive.
+\newblock Of archive.
+\newblock \url{http://archive.openflow.org/}.
+\newblock 2016-02-08.
+
+\bibitem[PLS{\etalchar{+}}06]{pietzuch2006network}
+Peter Pietzuch, Jonathan Ledlie, Jeffrey Shneidman, Mema Roussopoulos, Matt
+  Welsh, and Margo Seltzer.
+\newblock Network-aware operator placement for stream-processing systems.
+\newblock In {\em Data Engineering, 2006. ICDE'06. Proceedings of the 22nd
+  International Conference on}, pages 49--49. IEEE, 2006.
+
+\bibitem[PPK{\etalchar{+}}15]{pfaff2015design}
+Ben Pfaff, Justin Pettit, Teemu Koponen, Ethan~J Jackson, Andy Zhou, Jarno
+  Rajahalme, Jesse Gross, Alex Wang, Joe Stringer, Pravin Shelar, et~al.
+\newblock The design and implementation of open vswitch.
+\newblock In {\em NSDI}, pages 117--130, 2015.
+
+\bibitem[QDG{\etalchar{+}}14]{qin2014software}
+Zhijing Qin, Grit Denker, Carlo Giannelli, Paolo Bellavista, and Nalini
+  Venkatasubramanian.
+\newblock A software defined networking architecture for the
+  internet-of-things.
+\newblock In {\em Network Operations and Management Symposium (NOMS), 2014
+  IEEE}, pages 1--9. IEEE, 2014.
+
+\bibitem[RDR10]{rizou2010solving}
+Stamatia Rizou, Frank D{\"u}rr, and Kurt Rothermel.
+\newblock Solving the multi-operator placement problem in large-scale operator
+  networks.
+\newblock In {\em ICCCN}, pages 1--6, 2010.
+
+\bibitem[Riz12]{rizzo2012netmap}
+Luigi Rizzo.
+\newblock Netmap: a novel framework for fast packet i/o.
+\newblock In {\em 21st USENIX Security Symposium (USENIX Security 12)}, pages
+  101--112, 2012.
+
+\bibitem[RL12]{Rizzo:2012:VSE:2413176.2413185}
+Luigi Rizzo and Giuseppe Lettieri.
+\newblock Vale, a switched ethernet for virtual machines.
+\newblock In {\em Proceedings of the 8th International Conference on Emerging
+  Networking Experiments and Technologies}, CoNEXT '12, pages 61--72, New York,
+  NY, USA, 2012. ACM.
+
+\bibitem[Rus08]{russell2008virtio}
+Rusty Russell.
+\newblock virtio: towards a de-facto standard for virtual i/o devices.
+\newblock {\em ACM SIGOPS Operating Systems Review}, 42(5):95--103, 2008.
+
+\bibitem[Sch14]{scholz2014look}
+Dominik Scholz.
+\newblock A look at intel’s dataplane development kit.
+\newblock {\em Network}, 115, 2014.
+
+\bibitem[SGY{\etalchar{+}}09]{sherwood2009flowvisor}
+Rob Sherwood, Glen Gibb, Kok-Kiong Yap, Guido Appenzeller, Martin Casado, Nick
+  McKeown, and Guru Parulkar.
+\newblock Flowvisor: A network virtualization layer.
+\newblock {\em OpenFlow Switch Consortium, Tech. Rep}, pages 1--13, 2009.
+
+\bibitem[SOP{\etalchar{+}}15]{NpForMasses}
+Radu Stoenescu, Vladimir Olteanu, Matei Popovici, Mohamed Ahmed, Joao Martins,
+  Roberto Bifulco, Filipe Manco, Felipe Huici, Georgios Smaragdakis, Mark
+  Handley, and Costin Raiciu.
+\newblock In-net: In-network processing for the masses.
+\newblock In {\em Proceedings of the Tenth European Conference on Computer
+  Systems}, EuroSys '15, pages 23:1--23:15, New York, NY, USA, 2015. ACM.
+
+\bibitem[sRe15]{Esper}
+Esper Query~Language sReference.
+\newblock Esper reference release 5.3.0, 2015.
+
+\bibitem[Sup14]{OpenStack14}
+OpenStack Superuser.
+\newblock Openstack user survey insights 2014, 2014.
+
+\bibitem[Sup17]{OpenStack17}
+OpenStack Superuser.
+\newblock Openstack user survey insights 2017, 2017.
+
+\bibitem[TLGD15]{truong2015software}
+Nguyen~B Truong, Gyu~Myoung Lee, and Yacine Ghamri-Doudane.
+\newblock Software defined networking-based vehicular adhoc network with fog
+  computing.
+\newblock In {\em Integrated Network Management (IM), 2015 IFIP/IEEE
+  International Symposium on}, pages 1202--1207. IEEE, 2015.
+
+\bibitem[XMR16]{xu2016towards}
+Yiming Xu, V~Mahendran, and Sridhar Radhakrishnan.
+\newblock Towards sdn-based fog computing: Mqtt broker virtualization for
+  effective and reliable delivery.
+\newblock In {\em Communication Systems and Networks (COMSNETS), 2016 8th
+  International Conference on}, pages 1--6. IEEE, 2016.
+
+\bibitem[ZOTW06]{zhou2006efficient}
+Yongluan Zhou, Beng~Chin Ooi, Kian-Lee Tan, and Ji~Wu.
+\newblock Efficient dynamic operator placement in a locally distributed
+  continuous query system.
+\newblock In {\em OTM Confederated International Conferences" On the Move to
+  Meaningful Internet Systems"}, pages 54--71. Springer, 2006.
+
+\bibitem[ZWRH14]{zhang2014smartswitch}
+Wei Zhang, Timothy Wood, KK~Ramakrishnan, and Jinho Hwang.
+\newblock Smartswitch: Blurring the line between network infrastructure \&
+  cloud applications.
+\newblock In {\em HotCloud}, 2014.
+
+\end{thebibliography}

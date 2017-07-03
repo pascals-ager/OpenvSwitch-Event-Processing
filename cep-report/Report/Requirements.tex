@@ -1,0 +1,81 @@
+\chapter{Discussion} \label{chap:Discussion}
+Complex Event Processing (CEP) ``is a defined set of tools and techniques for analyzing and controlling the complex series of interrelated events that drive modern distributed information systems.`` \citep{Luckham2008}. The Event Processing paradigm sees the world as a series of discrete events. The producers and consumers of the events are spatio-temporally decoupled. The produced events are distributed to the consumers through a notification service, which may be a dedicated channel or distributed brokers. The following describes and expresses a complex event processing abstraction on an Openvswitch. The implementation entails extension of the OpenvSwitch 2.6.1 to support OpenFlow rules for events and a northbound API to install event rules using a ryu controller.
+
+
+
+\chapter{Requirements}
+
+\section{\textbf{Event Semantics}}
+The system model treats the flow of packets at a physical port as an event sink. The event data, encapsulated within a packet, is extracted and mapped to a defined minimal Event representation. Each event follows the below representation:\\1. Unique Identifier\\
+2. Event Type\\3. Event Attributes 
+
+Let 'E' be an event of type 't' and attributes '$a_1$','$a_2$'..'$a_n$'.
+
+\begin{equation}
+E\lbrace t,a_1,a_2..a_n \rbrace
+\end{equation}
+
+\begin{flushleft}
+Event instances can be detected based on different variants.
+\\1. Detect based on Event Type
+\\2. Detect based on values in Event Attributes
+\\3. Detect based on number of instances within a window.
+\\
+\end{flushleft}
+\begin{flushleft}
+To this end, an event algebra is realized within the virtual switch:
+\\
+\textbf{Comparator}: Event is signalled when comparator operator evaluates to True. Comparators are used to compare Event Type and Attributes with a value. Comparator operations can be used in combination with other operations to detect complex event patterns.
+\\ 
+\textbf{Conjunction}: Event is signalled when all constituent input patterns evaluate to True. The constituent input patterns are composed using the comparator operations.
+\\
+\textbf{Disjunction}: Event is signalled when atleast one constituent input pattern evaluates to True. The constituent input patterns are composed using the comparator operations.
+\\
+textbf{Sequence}: Event is signalled when input patterns are detected in a defined sequence.
+\\
+\textbf{Window}: Event is signalled when input patterns are detected within a time window.
+\end{flushleft}
+
+\begin{flushleft}
+A set of comparator operators is given by:
+\begin{equation}
+\oplus  \ni  \lbrace =,<,>, \rbrace
+\end{equation}
+the event operations using the comparator operators are expressed as below in (2.3):
+\begin{equation}
+E.a \oplus intval
+\end{equation}
+\end{flushleft}
+
+\begin{flushleft}
+Using the comparator operator and the previously defined Event Algebra, other complex operations are expressed:
+\begin{equation}
+E.t = strval \wedge (E.a_1 \oplus intval_1 \wedge E.a_2 \oplus intval_2)
+\end{equation}
+\begin{equation}
+E.t = strval \vee (E.a_1 \oplus intval_1 \wedge E.a_2 \oplus intval_2)
+\end{equation}
+\begin{equation}
+E.t = strval \vee (E.a_1 \oplus intval_1 \vee E.a_2 \oplus intval_2)
+\end{equation}
+\begin{equation}
+(E.a \oplus intval) Sequence (E.a \oplus intval)
+\end{equation}
+\begin{equation}
+(E.a \oplus intval) \wedge (E.a \oplus intval) \wedge Window = intval
+\end{equation}
+\end{flushleft}
+
+\begin{flushleft}
+The expressions are installed in the switch in the form of flow rules. A mechanism is provided to install the flow rules via JSON API through a controller.
+
+Figure to be attached.
+\end{flushleft}
+
+
+
+
+
+
+
+

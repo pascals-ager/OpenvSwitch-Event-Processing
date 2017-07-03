@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99d (TeX Live 2013/Debian)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: tudkom_students__20131209_v1.1.aux
+The style file: alpha.bst
+Database file #1: bibliography.bib
+Warning--entry type for "devAndroid" isn't style-file defined
+--line 115 of file bibliography.bib
+Warning--empty journal in buchmannactive
+Warning--empty year in buchmannactive
+You've used 41 entries,
+            2543 wiz_defined-function locations,
+            793 strings with 12498 characters,
+and the built_in function-call counts, 20518 in all, are:
+= -- 2154
+> -- 941
+< -- 36
++ -- 335
+- -- 328
+* -- 1397
+:= -- 3159
+add.period$ -- 145
+call.type$ -- 41
+change.case$ -- 279
+chr.to.int$ -- 41
+cite$ -- 43
+duplicate$ -- 868
+empty$ -- 1498
+format.name$ -- 366
+if$ -- 4433
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 41
+newline$ -- 207
+num.names$ -- 123
+pop$ -- 315
+preamble$ -- 1
+purify$ -- 321
+quote$ -- 0
+skip$ -- 750
+stack$ -- 0
+substring$ -- 1235
+swap$ -- 283
+text.length$ -- 36
+text.prefix$ -- 7
+top$ -- 0
+type$ -- 324
+warning$ -- 2
+while$ -- 211
+width$ -- 44
+write$ -- 553
+(There were 3 warnings)

@@ -1,0 +1,58 @@
+This is BibTeX, Version 0.99d (TeX Live 2016/W32TeX)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: advith_nagappa_dsp_theses.aux
+The style file: alpha.bst
+Database file #1: Bibliography.bib
+Warning--entry type for "OpenStack14" isn't style-file defined
+--line 873 of file Bibliography.bib
+Warning--entry type for "OpenStack17" isn't style-file defined
+--line 889 of file Bibliography.bib
+Warning--entry type for "Esper" isn't style-file defined
+--line 905 of file Bibliography.bib
+Warning--entry type for "DPDK" isn't style-file defined
+--line 919 of file Bibliography.bib
+Warning--entry type for "OFSwitchSpecification" isn't style-file defined
+--line 1077 of file Bibliography.bib
+Warning--empty institution in halpern2015service
+You've used 49 entries,
+            2543 wiz_defined-function locations,
+            836 strings with 14270 characters,
+and the built_in function-call counts, 24548 in all, are:
+= -- 2478
+> -- 1310
+< -- 43
++ -- 477
+- -- 471
+* -- 1759
+:= -- 3873
+add.period$ -- 165
+call.type$ -- 49
+change.case$ -- 374
+chr.to.int$ -- 49
+cite$ -- 50
+duplicate$ -- 971
+empty$ -- 1705
+format.name$ -- 518
+if$ -- 5185
+int.to.chr$ -- 1
+int.to.str$ -- 0
+missing$ -- 44
+newline$ -- 245
+num.names$ -- 147
+pop$ -- 429
+preamble$ -- 1
+purify$ -- 424
+quote$ -- 0
+skip$ -- 842
+stack$ -- 0
+substring$ -- 1264
+swap$ -- 292
+text.length$ -- 43
+text.prefix$ -- 11
+top$ -- 0
+type$ -- 384
+warning$ -- 1
+while$ -- 236
+width$ -- 52
+write$ -- 655
+(There were 6 warnings)

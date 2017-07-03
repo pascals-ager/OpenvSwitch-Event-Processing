@@ -1,0 +1,352 @@
+%======================================================
+% Technische Universitaet Darmstadt
+% Fachbereich Elektrotechnik und Informationstechnik
+% Fachbereich Informatik (Zweitmitglied)
+% Fachgebiet Multimedia Kommunikation (KOM)
+% Prof. Dr.-Ing. Ralf Steinmetz
+%======================================================
+% Template for Theses		
+% VERSION 1.0 (October 2009)
+% Use pdfLaTeX (other possible, but not supported)
+% Contact at KOM: Andr\'e Miede (andre.miede@kom...)
+%======================================================
+% Official TUD-LaTeX-files have to be installed:
+% http://exp1.fkp.physik.tu-darmstadt.de/tuddesign/
+% Refer to the manuals and forum for details
+%======================================================
+\documentclass[longdoc,accentcolor=tud4b,11pt,paper=a4,colorback=tud4b,oneside]{tudreport}
+
+%======================================================
+% colorback = Bereich unter Titel mit Hintergrundfarbe
+% colorbacktitle = Titel mit Hintergrundfarbe (Akzent)
+% KOM-Blau = accentcolor=tud1b		
+% Grau = accentcolor=tud0a 
+% blackrule fuer schwarze Leiste
+% nochapterpage = do not start chapters on new page
+% oneside = print only on one side of the page
+%======================================================
+
+%======================================================
+% General package loading and definitions
+%======================================================
+\usepackage{inputenc} 
+\usepackage{textcomp} 
+\usepackage{ngerman}
+\usepackage[american,ngerman]{babel}
+\usepackage{xspace}
+\usepackage[fleqn]{amsmath} % math environments and more by the AMS 
+\newcounter{dummy} % necessary for correct hyperlinks (to index, bib, etc.)
+\newcommand{\myfloatalign}{\centering} % how all the floats will be aligned
+%\usepackage{subcaption}
+\usepackage{caption}
+\expandafter\def\csname ver@subfig.sty\endcsname{} 
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+%======================================================
+% KOM-modifications of the TUD-layout
+%======================================================
+% reduce font size of page footers and headers (fancyhdr)
+\renewcommand{\footerfont}{\fontfamily{\sfdefault}\fontseries{m}\fontshape{n}\footnotesize\selectfont}
+% remove space between items 
+\usepackage{enumitem}
+	\setenumerate{noitemsep}
+	\setitemize{noitemsep}
+	\setdescription{noitemsep}
+	%\setcounter{secnumdepth}{3}
+%\setlist{nolistsep}
+
+%======================================================
+% Package loading for example contents (content.tex)
+%======================================================
+\usepackage{tabularx} % better tables
+\setlength{\extrarowheight}{3pt} % increase table row height
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{format=hang,font=small}
+\usepackage[square,numbers]{natbib}
+\usepackage{subfig}
+\usepackage{inputenc} 
+\usepackage{textcomp} 
+\usepackage{blindtext, graphicx}
+\usepackage{ngerman}
+\usepackage[american,ngerman]{babel}
+\usepackage{xspace}
+\usepackage[fleqn]{amsmath} % math environments and more by the AMS 
+
+%\usepackage{subcaption}
+\usepackage{caption}
+\usepackage{multirow}
+\expandafter\def\csname ver@subfig.sty\endcsname{} 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{pgfplots}                        
+\usepackage{tabularx} % better tables
+\setlength{\extrarowheight}{3pt} % increase table row height
+\usepackage{booktabs}
+\usepackage{caption}
+\captionsetup{format=hang,font=small}
+\usepackage[square,numbers]{natbib}
+\usepackage{subfig}
+\usepackage[stable,bottom]{footmisc}
+\usepackage[]{algorithmicx}
+\usepackage{wrapfig}
+\usepackage[hyphens]{url}
+\usepackage[strings]{underscore}
+\usepackage[stable,bottom]{footmisc}
+\usepackage[]{algorithmicx}
+\usepackage{wrapfig}
+\usepackage[hyphens]{url}
+\usepackage[strings]{underscore}
+\usepackage{mathptmx}
+\usepackage{graphicx}
+\usepackage{bera}% optional: just to have a nice mono-spaced font
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[titles]{tocloft}
+\cftsetindents{figure}{0em}{3.5em}
+\cftsetindents{table}{0em}{3.5em}
+\usetikzlibrary{patterns}
+
+%\usepackage{pdfpages}
+
+\colorlet{punct}{red!60!black}
+\definecolor{background}{HTML}{EEEEEE}
+\definecolor{delim}{RGB}{20,105,176}
+\colorlet{numb}{magenta!60!black}
+
+\lstdefinelanguage{json}{
+	basicstyle=\normalfont\ttfamily,
+	numbers=left,
+	numberstyle=\scriptsize,
+	stepnumber=1,
+	numbersep=8pt,
+	showstringspaces=false,
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{background},
+	literate=
+	*{0}{{{\color{numb}0}}}{1}
+	{1}{{{\color{numb}1}}}{1}
+	{2}{{{\color{numb}2}}}{1}
+	{3}{{{\color{numb}3}}}{1}
+	{4}{{{\color{numb}4}}}{1}
+	{5}{{{\color{numb}5}}}{1}
+	{6}{{{\color{numb}6}}}{1}
+	{7}{{{\color{numb}7}}}{1}
+	{8}{{{\color{numb}8}}}{1}
+	{9}{{{\color{numb}9}}}{1}
+	{:}{{{\color{punct}{:}}}}{1}
+	{,}{{{\color{punct}{,}}}}{1}
+	{\{}{{{\color{delim}{\{}}}}{1}
+	{\}}{{{\color{delim}{\}}}}}{1}
+	{[}{{{\color{delim}{[}}}}{1}
+	{]}{{{\color{delim}{]}}}}{1},
+}
+
+%%%%
+%Define the listing package
+\usepackage{listings} %code highlighter
+\usepackage{color} %use color
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+%Customize a bit the look
+\lstset{ %
+	backgroundcolor=\color{white}, % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+	basicstyle=\footnotesize, % the size of the fonts that are used for the code
+	breakatwhitespace=false, % sets if automatic breaks should only happen at whitespace
+	breaklines=true, % sets automatic line breaking
+	captionpos=b, % sets the caption-position to bottom
+	commentstyle=\color{mygreen}, % comment style
+	deletekeywords={...}, % if you want to delete keywords from the given language
+	escapeinside={\%*}{*)}, % if you want to add LaTeX within your code
+	extendedchars=true, % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+	frame=single, % adds a frame around the code
+	keepspaces=true, % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+	keywordstyle=\color{blue}, % keyword style
+	% language=Octave, % the language of the code
+	morekeywords={*,...}, % if you want to add more keywords to the set
+	numbers=left, % where to put the line-numbers; possible values are (none, left, right)
+	numbersep=5pt, % how far the line-numbers are from the code
+	numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+	rulecolor=\color{black}, % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+	showspaces=false, % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+	showstringspaces=false, % underline spaces within strings only
+	showtabs=false, % show tabs within strings adding particular underscores
+	stepnumber=1, % the step between two line-numbers. If it's 1, each line will be numbered
+	stringstyle=\color{mymauve}, % string literal style
+	tabsize=2, % sets default tabsize to 2 spaces
+	title=\lstname % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+%END of listing package%
+
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+%define Javascript language
+\lstdefinelanguage{JavaScript}{
+	keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={class, export, boolean, throw, implements, import, this},
+	ndkeywordstyle=\color{darkgray}\bfseries,
+	identifierstyle=\color{black},
+	sensitive=false,
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{purple}\ttfamily,
+	stringstyle=\color{red}\ttfamily,
+	morestring=[b]',
+	morestring=[b]"
+}
+
+\lstset{
+	language=JavaScript,
+	extendedchars=true,
+	basicstyle=\footnotesize\ttfamily,
+	showstringspaces=false,
+	showspaces=false,
+	numbers=left,
+	numberstyle=\footnotesize,
+	numbersep=9pt,
+	tabsize=2,
+	breaklines=true,
+	showtabs=false,
+	captionpos=b
+}
+%%%%
+
+%\DeclareCaptionType{code}[Code Listing][List of Code Listings]
+
+
+\makeatletter
+\def\BState{\State\hskip-\ALG@thistlm}
+\makeatother
+
+
+%======================================================
+% Important information: to be set here and only here
+%======================================================
+\newcommand{\komTitle}{In-Network Complex Event Processing\xspace}
+\newcommand{\komThesisType}{Masterarbeit\xspace} % Diplomarbeit Studienarbeit Master-Arbeit Bachelor-Arbeit
+\newcommand{\komID}{}
+\newcommand{\komName}{Advith Belegadde Nagappa\xspace}
+\newcommand{\komSubmissionDate}{\xspace}% use only this date format
+\newcommand{\komGutachter}{1. Gutachten: Marcel Bl{\"o}cher, M. Sc \xspace}
+\newcommand{\komBetreuer}{2. Gutachten: Prof. Dr. Patrick Eugster, Ph.D  \xspace}
+
+%======================================================
+% Setup for hyperref
+%======================================================
+\usepackage[pdftex,hyperfootnotes=true,pdfpagelabels]{hyperref}
+	\pdfcompresslevel=9
+	\pdfadjustspacing=1
+\hypersetup{%
+    colorlinks=false, linktocpage=false, pdfstartpage=1, pdfstartview=FitV,%
+    breaklinks=true, pdfpagemode=UseNone, pageanchor=true, pdfpagemode=UseOutlines,%
+    plainpages=false, bookmarksnumbered, bookmarksopen=true, bookmarksopenlevel=1,%
+    hypertexnames=true, pdfhighlight=/O, %nesting=true,%frenchlinks,%
+    %urlcolor=tud1b, linkcolor=tud1b, citecolor=tudtud1bccent,
+    pdftitle={\komTitle, \komThesisType, \komID},%
+    pdfauthor={\komName, DSP, TU Darmstadt},%
+    pdfsubject={},%
+    pdfkeywords={},%
+    pdfcreator={},%
+    pdfproducer={}%
+}
+
+%============================================
+% Setup of the title page (do not change)
+%============================================
+\title{\komTitle}
+\subtitle{\komThesisType}
+\subsubtitle{\komName \\ Tag der Einreichung: \komSubmissionDate \\ \komGutachter\\ \komBetreuer}
+
+%\setinstitutionlogo[height]{kom_info}
+\institution{\raggedleft Fachbereich Informatik\\
+	Distributed Systems Programming
+}
+
+%"Bhargava check below"
+
+%============================================
+% Setup of the title backside (do not change)
+%============================================
+%\lowertitleback{%
+%	Technische Universit\"{a}t Darmstadt \\%
+	%Fachbereich Elektrotechnik und Informationstechnik\\%
+	%Fachbereich Informatik (Zweitmitglied)\\[\baselineskip]%
+	%Fachgebiet Multimedia Kommunikation (KOM)\\%
+	%Prof. Dr.-Ing. Ralf Steinmetz%
+%	Department of Electrical Engineering and Information Technology \\%
+%	Department of Computer Science (Adjunct Professor) \\[\baselineskip]%
+%	Multimedia Communications Lab (KOM) \\%
+%	Prof. Dr.-Ing. Ralf Steinmetz %
+%}
+
+\uppertitleback{%
+	\komTitle \\%
+	\komThesisType \\%
+	\komID \\[\baselineskip]%
+	Eingereicht von \komName \\%
+	Tag der Einreichung: \komSubmissionDate \\[\baselineskip]%
+	\komGutachter \\%
+	\komBetreuer \\%
+	%\komExternerBetreuer%
+}
+	
+%======================================================
+% MAIN DOCUMENT STARTS HERE
+%======================================================
+\begin{document}
+%======================================================
+	% The front matter
+	%======================================================
+	\pagenumbering{roman}
+	\frenchspacing
+	\raggedbottom
+	\selectlanguage{american} % american ngerman
+	\maketitle
+	\chapter*{Ehrenw\"ortliche Erkl\"arung}
+	Hiermit versichere ich, die vorliegende \komThesisType ohne Hilfe Dritter und nur mit den angegebenen Quellen
+    und Hilfsmitteln angefertigt zu haben. Alle Stellen, die aus den Quellen entnommen wurden, sind als solche
+    kenntlich gemacht worden. Diese Arbeit hat in dieser oder \"ahnlicher Form noch keiner Pr\"ufungsbeh\"orde vorgelegen.
+    Die schriftliche Fassung stimmt mit der elektronischen Fassung \"uberein.
+	\vspace{1.5cm}
+	
+	\noindent Darmstadt, den \komSubmissionDate\hfill \komName
+	
+	\tableofcontents
+	\listoffigures
+    %\listofcodes
+	%\listoflstlisting
+	%\lstlistoflistings
+	\listoftables
+	
+	%======================================================
+	% The main matter (insert your contents here)
+	%======================================================
+	\cleardoublepage
+	\pagenumbering{arabic}
+	\input{0_Abstract}
+	\input{1_Introduction}
+	\input{2_State_of_the_Art}
+	\input{3_Related_Work}
+	\input{5_Design_and_Implementation}
+	\input{6_Evaluation_and_Results}
+	\input{7_Summary}
+	%\input{Evaluation_Testbed}
+	
+	%======================================================
+	% The back matter
+	%======================================================
+	%\cleardoublepage
+	\refstepcounter{dummy}
+	\addcontentsline{toc}{chapter}{\bibname}
+	\bibliographystyle{alpha} % <--- layout of the bib
+	\bibliography{Bibliography} % file name of your bib
+
+\end{document}
+%======================================================
+%======================================================
