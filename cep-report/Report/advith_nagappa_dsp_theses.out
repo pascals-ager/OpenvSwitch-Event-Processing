@@ -3,62 +3,66 @@
 \BOOKMARK [1][-]{section.1.2}{1.2 Contribution}{chapter.1}% 3
 \BOOKMARK [1][-]{section.1.3}{1.3 Outline}{chapter.1}% 4
 \BOOKMARK [0][]{chapter.2}{2 Background}{}% 5
-\BOOKMARK [1][-]{section.2.1}{2.1 Software Defined Networking}{chapter.2}% 6
-\BOOKMARK [1][-]{section.2.2}{2.2 Complex Event Processing}{chapter.2}% 7
-\BOOKMARK [2][-]{subsection.2.2.1}{2.2.1 Hierarchical event abstraction}{section.2.2}% 8
-\BOOKMARK [2][-]{subsection.2.2.2}{2.2.2 Communication models in complex event processing}{section.2.2}% 9
-\BOOKMARK [2][-]{subsection.2.2.3}{2.2.3 Event Query languages}{section.2.2}% 10
+\BOOKMARK [1][-]{section.2.1}{2.1 Complex Event Processing}{chapter.2}% 6
+\BOOKMARK [2][-]{subsection.2.1.1}{2.1.1 Hierarchical event abstraction}{section.2.1}% 7
+\BOOKMARK [2][-]{subsection.2.1.2}{2.1.2 Communication models in complex event processing}{section.2.1}% 8
+\BOOKMARK [2][-]{subsection.2.1.3}{2.1.3 Event Query languages}{section.2.1}% 9
+\BOOKMARK [1][-]{section.2.2}{2.2 Software Defined Networking}{chapter.2}% 10
 \BOOKMARK [1][-]{section.2.3}{2.3 OpenFlow}{chapter.2}% 11
-\BOOKMARK [1][-]{section.2.4}{2.4 Intel Data Plane Development Kit}{chapter.2}% 12
-\BOOKMARK [2][-]{subsection.2.4.1}{2.4.1 DPDK Vhost library}{section.2.4}% 13
-\BOOKMARK [0][]{chapter.3}{3 Related Work}{}% 14
-\BOOKMARK [1][-]{section.3.1}{3.1 Deployment Strategies and Operator Placement in Event Processing}{chapter.3}% 15
-\BOOKMARK [1][-]{section.3.2}{3.2 Fog Computing and Software Defined Internet of Things}{chapter.3}% 16
-\BOOKMARK [1][-]{section.3.3}{3.3 Application-aware Data Plane Processing in SDN}{chapter.3}% 17
-\BOOKMARK [1][-]{section.3.4}{3.4 In-Net: In-Networking Processing for the Masses}{chapter.3}% 18
-\BOOKMARK [1][-]{section.3.5}{3.5 SmartSwitch: Bluring the Line Between Network Infrastructure and Cloud Applications}{chapter.3}% 19
-\BOOKMARK [1][-]{section.3.6}{3.6 NetVM: High Performance and Flexible Network Virtualization}{chapter.3}% 20
-\BOOKMARK [0][]{chapter.4}{4 Design and Implementation}{}% 21
-\BOOKMARK [1][-]{section.4.1}{4.1 Why Open vSwitch?}{chapter.4}% 22
-\BOOKMARK [1][-]{section.4.2}{4.2 Goals of the implementation}{chapter.4}% 23
-\BOOKMARK [1][-]{section.4.3}{4.3 An overview of Open vSwitch}{chapter.4}% 24
-\BOOKMARK [1][-]{section.4.4}{4.4 Design Breakdown}{chapter.4}% 25
-\BOOKMARK [1][-]{section.4.5}{4.5 System Model}{chapter.4}% 26
-\BOOKMARK [2][-]{subsection.4.5.1}{4.5.1 Event Detection Semantics}{section.4.5}% 27
-\BOOKMARK [2][-]{subsection.4.5.2}{4.5.2 Compare Operation Semantics}{section.4.5}% 28
-\BOOKMARK [2][-]{subsection.4.5.3}{4.5.3 Stateful Operation Semantics}{section.4.5}% 29
-\BOOKMARK [1][-]{section.4.6}{4.6 Implementation walk-through}{chapter.4}% 30
-\BOOKMARK [2][-]{subsection.4.6.1}{4.6.1 Event extraction and de-serialization}{section.4.6}% 31
-\BOOKMARK [2][-]{subsection.4.6.2}{4.6.2 Accessing event data}{section.4.6}% 32
-\BOOKMARK [2][-]{subsection.4.6.3}{4.6.3 Modelling Openflow pipeline for event processing}{section.4.6}% 33
-\BOOKMARK [2][-]{subsection.4.6.4}{4.6.4 Adding event data fields to Openflow tables}{section.4.6}% 34
-\BOOKMARK [2][-]{subsection.4.6.5}{4.6.5 Adding support for event based rules}{section.4.6}% 35
-\BOOKMARK [2][-]{subsection.4.6.6}{4.6.6 Detection based on event data}{section.4.6}% 36
-\BOOKMARK [2][-]{subsection.4.6.7}{4.6.7 Enabling compare operations support}{section.4.6}% 37
-\BOOKMARK [2][-]{subsection.4.6.8}{4.6.8 Enabling Stateful Operations}{section.4.6}% 38
-\BOOKMARK [2][-]{subsection.4.6.9}{4.6.9 API support for event rules via RYU}{section.4.6}% 39
-\BOOKMARK [1][-]{section.4.7}{4.7 Summary}{chapter.4}% 40
-\BOOKMARK [0][]{chapter.5}{5 Evaluation and Results}{}% 41
-\BOOKMARK [1][-]{section.5.1}{5.1 Evaluation Environment}{chapter.5}% 42
-\BOOKMARK [1][-]{section.5.2}{5.2 System under Test}{chapter.5}% 43
-\BOOKMARK [1][-]{section.5.3}{5.3 Apparatus for Evaluation}{chapter.5}% 44
-\BOOKMARK [1][-]{section.5.4}{5.4 Evaluation on Network Namespaces}{chapter.5}% 45
-\BOOKMARK [2][-]{subsection.5.4.1}{5.4.1 Set-up Methodology}{section.5.4}% 46
-\BOOKMARK [2][-]{subsection.5.4.2}{5.4.2 Performance measurement without event operations}{section.5.4}% 47
-\BOOKMARK [2][-]{subsection.5.4.3}{5.4.3 Performance measurement with event detection and redirection}{section.5.4}% 48
-\BOOKMARK [2][-]{subsection.5.4.4}{5.4.4 Performance measurement with increasing size of event types}{section.5.4}% 49
-\BOOKMARK [2][-]{subsection.5.4.5}{5.4.5 Performance measurement with increasing number of event types }{section.5.4}% 50
-\BOOKMARK [2][-]{subsection.5.4.6}{5.4.6 Performance measurement with increasing percentage of filtered event types}{section.5.4}% 51
-\BOOKMARK [2][-]{subsection.5.4.7}{5.4.7 Performance measurement of event attributes detection and redirection}{section.5.4}% 52
-\BOOKMARK [2][-]{subsection.5.4.8}{5.4.8 Performance measurement of compare operations on event attributes}{section.5.4}% 53
-\BOOKMARK [2][-]{subsection.5.4.9}{5.4.9 Evaluating for accuracy - compare operations}{section.5.4}% 54
-\BOOKMARK [1][-]{section.5.5}{5.5 Evaluation with DPDK}{chapter.5}% 55
-\BOOKMARK [2][-]{subsection.5.5.1}{5.5.1 System Set Up}{section.5.5}% 56
-\BOOKMARK [2][-]{subsection.5.5.2}{5.5.2 Guest-to-Guest Measurements}{section.5.5}% 57
-\BOOKMARK [2][-]{subsection.5.5.3}{5.5.3 Performance measurement with event detection redirection}{section.5.5}% 58
-\BOOKMARK [2][-]{subsection.5.5.4}{5.5.4 Testing for accuracy of compare operations}{section.5.5}% 59
-\BOOKMARK [2][-]{subsection.5.5.5}{5.5.5 Evaluation of processing cycles needed for event operations}{section.5.5}% 60
-\BOOKMARK [0][]{chapter.6}{6 Conclusion and Future Work}{}% 61
-\BOOKMARK [1][-]{section.6.1}{6.1 Future Work}{chapter.6}% 62
-\BOOKMARK [1][-]{section.6.2}{6.2 Conclusion}{chapter.6}% 63
-\BOOKMARK [0][]{dummy.1}{Bibliography}{}% 64
+\BOOKMARK [1][-]{section.2.4}{2.4 RYU SDN Controller}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.5}{2.5 Intel Data Plane Development Kit}{chapter.2}% 13
+\BOOKMARK [2][-]{subsection.2.5.1}{2.5.1 DPDK Vhost library}{section.2.5}% 14
+\BOOKMARK [0][]{chapter.3}{3 Related Work}{}% 15
+\BOOKMARK [1][-]{section.3.1}{3.1 Deployment Strategies and Operator Placement in Event Processing}{chapter.3}% 16
+\BOOKMARK [1][-]{section.3.2}{3.2 Fog Computing and Software Defined Internet of Things}{chapter.3}% 17
+\BOOKMARK [1][-]{section.3.3}{3.3 Application-aware Data Plane Processing in SDN}{chapter.3}% 18
+\BOOKMARK [1][-]{section.3.4}{3.4 In-Net: In-Networking Processing for the Masses}{chapter.3}% 19
+\BOOKMARK [1][-]{section.3.5}{3.5 SmartSwitch: Blurring the Line Between Network Infrastructure and Cloud Applications}{chapter.3}% 20
+\BOOKMARK [1][-]{section.3.6}{3.6 NetVM: High Performance and Flexible Network Virtualization}{chapter.3}% 21
+\BOOKMARK [0][]{chapter.4}{4 Design and Implementation}{}% 22
+\BOOKMARK [1][-]{section.4.1}{4.1 Why Open vSwitch?}{chapter.4}% 23
+\BOOKMARK [1][-]{section.4.2}{4.2 Goals of the implementation}{chapter.4}% 24
+\BOOKMARK [1][-]{section.4.3}{4.3 An overview of Open vSwitch}{chapter.4}% 25
+\BOOKMARK [1][-]{section.4.4}{4.4 Design Breakdown}{chapter.4}% 26
+\BOOKMARK [1][-]{section.4.5}{4.5 System Model}{chapter.4}% 27
+\BOOKMARK [2][-]{subsection.4.5.1}{4.5.1 Event Detection Semantics}{section.4.5}% 28
+\BOOKMARK [2][-]{subsection.4.5.2}{4.5.2 Compare Operation Semantics}{section.4.5}% 29
+\BOOKMARK [2][-]{subsection.4.5.3}{4.5.3 Stateful Operation Semantics}{section.4.5}% 30
+\BOOKMARK [1][-]{section.4.6}{4.6 Implementation walk-through}{chapter.4}% 31
+\BOOKMARK [2][-]{subsection.4.6.1}{4.6.1 Event extraction and de-serialization}{section.4.6}% 32
+\BOOKMARK [2][-]{subsection.4.6.2}{4.6.2 Accessing event data}{section.4.6}% 33
+\BOOKMARK [2][-]{subsection.4.6.3}{4.6.3 Modelling OpenFlow pipeline for event processing}{section.4.6}% 34
+\BOOKMARK [2][-]{subsection.4.6.4}{4.6.4 Adding event data fields to OpenFlow tables}{section.4.6}% 35
+\BOOKMARK [2][-]{subsection.4.6.5}{4.6.5 Adding support for event based rules}{section.4.6}% 36
+\BOOKMARK [2][-]{subsection.4.6.6}{4.6.6 Detection based on event data}{section.4.6}% 37
+\BOOKMARK [2][-]{subsection.4.6.7}{4.6.7 Enabling compare operations support}{section.4.6}% 38
+\BOOKMARK [2][-]{subsection.4.6.8}{4.6.8 Enabling Stateful Operations}{section.4.6}% 39
+\BOOKMARK [2][-]{subsection.4.6.9}{4.6.9 API support for event rules via RYU}{section.4.6}% 40
+\BOOKMARK [1][-]{section.4.7}{4.7 Summary}{chapter.4}% 41
+\BOOKMARK [0][]{chapter.5}{5 Evaluation and Results}{}% 42
+\BOOKMARK [1][-]{section.5.1}{5.1 Evaluation Environment}{chapter.5}% 43
+\BOOKMARK [1][-]{section.5.2}{5.2 System under Test}{chapter.5}% 44
+\BOOKMARK [1][-]{section.5.3}{5.3 Apparatus for Evaluation}{chapter.5}% 45
+\BOOKMARK [1][-]{section.5.4}{5.4 Evaluation on Network Namespaces}{chapter.5}% 46
+\BOOKMARK [2][-]{subsection.5.4.1}{5.4.1 Set-up Methodology}{section.5.4}% 47
+\BOOKMARK [2][-]{subsection.5.4.2}{5.4.2 Performance measurement without event operations}{section.5.4}% 48
+\BOOKMARK [2][-]{subsection.5.4.3}{5.4.3 Performance measurement with event detection and redirection}{section.5.4}% 49
+\BOOKMARK [2][-]{subsection.5.4.4}{5.4.4 Performance measurement with increasing size of event types}{section.5.4}% 50
+\BOOKMARK [2][-]{subsection.5.4.5}{5.4.5 Performance measurement with increasing number of event types }{section.5.4}% 51
+\BOOKMARK [2][-]{subsection.5.4.6}{5.4.6 Performance measurement with increasing percentage of filtered event types}{section.5.4}% 52
+\BOOKMARK [2][-]{subsection.5.4.7}{5.4.7 Performance measurement of event attributes detection and redirection}{section.5.4}% 53
+\BOOKMARK [2][-]{subsection.5.4.8}{5.4.8 Performance measurement of compare operations on event attributes}{section.5.4}% 54
+\BOOKMARK [2][-]{subsection.5.4.9}{5.4.9 Evaluating for accuracy - compare operations}{section.5.4}% 55
+\BOOKMARK [2][-]{subsection.5.4.10}{5.4.10 Performance measure of stateful operations on event attributes}{section.5.4}% 56
+\BOOKMARK [2][-]{subsection.5.4.11}{5.4.11 Evaluating for accuracy - stateful operations}{section.5.4}% 57
+\BOOKMARK [1][-]{section.5.5}{5.5 Evaluation with DPDK}{chapter.5}% 58
+\BOOKMARK [2][-]{subsection.5.5.1}{5.5.1 System Set Up}{section.5.5}% 59
+\BOOKMARK [2][-]{subsection.5.5.2}{5.5.2 Guest-to-Guest Measurements}{section.5.5}% 60
+\BOOKMARK [2][-]{subsection.5.5.3}{5.5.3 Performance measurement with event detection redirection - DPDK}{section.5.5}% 61
+\BOOKMARK [2][-]{subsection.5.5.4}{5.5.4 Performance measure of compare operations and event redirection - DPDK}{section.5.5}% 62
+\BOOKMARK [2][-]{subsection.5.5.5}{5.5.5 Evaluating for accuracy of compare operations - DPDK}{section.5.5}% 63
+\BOOKMARK [2][-]{subsection.5.5.6}{5.5.6 Evaluation of processing cycles needed for event operations}{section.5.5}% 64
+\BOOKMARK [0][]{chapter.6}{6 Conclusion and Future Work}{}% 65
+\BOOKMARK [1][-]{section.6.1}{6.1 Conclusion}{chapter.6}% 66
+\BOOKMARK [1][-]{section.6.2}{6.2 Future Work}{chapter.6}% 67
+\BOOKMARK [0][]{dummy.1}{Bibliography}{}% 68

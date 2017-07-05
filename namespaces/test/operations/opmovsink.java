@@ -28,22 +28,40 @@ List<Integer> latency = new ArrayList<Integer>();
 //logger.setUseParentHandlers(false);
           DatagramSocket serverSocket = new DatagramSocket(9877);
              byte[] receiveData = new byte[1024];
-             while(counter<=60)
-                {
-                  
+
+        for(int i =20; i < 100; i++){
+      System.out.println(" i here is" + i);
+          for( int j=i; j<=(i+1); j ++){
+                  System.out.println(" j here is" + j);
+                  if(i==20 && j==21){i++;}
                    DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
                    serverSocket.receive(receivePacket);
                    String sentence = new String( receivePacket.getData(),0,receivePacket.getLength());
                    Date date = new Date();
                    long recvTimestamp = date.getTime();
                     System.out.println("Received at "+" "+recvTimestamp+" -- " + sentence);
+                    
                    List<String> list = Arrays.asList(sentence.split(","));
                    //System.out.println("Timestamp in packet is" + list.get(2));
                    long sendTimestamp = Long.parseLong(list.get(4));
                    latency.add((int)(recvTimestamp-sendTimestamp));
                    int attr1 = Integer.parseInt(list.get(2));
-                   if(attr1 < 50){
+                   if(attr1 < i){
                      miss ++;
+                     j--;
+                   }
+                   if(attr1 > i){
+                     miss ++;
+                     break;
+                   }
+                   if(attr1 > j+1){
+                    miss ++;
+                    miss ++;
+                    break;
+                   }
+                   if(attr1 > j){
+                    miss ++;
+                    break;
                    }
                    //System.out.println("Timestamp in packet as number" + recvTimestamp+ " "+counter);
                    //logger.info("Receiving packet");
@@ -52,11 +70,14 @@ List<Integer> latency = new ArrayList<Integer>();
                    counter ++;
 
                 } 
-                Integer sum = 0;
+                       Integer sum = 0;
                  for (Integer lat : latency) {
                 sum += lat;
                   }
-              System.out.println("Average latency is" + sum.doubleValue() / latency.size());
-              System.out.println("Packet hit" + miss);
-       }
+               System.out.println("Average latency is" + sum.doubleValue() / latency.size());
+              System.out.println("Packets inaccurate" + miss);
+                
+}
+
+   }
 }

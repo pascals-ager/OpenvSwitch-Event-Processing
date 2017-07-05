@@ -14,45 +14,45 @@ Warning--entry type for "DPDK" isn't style-file defined
 Warning--entry type for "OFSwitchSpecification" isn't style-file defined
 --line 1077 of file Bibliography.bib
 Warning--empty institution in halpern2015service
-You've used 49 entries,
+You've used 50 entries,
             2543 wiz_defined-function locations,
-            836 strings with 14270 characters,
-and the built_in function-call counts, 24548 in all, are:
-= -- 2478
-> -- 1310
-< -- 43
-+ -- 477
-- -- 471
-* -- 1759
-:= -- 3873
-add.period$ -- 165
-call.type$ -- 49
-change.case$ -- 374
-chr.to.int$ -- 49
-cite$ -- 50
-duplicate$ -- 971
-empty$ -- 1705
-format.name$ -- 518
-if$ -- 5185
+            840 strings with 14335 characters,
+and the built_in function-call counts, 24809 in all, are:
+= -- 2502
+> -- 1318
+< -- 44
++ -- 479
+- -- 473
+* -- 1769
+:= -- 3913
+add.period$ -- 168
+call.type$ -- 50
+change.case$ -- 379
+chr.to.int$ -- 50
+cite$ -- 51
+duplicate$ -- 982
+empty$ -- 1730
+format.name$ -- 522
+if$ -- 5240
 int.to.chr$ -- 1
 int.to.str$ -- 0
 missing$ -- 44
-newline$ -- 245
-num.names$ -- 147
-pop$ -- 429
+newline$ -- 250
+num.names$ -- 150
+pop$ -- 443
 preamble$ -- 1
-purify$ -- 424
+purify$ -- 430
 quote$ -- 0
-skip$ -- 842
+skip$ -- 850
 stack$ -- 0
-substring$ -- 1264
-swap$ -- 292
-text.length$ -- 43
-text.prefix$ -- 11
+substring$ -- 1271
+swap$ -- 293
+text.length$ -- 44
+text.prefix$ -- 12
 top$ -- 0
-type$ -- 384
+type$ -- 392
 warning$ -- 1
-while$ -- 236
-width$ -- 52
-write$ -- 655
+while$ -- 238
+width$ -- 53
+write$ -- 666
 (There were 6 warnings)

@@ -31,8 +31,8 @@ ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 #ovs-vsctl add-port br0 dpdk-p1 -- set Interface dpdk-p1 type=dpdk \
  #   options:dpdk-devargs=0000:00:09.0
 
-	#ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
-#ovs-vsctl set bridge ovsbr0 protocols=OpenFlow10
+ovs-vsctl set-controller br0 tcp:127.0.0.1:6633
+ovs-vsctl set bridge ovsbr0 protocols=OpenFlow10
 
 
 #sh veth-setup.sh
@@ -42,7 +42,7 @@ ovs-vsctl add-br br0 -- set bridge br0 datapath_type=netdev
 #             --ca-certs /usr/local/var/lib/openvswitch/pki/switchca/cacert.pem \
 #             --verbose
 
-#ryu-manager --verbose
+ryu-manager --verbose /home/advith/cep/thesis-advith-cep/ryu-4.0/ryu/app/ofctl_rest.py
 
 #ovs-appctl vlog/set netdev_linux:syslog:dbg && ovs-appctl vlog/set dpif_netdev:syslog:dbg && ovs-appctl vlog/set netlink_socket:syslog:dbg && ovs-appctl vlog/set ofproto_dpif_upcall:syslog:dbg && ovs-appctl vlog/set ofproto_dpif:syslog:dbg && ovs-appctl vlog/set flow_extract:syslog:dbg
 

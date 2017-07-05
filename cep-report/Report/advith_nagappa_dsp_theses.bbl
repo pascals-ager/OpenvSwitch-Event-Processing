@@ -55,6 +55,11 @@ Gianpaolo Cugola and Alessandro Margara.
 \newblock Deployment strategies for distributed complex event processing.
 \newblock {\em Computing}, 95(2):129--156, February 2013.
 
+\bibitem[Com]{RYU-Documentation}
+RYU Community.
+\newblock Ryu-documentation.
+\newblock Accessed: 5-7-2017.
+
 \bibitem[CQ09]{chakravarthy}
 Sharma Chakravarthy and Jiang Qingchun.
 \newblock {\em Stream data processing: a quality of service perspective:

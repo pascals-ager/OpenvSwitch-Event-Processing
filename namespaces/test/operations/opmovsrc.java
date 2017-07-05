@@ -36,16 +36,17 @@ int val = 0;
                 add("AAAAAAAAAA");
                 add("TEST");
                         }}; */
-      while(counter <= 1000){ 
-        
-
-  BufferedReader inFromUser =
+        BufferedReader inFromUser =
           new BufferedReader(new InputStreamReader(System.in));
-       DatagramSocket clientSocket = new DatagramSocket();
+       
        InetAddress IPAddress = InetAddress.getByName("10.1.1.1");
-       byte[] sendData = new byte[1024];
+       
+      
+        for(int i =0; i < 100; i++){
+          for( int j=0; j<=i; j ++){
+DatagramSocket clientSocket = new DatagramSocket();
       // byte[] receiveData = new byte[1024];
-
+byte[] sendData = new byte[1024];
 
 //        Date date = new Date();
         //String s = catalogue.get(2);
@@ -56,7 +57,7 @@ int val = 0;
   //sentence.append(list.get(new Random().nextInt(list.size())));
 sentence.append(",");
          //sentence.append(new Random().nextInt(100));//s
- sentence.append(counter%100);
+ sentence.append(j);
          sentence.append(",");
  sentence.append(90);
          sentence.append(",");         
@@ -80,8 +81,13 @@ sentence.append(",");
        //String modifiedSentence = new String(receivePacket.getData());
        //System.out.println("FROM SERVER:" + modifiedSentence);
        clientSocket.close();
-         Thread.sleep(6);
+         Thread.sleep(12);
 
-    }
+          }
+        }
+
+
+
+    
 }
 }

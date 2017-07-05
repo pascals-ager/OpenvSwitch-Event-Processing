@@ -233,8 +233,9 @@
 \newcommand{\komID}{}
 \newcommand{\komName}{Advith Belegadde Nagappa\xspace}
 \newcommand{\komSubmissionDate}{\xspace}% use only this date format
-\newcommand{\komGutachter}{1. Gutachten: Marcel Bl{\"o}cher, M. Sc \xspace}
-\newcommand{\komBetreuer}{2. Gutachten: Prof. Dr. Patrick Eugster, Ph.D  \xspace}
+\newcommand{\komGutachter}{1. Gutachten: Prof. Dr. Patrick Eugster, Ph.D  \xspace}
+\newcommand{\komBetreuer}{2. Gutachten: Marcel Bl{\"o}cher, M. Sc \xspace}
+
 
 %======================================================
 % Setup for hyperref
@@ -316,7 +317,8 @@
 	\vspace{1.5cm}
 	
 	\noindent Darmstadt, den \komSubmissionDate\hfill \komName
-	
+	\pagebreak
+	\input{0_Abstract}
 	\tableofcontents
 	\listoffigures
     %\listofcodes
@@ -329,13 +331,12 @@
 	%======================================================
 	\cleardoublepage
 	\pagenumbering{arabic}
-	\input{0_Abstract}
 	\input{1_Introduction}
 	\input{2_State_of_the_Art}
 	\input{3_Related_Work}
-	\input{5_Design_and_Implementation}
-	\input{6_Evaluation_and_Results}
-	\input{7_Summary}
+	\input{4_Design_and_Implementation}
+	\input{5_Evaluation_and_Results}
+	\input{6_Summary}
 	%\input{Evaluation_Testbed}
 	
 	%======================================================
