@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2017.3.6)  6 JUL 2017 02:49
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/W32TeX) (preloaded format=pdflatex 2017.3.6)  6 JUL 2017 03:37
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -26,8 +26,6 @@ Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
 Class tudreport Info: Option `paper=a4report' selected. on input line 142.
 Class tudreport Info: Option `paper=a4report' selected. on input line 144.
-Class tudreport Info: Unknown option 'oneside`. Pass to KOMA-Script class. on i
-nput line 144.
 
 (c:/texlive/2016/texmf-dist/tex/latex/koma-script/scrreprt.cls
 Document Class: scrreprt 2017/01/03 v3.22 KOMA-Script document class (report)
@@ -67,12 +65,6 @@ Class scrreprt Info: You've used standard option `openright'.
 (scrreprt)           If you'd like to set the option with \KOMAoptions,
 (scrreprt)           you'd have to use `open=right' there
 (scrreprt)           instead of `openright', too.
-Class scrreprt Info: You've used standard option `oneside'.
-(scrreprt)           This is correct!
-(scrreprt)           Internally I'm using `twoside=false'.
-(scrreprt)           If you'd like to set the option with \KOMAoptions,
-(scrreprt)           you'd have to use `twoside=false' there
-(scrreprt)           instead of `oneside', too.
 Class scrreprt Info: File `scrsize11pt.clo' used instead of
 (scrreprt)           file `scrsize11.clo' to setup font sizes on input line 226
 7.
@@ -90,12 +82,6 @@ Package typearea, 2017/01/03 v3.22 KOMA-Script package (type area)
 
 \ta@bcor=\skip42
 \ta@div=\count80
-Package typearea Info: You've used standard option `oneside'.
-(typearea)             This is correct!
-(typearea)             Internally I'm using `twoside=false'.
-(typearea)             If you'd like to set the option with \KOMAoptions,
-(typearea)             you'd have to use `twoside=false' there
-(typearea)             instead of `oneside', too.
 \ta@hblk=\skip43
 \ta@vblk=\skip44
 \ta@temp=\skip45
@@ -106,8 +92,8 @@ Package typearea Info: These are the values describing the layout:
 (typearea)             \paperwidth      = 597.50793pt
 (typearea)              \textwidth      = 418.25555pt
 (typearea)              DIV departure   = -6%
-(typearea)              \evensidemargin = 17.3562pt
-(typearea)              \oddsidemargin  = 17.3562pt
+(typearea)              \evensidemargin = 47.2316pt
+(typearea)              \oddsidemargin  = -12.5192pt
 (typearea)             \paperheight     = 845.04694pt
 (typearea)              \textheight     = 595.80026pt
 (typearea)              \topmargin      = -25.16531pt
@@ -401,7 +387,7 @@ LaTeX Info: Redefining \em on input line 37.
 LaTeX Info: Redefining \LaTeX on input line 108.
 )
 LaTeX Font Info:    Font shape `T1/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 239.
+(Font)              scaled to size 10.56007pt on input line 239.
 )
 \TUD@headfootsep=\skip62
  (./tudpage.sty
@@ -564,7 +550,7 @@ Package scrreprt Warning: Activating an ugly workaround for a missing
 \c@seclinedepth=\count98
 \TUD@chapter@diff@height=\skip98
 LaTeX Font Info:    Font shape `T1/mdbch/m/n' will be
-(Font)              scaled to size 12.09608pt on input line 75.
+(Font)              scaled to size 11.13608pt on input line 75.
 \@TUD@above@headskip=\skip99
 \@TUD@below@headskip=\skip100
 (./tudheading.def
@@ -1259,7 +1245,7 @@ LaTeX Font Info:    Redeclaring font encoding T1 on input line 48.
 (c:/texlive/2016/texmf-dist/tex/latex/bera/beraserif.sty
 Package: beraserif 2004/01/30 (WaS)
 LaTeX Font Info:    Font shape `T1/fve/m/n' will be
-(Font)              scaled to size 10.12793pt on input line 30.
+(Font)              scaled to size 9.28394pt on input line 30.
 )
 (c:/texlive/2016/texmf-dist/tex/latex/bera/berasans.sty
 Package: berasans 2004/01/30 (WaS)
@@ -2217,20 +2203,20 @@ e
 * paper: a4paper
 * layout: <same size as paper>
 * layoutoffset:(h,v)=(0.0pt,0.0pt)
-* modes: includehead includefoot includemp 
+* modes: includehead includefoot includemp twoside 
 * h-part:(L,W,R)=(56.9055pt, 497.92325pt, 42.67912pt)
 * v-part:(T,H,B)=(42.67912pt, 745.46222pt, 56.9055pt)
 * \paperwidth=597.50787pt
 * \paperheight=845.04684pt
 * \textwidth=497.92325pt
-* \textheight=698.49777pt
+* \textheight=701.09778pt
 * \oddsidemargin=-15.36449pt
-* \evensidemargin=-15.36449pt
+* \evensidemargin=-29.59087pt
 * \topmargin=-29.59087pt
 * \headheight=16.56445pt
-* \headsep=15.2pt
+* \headsep=13.9pt
 * \topskip=11.0pt
-* \footskip=15.2pt
+* \footskip=13.9pt
 * \marginparwidth=0.0pt
 * \marginparsep=0.0pt
 * \columnsep=11.95013pt
@@ -2239,8 +2225,8 @@ e
 * \voffset=0.0pt
 * \mag=1000
 * \@twocolumnfalse
-* \@twosidefalse
-* \@mparswitchfalse
+* \@twosidetrue
+* \@mparswitchtrue
 * \@reversemarginfalse
 * (1in=72.27pt=25.4mm, 1cm=28.453pt)
 
@@ -2352,11 +2338,11 @@ LaTeX Font Info:    Try loading font information for OMS+mdbch on input line 46
 File: omsmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for OMS/mdbch.
 )
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 460.
+(Font)              scaled to size 11.04007pt on input line 460.
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 8.64006pt on input line 460.
+(Font)              scaled to size 7.68005pt on input line 460.
 LaTeX Font Info:    Font shape `OMS/mdbch/m/n' will be
-(Font)              scaled to size 6.72005pt on input line 460.
+(Font)              scaled to size 6.62404pt on input line 460.
 LaTeX Font Info:    Try loading font information for OML+mdbch on input line 46
 0.
 
@@ -2364,11 +2350,11 @@ LaTeX Font Info:    Try loading font information for OML+mdbch on input line 46
 File: omlmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for OML/mdbch.
 )
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 460.
+(Font)              scaled to size 11.04007pt on input line 460.
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 8.64006pt on input line 460.
+(Font)              scaled to size 7.68005pt on input line 460.
 LaTeX Font Info:    Font shape `OML/mdbch/m/n' will be
-(Font)              scaled to size 6.72005pt on input line 460.
+(Font)              scaled to size 6.62404pt on input line 460.
 LaTeX Font Info:    Try loading font information for MDA+mdbch on input line 46
 0.
 
@@ -2376,11 +2362,11 @@ LaTeX Font Info:    Try loading font information for MDA+mdbch on input line 46
 File: mdamdbch.fd 2013/08/29 Fontinst v1.933 font definitions for MDA/mdbch.
 )
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 460.
+(Font)              scaled to size 11.04007pt on input line 460.
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 8.64006pt on input line 460.
+(Font)              scaled to size 7.68005pt on input line 460.
 LaTeX Font Info:    Font shape `MDA/mdbch/m/n' will be
-(Font)              scaled to size 6.72005pt on input line 460.
+(Font)              scaled to size 6.62404pt on input line 460.
 LaTeX Font Info:    Try loading font information for MDB+mdbch on input line 46
 0.
 
@@ -2388,11 +2374,11 @@ LaTeX Font Info:    Try loading font information for MDB+mdbch on input line 46
 File: mdbmdbch.fd 2013/08/29 Fontinst v1.933 font definitions for MDB/mdbch.
 )
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 11.52008pt on input line 460.
+(Font)              scaled to size 11.04007pt on input line 460.
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 8.64006pt on input line 460.
+(Font)              scaled to size 7.68005pt on input line 460.
 LaTeX Font Info:    Font shape `MDB/mdbch/m/n' will be
-(Font)              scaled to size 6.72005pt on input line 460.
+(Font)              scaled to size 6.62404pt on input line 460.
 LaTeX Font Info:    Try loading font information for OML+mdput on input line 46
 0.
 
@@ -2400,25 +2386,25 @@ LaTeX Font Info:    Try loading font information for OML+mdput on input line 46
 File: omlmdput.fd 2013/08/29 Fontinst v1.933 font definitions for OML/mdput.
 )
 LaTeX Font Info:    Font shape `OML/mdput/m/it' will be
-(Font)              scaled to size 11.28003pt on input line 460.
+(Font)              scaled to size 10.81003pt on input line 460.
 LaTeX Font Info:    Font shape `OML/mdput/m/it' will be
-(Font)              scaled to size 8.46002pt on input line 460.
+(Font)              scaled to size 7.52002pt on input line 460.
 LaTeX Font Info:    Font shape `OML/mdput/m/it' will be
-(Font)              scaled to size 6.58002pt on input line 460.
+(Font)              scaled to size 6.48601pt on input line 460.
 LaTeX Font Info:    Try loading font information for OT1+ptm on input line 460.
 
 
 (c:/texlive/2016/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <12> not available
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <11.5> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 460.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <9> not available
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <8> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 460.
-LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <7> not available
+LaTeX Font Info:    Font shape `OT1/ptm/bx/n' in size <6.9> not available
 (Font)              Font shape `OT1/ptm/b/n' tried instead on input line 460.
 LaTeX Font Info:    Font shape `T1/fvs/mb/n' will be
-(Font)              scaled to size 10.63432pt on input line 460.
+(Font)              scaled to size 9.79033pt on input line 460.
 \@TUD@titlelines=\count350
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
 (Font)              scaled to size 9.70593pt on input line 460.
@@ -2440,7 +2426,7 @@ LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
 \@TUD@logolines=\count351
 LaTeX Font Info:    Font shape `T1/fve/m/n' will be
 (Font)              scaled to size 9.24173pt on input line 460.
- [0
+ [-1
 Non-PDF special ignored!
 
 
@@ -2448,11 +2434,27 @@ Non-PDF special ignored!
 \openout4 = `advith_nagappa_dsp_theses.ist'.
 
 {c:/texlive/2016/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <./tud_logo.pdf>
+]
+Underfull \hbox (badness 10000) in paragraph at lines 460--460
+
+ []
+
+pdfTeX warning (ext4): destination with the same identifier (name{page.}) has b
+een already used, duplicate ignored
+<to be read again> 
+                   \relax 
+l.460 	\chapter
+               *{Ehrenw\"ortliche Erkl\"arung} [0
+
 ] (./0_Abstract.tex
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 8.43994pt on input line 2.
+(Font)              scaled to size 7.76474pt on input line 2.
  [1
 
+
+
+]
+[2
 
 
 ]
@@ -2465,36 +2467,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 2--8
 
  []
 
-) [2] (./advith_nagappa_dsp_theses.toc
+) [3] [4
+
+
+] (./advith_nagappa_dsp_theses.toc
 LaTeX Font Info:    Font shape `T1/fve/b/n' will be
-(Font)              scaled to size 10.12793pt on input line 1.
- [3
-
-
-])
+(Font)              scaled to size 9.28394pt on input line 1.
+ [5])
 \tf@toc=\write8
 \openout8 = `advith_nagappa_dsp_theses.toc'.
 
- [4]
-(./advith_nagappa_dsp_theses.lof [5
+ [6]
+(./advith_nagappa_dsp_theses.lof [7
 
 
 ])
 \tf@lof=\write9
 \openout9 = `advith_nagappa_dsp_theses.lof'.
 
- [6] (./advith_nagappa_dsp_theses.lot)
+ [8] (./advith_nagappa_dsp_theses.lot)
 \tf@lot=\write10
 \openout10 = `advith_nagappa_dsp_theses.lot'.
 
 
-[7
+[9
 
 
 ]
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 10.12793pt on input line 478.
- [8] (./1_Introduction.tex
+(Font)              scaled to size 9.28394pt on input line 478.
+ [10] (./1_Introduction.tex
 chapter 1.
 
 Class scrreprt Warning: \float@addtolists detected!
@@ -2533,20 +2535,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 2--10
 
 ]
 LaTeX Font Info:    Font shape `T1/fve/m/n' will be
-(Font)              scaled to size 9.28394pt on input line 16.
+(Font)              scaled to size 8.43994pt on input line 16.
 LaTeX Font Info:    Font shape `T1/fvs/mb/n' will be
-(Font)              scaled to size 10.12793pt on input line 16.
- <Vswitch05.pdf, id=528, 715.67375pt x 607.26875pt>
+(Font)              scaled to size 9.28394pt on input line 16.
+ <Vswitch05.pdf, id=540, 715.67375pt x 607.26875pt>
 File: Vswitch05.pdf Graphic file (type pdf)
  <use Vswitch05.pdf>
 Package pdftex.def Info: Vswitch05.pdf used on input line 17.
 (pdftex.def)             Requested size: 402.39076pt x 341.43306pt.
-
-[2]
-LaTeX Font Info:    Font shape `T1/fve/m/it' in size <12> not available
+LaTeX Font Info:    Font shape `T1/fve/m/it' in size <11> not available
 (Font)              Font shape `T1/fve/m/sl' tried instead on input line 20.
 LaTeX Font Info:    Font shape `T1/fve/m/sl' will be
-(Font)              scaled to size 10.12793pt on input line 20.
+(Font)              scaled to size 9.28394pt on input line 20.
 
 Underfull \hbox (badness 10000) in paragraph at lines 19--23
 
@@ -2567,13 +2567,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 19--23
 
  []
 
-[3 <./Vswitch05.pdf>]
+[2 <./Vswitch05.pdf>]
 LaTeX Font Info:    Try loading font information for TS1+fve on input line 27.
  (c:/texlive/2016/texmf-dist/tex/latex/bera/ts1fve.fd
 File: ts1fve.fd 2004/09/07 scalable font definitions for TS1/fve.
 )
 LaTeX Font Info:    Font shape `TS1/fve/m/n' will be
-(Font)              scaled to size 10.79993pt on input line 27.
+(Font)              scaled to size 9.89993pt on input line 27.
 
 Underfull \hbox (badness 10000) in paragraph at lines 35--44
 
@@ -2589,35 +2589,28 @@ Underfull \hbox (badness 10000) in paragraph at lines 35--44
 
  []
 
-[4]) (./2_State_of_the_Art.tex [5]
+[3]) (./2_State_of_the_Art.tex [4]
 chapter 2.
-<Luckham.pdf, id=702, 605.26125pt x 637.38126pt>
+<Luckham.pdf, id=708, 605.26125pt x 637.38126pt>
 File: Luckham.pdf Graphic file (type pdf)
  <use Luckham.pdf>
 Package pdftex.def Info: Luckham.pdf used on input line 14.
 (pdftex.def)             Requested size: 270.18544pt x 284.52756pt.
- [6
-
-
-]
 LaTeX Font Info:    Font shape `T1/fvs/m/n' will be
-(Font)              scaled to size 10.63432pt on input line 17.
- [7 <./Luckham.pdf>] <pubsub.pdf, id=784, 492.84125pt x 273.02pt>
+(Font)              scaled to size 9.79033pt on input line 17.
+ [5
+
+
+ <./Luckham.pdf>] <pubsub.pdf, id=785, 492.84125pt x 273.02pt>
 File: pubsub.pdf Graphic file (type pdf)
  <use pubsub.pdf>
 Package pdftex.def Info: pubsub.pdf used on input line 28.
 (pdftex.def)             Requested size: 341.45204pt x 170.71623pt.
-
-<pushpull.pdf, id=786, 763.85374pt x 323.2075pt>
+ [6 <./pubsub.pdf>] <pushpull.pdf, id=853, 763.85374pt x 323.2075pt>
 File: pushpull.pdf Graphic file (type pdf)
  <use pushpull.pdf>
 Package pdftex.def Info: pushpull.pdf used on input line 35.
 (pdftex.def)             Requested size: 455.23874pt x 227.61966pt.
- [8 <./pubsub.pdf>]
-Underfull \hbox (badness 10000) in paragraph at lines 44--46
-
- []
-
 
 Underfull \hbox (badness 10000) in paragraph at lines 44--46
 
@@ -2628,13 +2621,18 @@ Underfull \hbox (badness 10000) in paragraph at lines 44--46
 
  []
 
-[9 <./pushpull.pdf>] <SDN-Architecture05.pdf, id=972, 452.69125pt x 393.47pt>
+
+Underfull \hbox (badness 10000) in paragraph at lines 44--46
+
+ []
+
+[7 <./pushpull.pdf>] <SDN-Architecture05.pdf, id=975, 452.69125pt x 393.47pt>
 File: SDN-Architecture05.pdf Graphic file (type pdf)
 
 <use SDN-Architecture05.pdf>
 Package pdftex.def Info: SDN-Architecture05.pdf used on input line 55.
 (pdftex.def)             Requested size: 294.61192pt x 256.0748pt.
- [10]
+ [8 <./SDN-Architecture05.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 59--62
 
  []
@@ -2644,7 +2642,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 59--62
 
  []
 
-[11 <./SDN-Architecture05.pdf>]
+
 Underfull \hbox (badness 10000) in paragraph at lines 62--63
 
  []
@@ -2669,93 +2667,100 @@ Underfull \hbox (badness 10000) in paragraph at lines 68--69
 
  []
 
-[12] <DPDK03.pdf, id=1108, 524.96124pt x 343.2825pt>
+[9] <DPDK03.pdf, id=1106, 524.96124pt x 343.2825pt>
 File: DPDK03.pdf Graphic file (type pdf)
  <use DPDK03.pdf>
 Package pdftex.def Info: DPDK03.pdf used on input line 77.
 (pdftex.def)             Requested size: 348.08556pt x 227.62204pt.
- [13]
-[14 <./DPDK03.pdf>] <vhostnet.pdf, id=1216, 715.67375pt x 672.5125pt>
+ [10]
+[11 <./DPDK03.pdf>] <vhostnet.pdf, id=1214, 715.67375pt x 672.5125pt>
 File: vhostnet.pdf Graphic file (type pdf)
 
 <use vhostnet.pdf>
 Package pdftex.def Info: vhostnet.pdf used on input line 92.
 (pdftex.def)             Requested size: 302.78682pt x 284.52756pt.
-) (./3_Related_Work.tex [15 <./vhostnet.pdf>] [16]
+) (./3_Related_Work.tex [12 <./vhostnet.pdf>]
 chapter 3.
+
+Overfull \hbox (0.92996pt too wide) in paragraph at lines 5--8
+\T1/fve/m/n/11 Since the the-sis fo-cuses on cre-at-ing a data plane so-lu-tion
+ specif-i-cally tuned for the Event Processing/Event-
+ []
+
 
 Underfull \hbox (badness 10000) in paragraph at lines 13--14
 
  []
 
-[17
+[13
 
 
-] [18] <appaware01.pdf, id=1403, 795.97375pt x 797.98125pt>
+] [14] <appaware01.pdf, id=1397, 795.97375pt x 797.98125pt>
 File: appaware01.pdf Graphic file (type pdf)
 
 <use appaware01.pdf>
 Package pdftex.def Info: appaware01.pdf used on input line 46.
 (pdftex.def)             Requested size: 369.88106pt x 284.52121pt.
- [19] <innet01.pdf, id=1412, 793.96625pt x 654.445pt>
+ [15 <./appaware01.pdf>]
+<innet01.pdf, id=1699, 793.96625pt x 654.445pt>
 File: innet01.pdf Graphic file (type pdf)
-
-<use innet01.pdf>
+ <use innet01.pdf>
 Package pdftex.def Info: innet01.pdf used on input line 64.
 (pdftex.def)             Requested size: 345.1787pt x 284.52756pt.
- [20 <./appaware01.pdf>] [21 <./innet01.pdf>]
-<netvm01.pdf, id=1917, 723.70375pt x 624.3325pt>
+ [16 <./innet01.pdf>] [17] <netvm01.pdf, id=1911, 723.70375pt x 624.3325pt>
 File: netvm01.pdf Graphic file (type pdf)
- <use netvm01.pdf>
+
+<use netvm01.pdf>
 Package pdftex.def Info: netvm01.pdf used on input line 95.
 (pdftex.def)             Requested size: 329.81578pt x 284.52756pt.
- [22]
-[23 <./netvm01.pdf>]) (./4_Design_and_Implementation.tex [24] [25]
+ [18 <./netvm01.pdf>]) (./4_Design_and_Implementation.tex
+[19] [20]
 chapter 4.
-<evsep01.pdf, id=2007, 688.5725pt x 321.2pt>
+<evsep01.pdf, id=1997, 688.5725pt x 321.2pt>
 File: evsep01.pdf Graphic file (type pdf)
  <use evsep01.pdf>
 Package pdftex.def Info: evsep01.pdf used on input line 13.
 (pdftex.def)             Requested size: 284.52296pt x 170.7204pt.
- [26
+ [21
 
 
-] [27 <./evsep01.pdf>] <kernaldatapath.pdf, id=2073, 784.9325pt x 433.62pt>
+] [22 <./evsep01.pdf>] <kernaldatapath.pdf, id=2063, 784.9325pt x 433.62pt>
 File: kernaldatapath.pdf Graphic file (type pdf)
 
 <use kernaldatapath.pdf>
 Package pdftex.def Info: kernaldatapath.pdf used on input line 50.
 (pdftex.def)             Requested size: 412.03584pt x 227.62204pt.
- [28]
-<internals.pdf, id=2079, 392.46625pt x 363.3575pt>
+ [23]
+<internals.pdf, id=2068, 392.46625pt x 363.3575pt>
 File: internals.pdf Graphic file (type pdf)
  <use internals.pdf>
 Package pdftex.def Info: internals.pdf used on input line 64.
 (pdftex.def)             Requested size: 184.39328pt x 170.71652pt.
- [29 <./kernaldatapath.pdf>] <dpnetdev.pdf, id=2132, 824.07875pt x 584.1825pt>
+ [24 <./kernaldatapath.pdf>] <dpnetdev.pdf, id=2121, 824.07875pt x 584.1825pt>
 File: dpnetdev.pdf Graphic file (type pdf)
 
 <use dpnetdev.pdf>
 Package pdftex.def Info: dpnetdev.pdf used on input line 83.
 (pdftex.def)             Requested size: 321.1002pt x 227.62204pt.
- [30 <./internals.pdf>] [31 <./dpnetdev.pdf>]
-<payload.pdf, id=2249, 553.06625pt x 43.16125pt>
+ [25 <./internals.pdf>] [26 <./dpnetdev.pdf>]
+<payload.pdf, id=2239, 553.06625pt x 43.16125pt>
 File: payload.pdf Graphic file (type pdf)
  <use payload.pdf>
 Package pdftex.def Info: payload.pdf used on input line 104.
 (pdftex.def)             Requested size: 284.52756pt x 22.20424pt.
- [32 <./payload.pdf>] [33] <flowextract01.pdf, id=2285, 824.07875pt x 584.1825p
+ [27 <./payload.pdf>] [28] <flowextract01.pdf, id=2277, 824.07875pt x 584.1825p
 t>
 File: flowextract01.pdf Graphic file (type pdf)
 
 <use flowextract01.pdf>
 Package pdftex.def Info: flowextract01.pdf used on input line 209.
 (pdftex.def)             Requested size: 321.1002pt x 227.62204pt.
- [34]
+
 Underfull \hbox (badness 10000) in paragraph at lines 213--214
 
  []
 
+[29 <./flowextract01.pdf>]
 (c:/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
@@ -2763,18 +2768,17 @@ File: lstlang1.sty 2015/06/04 1.6 listings language file
 File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
 )
 LaTeX Font Info:    Font shape `T1/fve/m/n' will be
-(Font)              scaled to size 8.43994pt on input line 215.
+(Font)              scaled to size 7.76474pt on input line 215.
 LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
-(Font)              scaled to size 8.43994pt on input line 215.
+(Font)              scaled to size 7.76474pt on input line 215.
 LaTeX Font Info:    Font shape `T1/fvm/b/n' will be
-(Font)              scaled to size 8.43994pt on input line 216.
- [35 <./flowextract01.pdf>]
+(Font)              scaled to size 7.76474pt on input line 216.
 LaTeX Font Info:    Font shape `T1/fvm/m/n' will be
-(Font)              scaled to size 10.12793pt on input line 236.
- <pipeline05.pdf, id=2419, 1253.68375pt x 513.92pt>
-File: pipeline05.pdf Graphic file (type pdf)
+(Font)              scaled to size 9.28394pt on input line 236.
 
-<use pipeline05.pdf>
+<pipeline05.pdf, id=2391, 1253.68375pt x 513.92pt>
+File: pipeline05.pdf Graphic file (type pdf)
+ <use pipeline05.pdf>
 Package pdftex.def Info: pipeline05.pdf used on input line 243.
 (pdftex.def)             Requested size: 540.62302pt x 227.62328pt.
 
@@ -2782,7 +2786,7 @@ Overfull \hbox (42.69977pt too wide) in paragraph at lines 243--244
  [][] 
  []
 
-[36 <./pipeline05.pdf>] <flowtable.pdf, id=2551, 831.105pt x 243.91125pt>
+[30 <./pipeline05.pdf>] <flowtable.pdf, id=2536, 831.105pt x 243.91125pt>
 File: flowtable.pdf Graphic file (type pdf)
 
 <use flowtable.pdf>
@@ -2793,39 +2797,39 @@ Underfull \hbox (badness 10000) in paragraph at lines 256--257
 
  []
 
-
+[31 <./flowtable.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 277--278
 
  []
 
-[37 <./flowtable.pdf>]
+
 Underfull \hbox (badness 10000) in paragraph at lines 303--305
 
  []
 
-[38]
+[32]
 Underfull \hbox (badness 10000) in paragraph at lines 316--317
 
  []
 
-<flowadd01.pdf, id=2694, 543.02875pt x 403.5075pt>
+<flowadd01.pdf, id=2680, 543.02875pt x 403.5075pt>
 File: flowadd01.pdf Graphic file (type pdf)
  <use flowadd01.pdf>
 Package pdftex.def Info: flowadd01.pdf used on input line 332.
 (pdftex.def)             Requested size: 344.62054pt x 256.0748pt.
- [39]
+ [33]
 Underfull \hbox (badness 10000) in paragraph at lines 335--336
 
  []
 
-<ruleinsert01.pdf, id=2713, 532.99126pt x 493.845pt>
+<ruleinsert01.pdf, id=2699, 532.99126pt x 493.845pt>
 File: ruleinsert01.pdf Graphic file (type pdf)
  <use ruleinsert01.pdf>
 Package pdftex.def Info: ruleinsert01.pdf used on input line 351.
 (pdftex.def)             Requested size: 312.99008pt x 256.06993pt.
 
-[40 <./flowadd01.pdf>]
-<ofproto-dpif-xlate.pdf, id=2766, 565.11125pt x 215.80624pt>
+[34 <./flowadd01.pdf>]
+<ofproto-dpif-xlate.pdf, id=2751, 565.11125pt x 215.80624pt>
 File: ofproto-dpif-xlate.pdf Graphic file (type pdf)
 
 <use ofproto-dpif-xlate.pdf>
@@ -2836,49 +2840,49 @@ Underfull \hbox (badness 10000) in paragraph at lines 365--366
 
  []
 
-[41 <./ruleinsert01.pdf> <./ofproto-dpif-xlate.pdf>]
+[35 <./ruleinsert01.pdf> <./ofproto-dpif-xlate.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 384--385
 
  []
 
-[42]
+
 Underfull \hbox (badness 10000) in paragraph at lines 415--416
 
  []
 
-
+[36]
 Underfull \hbox (badness 10000) in paragraph at lines 429--430
 
  []
 
-[43]
+
 Underfull \hbox (badness 10000) in paragraph at lines 448--449
 
  []
 
-[44] <ryu01.pdf, id=2993, 783.92876pt x 473.77pt>
+[37] [38] <ryu01.pdf, id=2994, 783.92876pt x 473.77pt>
 File: ryu01.pdf Graphic file (type pdf)
  <use ryu01.pdf>
 Package pdftex.def Info: ryu01.pdf used on input line 513.
 (pdftex.def)             Requested size: 341.43687pt x 256.07777pt.
- [45]
+
 Underfull \hbox (badness 10000) in paragraph at lines 517--518
 
  []
 
 (c:/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
-) [46 <./ryu01.pdf>]
+) [39 <./ryu01.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 553--554
 
  []
 
-
+[40]
 Underfull \hbox (badness 10000) in paragraph at lines 579--580
 
  []
 
-[47]
+
 Underfull \hbox (badness 10000) in paragraph at lines 590--591
 
  []
@@ -2888,41 +2892,42 @@ Underfull \hbox (badness 10000) in paragraph at lines 602--603
 
  []
 
-[48]
+[41]
 Underfull \hbox (badness 10000) in paragraph at lines 632--633
 
  []
 
-) (./5_Evaluation_and_Results.tex [49]
+) (./5_Evaluation_and_Results.tex [42]
 chapter 5.
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 8.
 See the caption package documentation for explanation.
 
-[50
-
-
-] <evsovs.pdf, id=3192, 906.38625pt x 386.44376pt>
+<evsovs.pdf, id=3169, 906.38625pt x 386.44376pt>
 File: evsovs.pdf Graphic file (type pdf)
  <use evsovs.pdf>
 Package pdftex.def Info: evsovs.pdf used on input line 39.
 (pdftex.def)             Requested size: 467.1468pt x 199.16928pt.
- [51 <./evsovs.pdf>] <nsovs01.pdf, id=3297, 693.59125pt x 383.4325pt>
+ [43
+
+
+] [44 <./evsovs.pdf>] <nsovs01.pdf, id=3279, 693.59125pt x 383.4325pt>
 File: nsovs01.pdf Graphic file (type pdf)
  <use nsovs01.pdf>
 Package pdftex.def Info: nsovs01.pdf used on input line 80.
 (pdftex.def)             Requested size: 341.4396pt x 227.62738pt.
 
-[52] (c:/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
+[45 <./nsovs01.pdf>]
+(c:/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (c:/texlive/2016/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
-) [53 <./nsovs01.pdf>]
+)
 LaTeX Font Info:    Font shape `T1/fve/m/n' will be
-(Font)              scaled to size 7.00514pt on input line 130.
- [54] [55]
+(Font)              scaled to size 6.41435pt on input line 130.
+ [46] [47]
 Underfull \hbox (badness 10000) in paragraph at lines 213--217
 
  []
@@ -2932,7 +2937,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 213--217
 
  []
 
-[56] [57] [58] [59] [60]
+[48] [49] [50] [51]
 Underfull \hbox (badness 10000) in paragraph at lines 535--541
 
  []
@@ -2942,7 +2947,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 535--541
 
  []
 
-[61]
+[52] [53]
 Underfull \hbox (badness 10000) in paragraph at lines 615--622
 
  []
@@ -2952,7 +2957,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 615--622
 
  []
 
-[62]
+[54]
 Underfull \hbox (badness 10000) in paragraph at lines 664--671
 
  []
@@ -2962,13 +2967,13 @@ Underfull \hbox (badness 10000) in paragraph at lines 664--671
 
  []
 
-[63] [64]
+[55]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 714.
 See the caption package documentation for explanation.
 
-
+[56]
 Underfull \hbox (badness 10000) in paragraph at lines 740--747
 
  []
@@ -2978,7 +2983,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 740--747
 
  []
 
-[65]
+[57]
 Underfull \hbox (badness 10000) in paragraph at lines 788--795
 
  []
@@ -2988,30 +2993,30 @@ Underfull \hbox (badness 10000) in paragraph at lines 788--795
 
  []
 
-[66] [67] <learnandcache.pdf, id=3630, 755.82375pt x 526.96875pt>
+[58] <learnandcache.pdf, id=3601, 755.82375pt x 526.96875pt>
 File: learnandcache.pdf Graphic file (type pdf)
 
 <use learnandcache.pdf>
 Package pdftex.def Info: learnandcache.pdf used on input line 898.
 (pdftex.def)             Requested size: 285.6706pt x 199.16928pt.
- [68]
+ [59]
 Underfull \hbox (badness 10000) in paragraph at lines 900--901
 
  []
 
-[69 <./learnandcache.pdf>] [70] [71] (./55_performance_stateful_operations.tex
+[60 <./learnandcache.pdf>] [61] [62] (./55_performance_stateful_operations.tex
 Underfull \hbox (badness 10000) in paragraph at lines 7--14
 
  []
 
-[72]
+[63]
 Underfull \hbox (badness 10000) in paragraph at lines 49--56
 
  []
 
-[73]
-Overfull \hbox (56.90515pt too wide) in paragraph at lines 92--92
-[]\T1/fvm/m/n/12 SET MAXVAL TEMPSTREAM CONDITION (5 < DEVICE_1.VALUE ? DEVICE_1
+[64]
+Overfull \hbox (10.66922pt too wide) in paragraph at lines 92--92
+[]\T1/fvm/m/n/11 SET MAXVAL TEMPSTREAM CONDITION (5 < DEVICE_1.VALUE ? DEVICE_1
 .VALUE : 5) WINDOW(100, TEMP)[] 
  []
 
@@ -3020,19 +3025,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 95--138
 
  []
 
-[74] [75] [76]) [77] [78] <evsdpdk04.pdf, id=3887, 705.63625pt x 613.29124pt>
+[65] [66] [67]) [68] <evsdpdk04.pdf, id=3847, 705.63625pt x 613.29124pt>
 File: evsdpdk04.pdf Graphic file (type pdf)
 
 <use evsdpdk04.pdf>
 Package pdftex.def Info: evsdpdk04.pdf used on input line 1178.
 (pdftex.def)             Requested size: 392.83867pt x 341.43306pt.
- [79] <evsovsdpdk.pdf, id=3907, 916.42375pt x 386.44376pt>
+ [69] <evsovsdpdk.pdf, id=3875, 916.42375pt x 386.44376pt>
 File: evsovsdpdk.pdf Graphic file (type pdf)
 
 <use evsovsdpdk.pdf>
 Package pdftex.def Info: evsovsdpdk.pdf used on input line 1189.
 (pdftex.def)             Requested size: 472.32008pt x 199.16928pt.
- [80 <./evsdpdk04.pdf>]
+ [70 <./evsdpdk04.pdf>]
 Underfull \hbox (badness 10000) in paragraph at lines 1201--1202
 
  []
@@ -3047,7 +3052,7 @@ Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 1206.
 See the caption package documentation for explanation.
 
-[81 <./evsovsdpdk.pdf>] [82] (./56_performance_compare_operations_dpdk.tex
+[71 <./evsovsdpdk.pdf>] [72] (./56_performance_compare_operations_dpdk.tex
 Underfull \hbox (badness 10000) in paragraph at lines 5--12
 
  []
@@ -3057,28 +3062,25 @@ Underfull \hbox (badness 10000) in paragraph at lines 5--12
 
  []
 
-[83] [84]) [85]
+[73] [74]) [75]
 
 Package caption Warning: The option `hypcap=true' will be ignored for this
 (caption)                particular \caption on input line 1389.
 See the caption package documentation for explanation.
 
 
-Overfull \hbox (76.38075pt too wide) in paragraph at lines 1390--1406
+Overfull \hbox (30.67522pt too wide) in paragraph at lines 1390--1406
  [] 
  []
 
-[86]) (./6_Summary.tex [87]
+) (./6_Summary.tex [76]
 chapter 6.
 
 Underfull \hbox (badness 10000) in paragraph at lines 15--16
 
  []
 
-[88
-
-
-])
+)
 Underfull \hbox (badness 10000) in paragraph at lines 18--491
 
  []
@@ -3093,16 +3095,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 18--491
 
  []
 
-(./advith_nagappa_dsp_theses.bbl [89] [90
+[77
 
 
-] [91] [92])
+] (./advith_nagappa_dsp_theses.bbl [78] [79
+
+
+] [80] [81])
 
 Package glossaries Warning: No \printglossary or \printglossaries found. 
 (Remove \makeglossaries if you don't want any glossaries.) 
 This document will not have a glossary.
 
-[93]
+[82]
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 503.
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 503.
  (./advith_nagappa_dsp_theses.aux)
@@ -3120,10 +3125,10 @@ LaTeX Warning: There were multiply-defined labels.
 
  ) 
 Here is how much of TeX's memory you used:
- 55524 strings out of 493013
- 1192378 string characters out of 6136994
- 1549188 words of memory out of 5000000
- 57094 multiletter control sequences out of 15000+600000
+ 55509 strings out of 493013
+ 1192260 string characters out of 6136994
+ 1587239 words of memory out of 5000000
+ 57089 multiletter control sequences out of 15000+600000
  94661 words of font info for 99 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  73i,20n,100p,10364b,2304s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -3139,10 +3144,10 @@ fvmr8a.pfb><c:/texlive/2016/texmf-dist/fonts/type1/public/bera/fvsr8a.pfb><c:/t
 exlive/2016/texmf-dist/fonts/type1/adobe/utopia/putri8a.pfb><c:/texlive/2016/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2016/texmf-dist/fonts/typ
 e1/urw/times/utmri8a.pfb>
-Output written on advith_nagappa_dsp_theses.pdf (102 pages, 2850597 bytes).
+Output written on advith_nagappa_dsp_theses.pdf (94 pages, 2844100 bytes).
 PDF statistics:
- 4496 PDF objects out of 5155 (max. 8388607)
- 3130 compressed objects within 32 object streams
- 976 named destinations out of 1000 (max. 500000)
+ 4459 PDF objects out of 5155 (max. 8388607)
+ 3101 compressed objects within 32 object streams
+ 967 named destinations out of 1000 (max. 500000)
  709 words of extra memory for PDF output out of 10000 (max. 10000000)
 
