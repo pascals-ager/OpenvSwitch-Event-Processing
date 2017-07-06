@@ -229,6 +229,10 @@ Stamatia Rizou, Frank D{\"u}rr, and Kurt Rothermel.
   networks.
 \newblock In {\em ICCCN}, pages 1--6, 2010.
 
+\bibitem[Ref15]{Esper}
+Esper Query~Language Reference.
+\newblock Esper reference release 5.3.0, 2015.
+
 \bibitem[Riz12]{rizzo2012netmap}
 Luigi Rizzo.
 \newblock Netmap: a novel framework for fast packet i/o.
@@ -265,10 +269,6 @@ Radu Stoenescu, Vladimir Olteanu, Matei Popovici, Mohamed Ahmed, Joao Martins,
 \newblock In-net: In-network processing for the masses.
 \newblock In {\em Proceedings of the Tenth European Conference on Computer
   Systems}, EuroSys '15, pages 23:1--23:15, New York, NY, USA, 2015. ACM.
-
-\bibitem[sRe15]{Esper}
-Esper Query~Language sReference.
-\newblock Esper reference release 5.3.0, 2015.
 
 \bibitem[Sup14]{OpenStack14}
 OpenStack Superuser.

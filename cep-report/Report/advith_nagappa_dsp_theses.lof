@@ -1,48 +1,48 @@
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {1.1}{\ignorespaces Data path in virtualization environments\relax }}{2}{figure.caption.16}
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Data path in virtualization environments\relax }}{3}{figure.caption.16}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {2.1}{\ignorespaces Event Abstraction Hierarchy\relax }}{5}{figure.caption.17}
-\contentsline {figure}{\numberline {2.2}{\ignorespaces Publish-Subscribe communication model\relax }}{6}{figure.caption.18}
-\contentsline {figure}{\numberline {2.3}{\ignorespaces Push-Pull communication model\relax }}{7}{figure.caption.19}
-\contentsline {figure}{\numberline {2.4}{\ignorespaces SDN Architecture\relax }}{9}{figure.caption.20}
-\contentsline {figure}{\numberline {2.5}{\ignorespaces DPDK Components\relax }}{11}{figure.caption.21}
-\contentsline {figure}{\numberline {2.6}{\ignorespaces Vhost-net acceleration\relax }}{13}{figure.caption.22}
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Event Abstraction Hierarchy\relax }}{7}{figure.caption.17}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Publish-Subscribe communication model\relax }}{8}{figure.caption.18}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Push-Pull communication model\relax }}{9}{figure.caption.19}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces SDN Architecture\relax }}{11}{figure.caption.20}
+\contentsline {figure}{\numberline {2.5}{\ignorespaces DPDK Components\relax }}{14}{figure.caption.21}
+\contentsline {figure}{\numberline {2.6}{\ignorespaces Vhost-net acceleration\relax }}{15}{figure.caption.22}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Application Aware Data Plane Processing\relax }}{16}{figure.caption.23}
-\contentsline {figure}{\numberline {3.2}{\ignorespaces In-Network processing model\relax }}{17}{figure.caption.24}
-\contentsline {figure}{\numberline {3.3}{\ignorespaces NetVM\relax }}{19}{figure.caption.25}
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Application Aware Data Plane Processing\relax }}{20}{figure.caption.23}
+\contentsline {figure}{\numberline {3.2}{\ignorespaces In-Network processing model\relax }}{21}{figure.caption.24}
+\contentsline {figure}{\numberline {3.3}{\ignorespaces NetVM\relax }}{23}{figure.caption.25}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Open vSwitch viewed as an Event Processing engine\relax }}{22}{figure.caption.26}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces OVS components\relax }}{24}{figure.caption.27}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces OVS overview\relax }}{25}{figure.caption.28}
-\contentsline {figure}{\numberline {4.4}{\ignorespaces OVS dataflow: datapath to ofproto\relax }}{26}{figure.caption.29}
-\contentsline {figure}{\numberline {4.5}{\ignorespaces Event Payload\relax }}{27}{figure.caption.30}
-\contentsline {figure}{\numberline {4.6}{\ignorespaces Event extraction and access\relax }}{30}{figure.caption.31}
-\contentsline {figure}{\numberline {4.7}{\ignorespaces Openflow Pipeline\relax }}{31}{figure.caption.32}
-\contentsline {figure}{\numberline {4.8}{\ignorespaces Openflow Flowtable - Add event data fields\relax }}{32}{figure.caption.33}
-\contentsline {figure}{\numberline {4.9}{\ignorespaces Openflow: Parse event fields\relax }}{34}{figure.caption.34}
-\contentsline {figure}{\numberline {4.10}{\ignorespaces Openflow: Event rule creation\relax }}{35}{figure.caption.35}
-\contentsline {figure}{\numberline {4.11}{\ignorespaces ofproto: Rule look-up\relax }}{36}{figure.caption.36}
-\contentsline {figure}{\numberline {4.12}{\ignorespaces RYU: North to South - Event Rule creation\relax }}{40}{figure.caption.37}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Open vSwitch viewed as an Event Processing engine\relax }}{27}{figure.caption.26}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces OVS components\relax }}{29}{figure.caption.27}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces OVS overview\relax }}{30}{figure.caption.28}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces OVS dataflow: datapath to ofproto\relax }}{31}{figure.caption.29}
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Event Payload\relax }}{32}{figure.caption.30}
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Event extraction and deserialization\relax }}{35}{figure.caption.31}
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Openflow Pipeline\relax }}{36}{figure.caption.32}
+\contentsline {figure}{\numberline {4.8}{\ignorespaces Openflow Flowtable - Add event data fields\relax }}{37}{figure.caption.33}
+\contentsline {figure}{\numberline {4.9}{\ignorespaces Openflow: Parse event fields\relax }}{40}{figure.caption.34}
+\contentsline {figure}{\numberline {4.10}{\ignorespaces Openflow: Event rule creation\relax }}{41}{figure.caption.35}
+\contentsline {figure}{\numberline {4.11}{\ignorespaces ofproto: Rule look-up\relax }}{41}{figure.caption.36}
+\contentsline {figure}{\numberline {4.12}{\ignorespaces RYU: North to South - Event Rule creation\relax }}{46}{figure.caption.37}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Data Flow in EVS vs OVS\relax }}{45}{figure.caption.39}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Namespaces on EVS/OVS\relax }}{46}{figure.caption.40}
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Performance of bridged namespaces\relax }}{49}{figure.caption.41}
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Performance of Event Redirection\relax }}{50}{figure.caption.42}
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Changing Size and Number of Event Types\relax }}{52}{figure.caption.43}
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Performance of Event Filtering\relax }}{52}{figure.caption.44}
-\contentsline {figure}{\numberline {5.7}{\ignorespaces Performance of Event attribute match operations\relax }}{55}{figure.caption.46}
-\contentsline {figure}{\numberline {5.8}{\ignorespaces Performance of compare operations\relax }}{60}{figure.caption.53}
-\contentsline {figure}{\numberline {5.9}{\ignorespaces Megaflow cache\relax }}{61}{figure.caption.54}
-\contentsline {figure}{\numberline {5.10}{\ignorespaces Accuracy and latency measure of compare operations with disabled megaflows\relax }}{62}{figure.caption.55}
-\contentsline {figure}{\numberline {5.11}{\ignorespaces Accuracy and latency measure of compare operations with flow max idle time=1\relax }}{63}{figure.caption.56}
-\contentsline {figure}{\numberline {5.12}{\ignorespaces Accuracy and latency measure of compare operations with flow max idle time=5\relax }}{64}{figure.caption.57}
-\contentsline {figure}{\numberline {5.13}{\ignorespaces Performance of stateful operations\relax }}{67}{figure.caption.61}
-\contentsline {figure}{\numberline {5.14}{\ignorespaces Accuracy of stateful operations\relax }}{68}{figure.caption.62}
-\contentsline {figure}{\numberline {5.15}{\ignorespaces Performance of Stateful Operations\relax }}{69}{figure.caption.63}
-\contentsline {figure}{\numberline {5.16}{\ignorespaces KVM guests on EVS/OVS DPDK\relax }}{71}{figure.caption.64}
-\contentsline {figure}{\numberline {5.17}{\ignorespaces Data Flow in EVS vs OVS DPDK\relax }}{72}{figure.caption.65}
-\contentsline {figure}{\numberline {5.18}{\ignorespaces Performance of event redirection in bridged virtual machines\relax }}{74}{figure.caption.66}
-\contentsline {figure}{\numberline {5.19}{\ignorespaces Performance of compare operation and event redirection in bridged virtual machines\relax }}{76}{figure.caption.67}
-\contentsline {figure}{\numberline {5.20}{\ignorespaces Accuracy of operations in EVS DPDK\relax }}{76}{figure.caption.68}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Data Flow in EVS vs OVS\relax }}{51}{figure.caption.39}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Namespaces on EVS/OVS\relax }}{53}{figure.caption.40}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Performance of bridged namespaces\relax }}{56}{figure.caption.41}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Performance of Event Redirection\relax }}{57}{figure.caption.42}
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Changing Size and Number of Event Types\relax }}{59}{figure.caption.43}
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Performance of Event Filtering\relax }}{60}{figure.caption.44}
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Performance of Event attribute match operations\relax }}{62}{figure.caption.46}
+\contentsline {figure}{\numberline {5.8}{\ignorespaces Performance of compare operations\relax }}{68}{figure.caption.53}
+\contentsline {figure}{\numberline {5.9}{\ignorespaces Megaflow cache\relax }}{69}{figure.caption.54}
+\contentsline {figure}{\numberline {5.10}{\ignorespaces Accuracy and latency measure of compare operations with disabled megaflows\relax }}{70}{figure.caption.55}
+\contentsline {figure}{\numberline {5.11}{\ignorespaces Accuracy and latency measure of compare operations with flow max idle time=1\relax }}{71}{figure.caption.56}
+\contentsline {figure}{\numberline {5.12}{\ignorespaces Accuracy and latency measure of compare operations with flow max idle time=5\relax }}{72}{figure.caption.57}
+\contentsline {figure}{\numberline {5.13}{\ignorespaces Performance of stateful operations\relax }}{75}{figure.caption.61}
+\contentsline {figure}{\numberline {5.14}{\ignorespaces Accuracy of stateful operations\relax }}{77}{figure.caption.62}
+\contentsline {figure}{\numberline {5.15}{\ignorespaces Performance of stateful Operations without caching\relax }}{77}{figure.caption.63}
+\contentsline {figure}{\numberline {5.16}{\ignorespaces KVM guests on EVS/OVS DPDK\relax }}{80}{figure.caption.64}
+\contentsline {figure}{\numberline {5.17}{\ignorespaces Data Flow in EVS vs OVS DPDK\relax }}{81}{figure.caption.65}
+\contentsline {figure}{\numberline {5.18}{\ignorespaces Performance of event redirection in bridged virtual machines\relax }}{83}{figure.caption.66}
+\contentsline {figure}{\numberline {5.19}{\ignorespaces Performance of compare operation and event redirection in bridged virtual machines\relax }}{85}{figure.caption.67}
+\contentsline {figure}{\numberline {5.20}{\ignorespaces Accuracy of operations in EVS DPDK\relax }}{86}{figure.caption.68}
 \addvspace {10\p@ }

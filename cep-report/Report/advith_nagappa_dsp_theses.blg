@@ -16,7 +16,7 @@ Warning--entry type for "OFSwitchSpecification" isn't style-file defined
 Warning--empty institution in halpern2015service
 You've used 50 entries,
             2543 wiz_defined-function locations,
-            840 strings with 14335 characters,
+            840 strings with 14334 characters,
 and the built_in function-call counts, 24809 in all, are:
 = -- 2502
 > -- 1318

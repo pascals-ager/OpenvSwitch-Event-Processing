@@ -2,7 +2,7 @@
 In this chapter, the design and implementation of a programmable event processing framework within the Open vSwitch are presented. As a preview to the design, the problem statement of the thesis is revisited, and the goals of the implementation are established in section 4.2. The rationale for an Open vSwitch implementation and the overview of the Open vSwitch is presented in sections 4.1 and 4.3. The breakdown of the design and the model of the envisioned system is expressed in section 4.4 and 4.5 respectively. An high-level implementation walk-through is detailed in section 4.6.
 Before diving into the design and implementation of the system, it is important to revisit the problem statement and define the goals of the thesis. As outlined in Sections 1.1 and 1.2, the contribution of the thesis is in the area of Event-Based Systems which rely on high streaming data to detect and compose events to be processed. Typically such systems deal with massive streams of data arriving at high rates from a vast variety of nodes - be it sensory nodes or conventional computational devices. In this Chapter, a novel way of offloading the handling of such data onto the underlying network is presented. As outlined in section 1.2, offloading aspects of event processing onto the network can help in reducing the burden of computation on the event processing engines by detecting events and taking appropriate actions before they enter the event processing engine. To create such a solution, the first question that needs to be answered is where in the network can aspects of an event processing engine be offloaded to? The implementation in this thesis focuses on the virtual switch.
 
-With the advent of network and server virtualization environments, virtual switches (vSwitch) have increasingly become the mainstay deployments in all kinds of processing platforms. From large-scale data center networks to smaller Fog deployments, vSwitches allow for communication between different virtualized nodes of a host providing intelligent L2 routing with the aim of abstracting physical switches into an easily manageable logical switch. Since a vSwitch is a pure software solution - embedded or otherwise - it is much easier for administrators to manage and roll-out new functionalities on the switch. Additionally, vSwitches are also deployed on the edge of a network. For these reasons, the implementation in this thesis focuses on offloading aspects of event processing on to a vSwitch. Among the different implementation of vSwitches that are available for researchers today, we focus on the Open vSwitch as the core of our implementation. That leads to the next section, why Open vSwitch? 
+With the advent of network and server virtualization environments, the \ac{vswitch} has increasingly become the mainstay deployment in  various processing platforms. From large-scale data-center networks to smaller Fog deployments, vSwitches allow for communication between different virtualized nodes of a host providing intelligent L2 routing with the aim of abstracting physical switches into an easily manageable logical switch. Since a vSwitch is a pure software solution - embedded or otherwise - it is much easier for administrators to manage and roll-out new functionalities on the switch. Additionally, vSwitches are also deployed on the edge of a network. For these reasons, the implementation in this thesis focuses on offloading aspects of event processing on to a vSwitch. Among the different implementation of vSwitches that are available for researchers today, we focus on the Open vSwitch as the core of our implementation. That leads to the next section, why Open vSwitch? 
 
 
 \section{Why Open vSwitch?}
@@ -10,7 +10,7 @@ Open vSwitch is a production quality switch built for multi-server virtualizatio
  \begin{figure}[H]
  \centering
  \caption{Open vSwitch viewed as an Event Processing engine} 
- \includegraphics[height=8cm,width=14cm]{evsep01.pdf}
+ \includegraphics[height=6cm,width=10cm]{evsep01.pdf}
 \end{figure}
 
 \section{Goals of the implementation}
@@ -47,7 +47,7 @@ In the context of the thesis, most of the work focuses on the ovs-vswitchd daemo
  \begin{figure}[H] 
   \centering   
  \caption{OVS components}
- \includegraphics[height=10cm]{kernaldatapath.pdf}
+ \includegraphics[height=8cm]{kernaldatapath.pdf}
 \end{figure}
 
 The interplay of the components of the Open vSwitch is shown in figure 4.3. The two interfaces that specify the handling of the packets are \newline
@@ -80,15 +80,15 @@ Before design and implementation of the event processing framework within Open v
  \begin{figure}[H] 
  \centering   
  \caption{OVS dataflow: datapath to ofproto}
- \includegraphics[height=12cm]{dpnetdev.pdf}
+ \includegraphics[height=8cm]{dpnetdev.pdf}
 \end{figure}
  \item OpenFlow pipeline support for events: For making the event detection programmable, additional tables are created within the OpenFlow processing pipeline, or the ofproto classifier. Handling the ofproto classifier is sufficient because ofproto-dpif takes care of creating the tables in the datapath classifier/exact match cache when needed.
  \item Creating keys for event attributes: The \textit{odp-netlink} interface in Open vSwitch specifies the rules for creating attribute keys. These keys are used to look up the ofproto classifier and find the relevant rule installed for an event. 
  \item Support for logical operations: The operations on event attributes are performed using OpenFlow actions. Hence each operation is achieved using a newly defined action, which is triggered based on the detection criteria specified on event items.
- \item RYU Controller design: The controller plays a big role in communicating OpenFlow rules to the Open vSwitch. Although ovs-ofctl utility can also play this part, a controller such as RYU is more sophisticated, in that it allows the creation of HTTP API's that are accessible by remote webservers to create rules. Such an API support is provided which enables remote creation and deletion of event based rules. The RYU controller plays the role of the rules engine, whereas Open vSwitch plays the role of the execution engine. 
+ \item RYU Controller design: The controller plays a big role in communicating OpenFlow rules to the Open vSwitch. Although ovs-ofctl utility can also play this part, a controller such as RYU is more sophisticated, in that it allows the creation of HTTP API's that are accessible by remote webservers to create rules. Such an API support is provided which enables remote creation and deletion of event based rules. From the event processing perspective, the RYU controller plays the role of the rules engine, whereas Open vSwitch plays the role of the execution engine. 
 \end{itemize}
 
-The design overview presented above aims to create a sophisticated programmable event processing framework on the network, which can complement the event processing engines to achieve latency sensitive results, reduce the burden of computation and enable staged processing. In the coming sections, more focus is granted up on individual design decisions.
+The design overview presented above aims to create a sophisticated programmable event processing framework on the network, which can complement the event processing engines to achieve latency sensitive results, reduce the burden on the network and enable staged processing. In the coming sections, more focus is granted up on individual design decisions.
 
 
 \section{System Model}
@@ -205,8 +205,8 @@ In this section, the methodology for event parsing and extraction is presented. 
 
 \begin{figure}[H]
  \centering
- \caption{Event extraction and access}
- \includegraphics[height=12cm]{flowextract01.pdf}
+ \caption{Event extraction and deserialization}
+ \includegraphics[height=8cm]{flowextract01.pdf}
 \end{figure}
 
 \subsection{Accessing event data}
@@ -249,7 +249,7 @@ As briefly alluded to in the section 4.6.2, the event items are to be added into
 \begin{figure}[H]
  \centering
  \caption{Openflow Flowtable - Add event data fields}
- \includegraphics[height=5cm]{flowtable.pdf}
+ \includegraphics[height=4cm]{flowtable.pdf}
 \end{figure}
 
 \subsection{Adding event data fields to OpenFlow tables}
@@ -329,7 +329,7 @@ This informs the parser that the relevant event fields are in the 22, 23 and 24 
 \begin{figure}[H]
  \centering
  \caption{Openflow: Parse event fields}
- \includegraphics[height=10cm,width=14cm]{flowadd.pdf}
+ \includegraphics[height=9cm]{flowadd01.pdf}
 \end{figure}
 
 Figure 4.10 shows an OpenFlow message of type OFPTYPE_FLOW_MOD is parsed to extract the relevant rules and added into the classifier. The ovs-vswitchd daemon actively polls for OpenFlow messages. On receiving a message, the message type is decoded. If the message is of type 'OFPTYPE_FLOW_MOD' the message is decoded by a decode function. The first phase of the decoding process involved pulling the message which is in the custom OpenFlow buffer, ofpbuf, into the Openflow1.0 match structure struct ofp10_match. This structure is also extended to support event fields, very much like struct flow: \newline
@@ -348,7 +348,7 @@ Once the \textit{struct op10_match} is created, the relevant event fields are ex
 \begin{figure}[H]
  \centering
  \caption{Openflow: Event rule creation}
- \includegraphics[height=12cm,width=14cm]{ruleinsert.pdf}
+ \includegraphics[height=9cm,width=11cm]{ruleinsert01.pdf}
 \end{figure}
 
 At this point, the implementation supports programmable event rules and the three event fields specified by the system model. However, the event detection mechanism is yet to be implemented. In the next subsection, a closer look into the implementation steps needed to support matching based on event type and event attributes is presented.
@@ -359,7 +359,7 @@ In this section, the implementation process to support classifier lookup based o
 \begin{figure}[H]
  \centering
  \caption{ofproto: Rule look-up}
- \includegraphics[height=5cm]{ofproto-dpif-xlate.pdf}
+ \includegraphics[height=4cm]{ofproto-dpif-xlate.pdf}
 \end{figure}
 
 Userspace keys to support the lookup are added to odp-netlink. In the below snippets, the set up steps for \textit{e_type} key are shown. The snippet focuses on the key steps to be taken to enable keys and excludes the details, which can be found in the source code. \newline
@@ -505,12 +505,12 @@ else:
 \end{itemize}
 
 \subsection{API support for event rules via RYU}
-In this section, the implementation of an OpenFlow based event rules engine is presented. To implement support for event rules the RYU controller is modified. Figure 4.12 shows the flow of data within the RYU controller started from the API to the corresponding \textit{OFPT_FLOW_MOD} message. 
+In this section, the implementation of an OpenFlow based event rules engine is presented. To implement support for event rules the RYU controller is modified. Figure 4.12 shows the flow of data within the RYU controller starting from the HTTP based JSON API to a \textit{OFPT_FLOW_MOD} message. 
 
 \begin{figure}[H]
  \centering
  \caption{RYU: North to South - Event Rule creation}
- \includegraphics[height=10cm,width=14cm]{ryu01.pdf}
+ \includegraphics[height=9cm,width=12cm]{ryu01.pdf}
 \end{figure}
 The implementation is broken down into four parts:
 \begin{itemize}

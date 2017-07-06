@@ -121,7 +121,7 @@ Without accounting for accuracy, only events which will satisfy the rule each ti
 	\addlegendentry{EVS - moving max - Avg 0.1743ms}
 	
 	\addplot[
-	color=yellow,
+	color=red,
 	mark=square,
 	]
 	coordinates {
@@ -202,7 +202,7 @@ if the received event attribute at each loop is lower than the loop counter, the
 	\begin{axis}[
 	ybar,
 	xlabel={Delay in Rule hit (ms)},
-	ylabel={Accuracy of compare operations(percentage)},
+	ylabel={Accuracy of stateful operations(percentage)},
 	symbolic x coords={7,8,9,10,11,12},
 	nodes near coords,
 	legend style={at={(0.5,1)},
@@ -233,7 +233,7 @@ As plotted in figures 5.14 and 5.15, the best accuracy and least latency is obse
 
 \begin{figure}[H] 
 	\centering
-	\caption{Performance of Stateful Operations}
+	\caption{Performance of stateful Operations without caching}
 	\begin{tikzpicture} 
 	\begin{axis}[
 	xlabel={Delay in Rule hit (ms)},

@@ -1,0 +1,30 @@
+\ifglsentryexists{sdn}{}%
+{%
+\gls@defglossaryentry{sdn}%
+{%
+name={SDN},%
+sort={SDN},%
+type={acronym},%
+first={Software Defined Network\glsspace (SDN)},%
+firstplural={Software Defined Network\acrpluralsuffix \glsspace (SDN\acrpluralsuffix )},%
+text={SDN},%
+plural={SDN\acrpluralsuffix },%
+description={Software Defined Network},%
+descriptionplural={Software Defined Network\acrpluralsuffix },%
+symbol={\relax },%
+symbolplural={\relax },%
+user1={},%
+user2={},%
+user3={},%
+user4={},%
+user5={},%
+user6={},%
+long={Software Defined Network},%
+longplural={Software Defined Networks},%
+short={SDN},%
+shortplural={SDNs},%
+counter={page},%
+parent={},%
+%
+}%
+}%

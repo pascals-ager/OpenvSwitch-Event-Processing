@@ -14,7 +14,7 @@
 % http://exp1.fkp.physik.tu-darmstadt.de/tuddesign/
 % Refer to the manuals and forum for details
 %======================================================
-\documentclass[longdoc,accentcolor=tud4b,11pt,paper=a4,colorback=tud4b,oneside]{tudreport}
+\documentclass[longdoc,accentcolor=tud4b,12pt,paper=a4,colorback=tud4b,oneside]{tudreport}
 
 %======================================================
 % colorback = Bereich unter Titel mit Hintergrundfarbe
@@ -107,7 +107,155 @@
 \cftsetindents{figure}{0em}{3.5em}
 \cftsetindents{table}{0em}{3.5em}
 \usetikzlibrary{patterns}
+\usepackage[acronym]{glossaries}
+\usepackage{acro}
 
+
+\usepackage{enumitem}
+\newlength\myitemwidth
+
+\setlength\myitemwidth{25em} % <<< choose what you need here
+\newlist{myacronymlist}{description}{1}
+\setlist[myacronymlist]{
+	labelindent = 0pt ,
+	labelsep    = 0pt ,
+	leftmargin  = \myitemwidth ,
+	labelwidth  = \myitemwidth ,
+	itemindent  = 0pt ,
+	format      = \normalfont
+}
+
+\usepackage{acro}
+\DeclareAcroListStyle{myliststyle}{list}{
+	list = myacronymlist
+}
+\acsetup{ list-style = myliststyle }
+
+\makeglossaries
+\DeclareAcronym{pmd}{
+	short = PMD ,
+	long  = Poll Mode Driver ,
+	class = abbrev
+}
+\DeclareAcronym{eal}{
+	short = EAL ,
+	long  = Environment Abstraction Layer ,
+	class = abbrev
+}
+
+\DeclareAcronym{cep}{
+	short = CEP ,
+	long  = Complex Event Processing ,
+	class = abbrev
+}
+\DeclareAcronym{sdn}{
+	short = SDN ,
+	long  = Software Defined Network,
+	class = abbrev
+}
+	
+\DeclareAcronym{api}{
+	short = API ,
+	long  = Application Programming Interface,
+	class = abbrev
+}
+
+\DeclareAcronym{nfv}{
+	short = NFV ,
+	long  = Network Functions Virtualization,
+	class = abbrev
+}
+
+\DeclareAcronym{kvm}{
+	short = KVM ,
+	long  = Linux Kernel Virtual Machine,
+	class = abbrev
+}
+
+\DeclareAcronym{qemu}{
+	short = QEMU ,
+	long  = Quick Emulator,
+	class = abbrev
+}
+
+\DeclareAcronym{nic}{
+	short = NIC ,
+	long  = Network Interface Card,
+	class = abbrev
+}
+
+\DeclareAcronym{dpdk}{
+	short = DPDK ,
+	long  = Data Plane Development Kit,
+	class = abbrev
+}
+
+\DeclareAcronym{vm}{
+	short = VM ,
+	long  = Virtual Machine,
+	class = abbrev
+}
+
+\DeclareAcronym{ovs}{
+	short = OVS ,
+	long  = Open vSwitch,
+	class = abbrev
+}
+\DeclareAcronym{saas}{
+	short = SaaS ,
+	long  = Sensing-as-a-Service,
+	class = abbrev
+}
+\DeclareAcronym{iot}{
+	short = IoT ,
+	long  = Internet of Things,
+	class = abbrev
+}
+\DeclareAcronym{numa}{
+	short = NUMA ,
+	long  = Non-Uniform memory access,
+	class = abbrev
+}
+\DeclareAcronym{pci}{
+	short = PCI ,
+	long  = Peripheral Component Interconnect,
+	class = abbrev
+}
+\DeclareAcronym{vswitch}{
+	short = vSwitch ,
+	long  = Virtual Switch,
+	class = abbrev
+}
+\DeclareAcronym{evs}{
+	short = EVS ,
+	long  = Event Processing enabled Open vSwitch,
+	class = abbrev
+}
+\DeclareAcronym{mqtt}{
+	short = MQTT ,
+	long  = Message Queueing Telemetry Transport,
+	class = abbrev
+}
+\DeclareAcronym{dma}{
+	short = DMA ,
+	long  = Direct Memory Access,
+	class = abbrev
+}
+\DeclareAcronym{udp}{
+	short = UDP ,
+	long  = User Datagram Protocol,
+	class = abbrev
+}
+\DeclareAcronym{ipc}{
+	short = IPC ,
+	long  = Inter Process Communication,
+	class = abbrev
+}
+\DeclareAcronym{rtt}{
+	short = RTT ,
+	long  = Round Trip Time,
+	class = abbrev
+}
 %\usepackage{pdfpages}
 
 \colorlet{punct}{red!60!black}
@@ -325,7 +473,9 @@
 	%\listoflstlisting
 	%\lstlistoflistings
 	\listoftables
+	\pagebreak
 	
+	\printacronyms[include-classes=abbrev,name=Abbreviations]
 	%======================================================
 	% The main matter (insert your contents here)
 	%======================================================
@@ -343,11 +493,13 @@
 	% The back matter
 	%======================================================
 	%\cleardoublepage
+
 	\refstepcounter{dummy}
 	\addcontentsline{toc}{chapter}{\bibname}
 	\bibliographystyle{alpha} % <--- layout of the bib
 	\bibliography{Bibliography} % file name of your bib
-
+	
+	
 \end{document}
 %======================================================
 %======================================================

@@ -1,5 +1,5 @@
 \chapter{Evaluation and Results}
-In this chapter, the EVS bridge is evaluated for performance and function. The chapter describes the modes of deployment used for evaluation and the baselines used for measurement and comparison. Wherever eligible a brief discussion of the result is provided with necessary parameters. 
+In this chapter, the \ac{evs} bridge is evaluated for performance and function. The chapter describes the modes of deployment used for evaluation and the baselines used for measurement and comparison. Wherever eligible a brief discussion of the result is provided with necessary parameters. 
 
 
 \section{Evaluation Environment}
@@ -30,7 +30,7 @@ In Table 5.1, the components working together to form the evaluation environment
 \end{center}
 
 \section{System under Test}
-The system under test during the evaluation is the Event Processing enabled Open vSwitch(EVS) bridge. Firstly the performance of the EVS bridge is measured in terms of link bandwitdh and average round trip time and compared with that of a standard OVS bridge. This is important because an addition of functionality to the OVS bridge should not result in a performace degradation that will make the OVS bridge unusable for the generic switching scenarios it was originally designed for. 
+The system under test during the evaluation is the EVS bridge. Firstly the performance of the EVS bridge is measured in terms of link bandwitdh and average round trip time and compared with that of a standard OVS bridge. This is important because an addition of functionality to the OVS bridge should not result in a performance degradation that will make the OVS bridge unusable for the generic switching scenarios it was originally designed for. 
 \newline
 Secondly, the EVS bridge is evaluated with respect to the problem statement - described in Chapter 1.2 - that there is a performance gain to be attained when aspects of event processing are offloaded on to the underlying network. To evaluate the performance, an  application(evntsrc) is implemented to generate events, and another application(evntsink) is developed to consume the packets and measure latency. Standard packet generators cannot be used for evaluation because of the need to control the format of the packet payload. Performance of the EVS bridge is compared against a custom light-weight userspace application(evntbroker) emulating an event processing engine. The evntbroker application bridged on the standard OVS. The flow-path of data in the two systems is captured in figure 5.1. We can see that EVS bridge replaces the udpbroker and reduces the number of packets in the system. Although the evntbroker does not preform the role of full-fledged complex event processing engine, it is sufficient to provide a baseline for the event processing operations built in to the EVS bridge. The point-to-point latency between evntsrc and evntsink is measured in both the systems- under two deployment scenarios - and the results discussed.
 
@@ -49,6 +49,9 @@ Thirdly, we measure the performance of the EVS bridge for the following addition
  \item Measure of latency with increasing number of matched event attributes. 
  \item Measure of latency with event attributes detection and redirection.
  \item Measure of latency with compare operations performed on event attributes.
+ \item Measure of latency with stateful operations performed on event attributes.
+ \item Evaluation of compare operations for accuracy.
+ \item Evaluation of stateful operations for accuracy.
 \end{itemize}
 
 The Evaluation is performed in two deployment modes:
@@ -61,7 +64,7 @@ The Evaluation is performed in two deployment modes:
 \section{Apparatus for Evaluation}
 As briefly discussed in the previous chapter 5.2 and illustrated in figure 5.1, the three components needed for the evaluation are:
 \begin{itemize}
- \item Event Source: The EVS bridge implementation handles events only if the packets have a custom tag in the packet. All other packets without the tag are sent through the standard processing flow. Once the tag is detected, the EVS bridge parses the packet payload to derive the event types and event attributes. Hence the packets have to follow the  format \textit{[tag,event_type,event_attribute1,event_attribute2]}. To this end, a Java-based Event Source generator, \textit{evntsrc}, has been implemented to generate UDP packets in the established format.
+ \item Event Source: The EVS bridge implementation handles events only if the packets have a custom tag in the packet. All other packets without the tag are sent through the standard processing flow. Once the tag is detected, the EVS bridge parses the packet payload to derive the event types and event attributes. Hence the packets have to follow the  format \textit{[tag,event_type,event_attribute1,event_attribute2]}. To this end, a Java-based Event Source generator, \textit{evntsrc}, has been implemented to generate \ac{udp} packets in the established format.
   
  \item Event Sink: The events are consumed by an event sink which is responsible for measuring the point to point latency from source to sink. The \textit{evntsink} application has been implemented to consume events and measure the latency.
  
@@ -74,7 +77,7 @@ In this section, we evaluate the performance of userspace-EVS against userspace-
  \begin{figure}[H]
  \centering
  \caption{Namespaces on EVS/OVS}
- \includegraphics[height=8cm]{nsovs01.pdf}
+ \includegraphics[height=8cm,width=12cm]{nsovs01.pdf}
 \end{figure}
 
 
@@ -149,12 +152,12 @@ In this subsection the steps taken to set up the Network Namespaces bridged on t
 http://localhost:8080/stats/flowentry/add \end{lstlisting}
 \end{itemize}
 
-The latency measurements are produced at the evntsink application. It is important to understand the methodology for measurement. Network namespaces are purely separate logical networks. They run on the same CPU and use the Hardware. Technologies such as dockers, Linux containers combine facilities provided by network namespaces, process namespaces, file system namespace, IPC namespaces among others with Linux control groups to provide virtualization containers. But network namespaces simply provide a logical network stack. To measure the latency, the evntsrc application sends the system timestamp in the payload. The payload follows the format specified in figure 4.5. On receiving the packet, the eventsink extracts the timestamp from the payload computes the difference between current system time. The delta value is aggregated for 1000 UDP packets in each run to give one trial reading of the point-to-point latency. The same methodology is used in all experiments.
+The latency measurements are produced at the evntsink application. It is important to understand the methodology for measurement. Network namespaces are purely separate logical networks. They run on the same CPU and use the Hardware. Technologies such as dockers, Linux containers combine facilities provided by network namespaces, process namespaces, file system namespace, \ac{ipc} namespaces among others with Linux control groups to provide virtualization containers. But network namespaces simply provide a logical network stack. To measure the latency, the evntsrc application sends the system timestamp in the payload. The payload follows the format specified in figure 4.5. On receiving the packet, the eventsink extracts the timestamp from the payload computes the difference between current system time. The delta value is aggregated for 1000 UDP packets in each run to give one trial reading of the point-to-point latency. The same methodology is used in all experiments.
 
 \subsection{Performance measurement without event operations}
 In this subsection, the evaluation of latency between the evntsrc and evntsink connected without performing any event detection and redirection operation is detailed. Here the EVS bridge performs the role of a standard OVS bridge because no rules specific to events are installed. The packets are sent directly from evntsrc to evntsink without the need for evntbroker. The same exercise is repeated for the standard OVS bridge in order to contrast the performance of the two bridges. The observed results of this analysis are summarized in Figure 5.4. As we can see, the point-to-point latency between evntsrc and evntsink on the EVS bridge is only slightly greater than that of the point-to-point latency of the same on the standard OVS bridge. The slight increase in latency can be attributed to the fact that the EVS bridge performs deep packet inspection per packet to parse and de-serialize the payload data. 
 \newline
-In addition to point-to-point latency, the bandwidth of the link, and average round trip time (RTT) is measured for both EVS and OVS bridge. To measure the bandwidth of the link, \textit{hperf3} is used and to measure RTT \textit{hping3} is used. As we see in Figure 5.1, EVS bridge is similar to the standard OVS bridge when compared on the parameters of link bandwith and RTT. The bandwidth of the link is  low in both  cases because namespaces are bridged using virtual interfaces and expectedly have low throughput.
+In addition to point-to-point latency, the bandwidth of the link, and average \ac{rtt} is measured for both EVS and OVS bridge. To measure the bandwidth of the link, \textit{hperf3} is used and to measure RTT \textit{hping3} is used. As we see in Figure 5.1, EVS bridge is similar to the standard OVS bridge when compared on the parameters of link bandwith and RTT. The bandwidth of the link is  low in both  cases because namespaces are bridged using virtual interfaces and expectedly have low throughput.
 \begin{figure}[H]
 \centering
 \caption{Performance of bridged namespaces}
@@ -178,7 +181,7 @@ mark=square,
 coordinates {
  (1,0.1546)(2,0.1348)(3,0.1464)(4,0.158)(5,0.1396)(6,0.1588)(7,0.144)(8,0.1396)(9,0.1424)(10,0.159)
 };
-\addlegendentry{Namespaces on EVS - Avg 0.148ms}
+\addlegendentry{EVS - Avg 0.148ms}
 \addplot[
 color=green,
 mark=square,
@@ -186,7 +189,7 @@ mark=square,
 coordinates {
  (1,0.137)(2,0.1456)(3,0.1273)(4,0.1234)(5,0.1269)(6,0.1368)(7,0.1468)(8,0.1434)(9,0.1380)(10,0.1510)
 };
-\addlegendentry{Namespaces on OVS - Avg 0.137ms}
+\addlegendentry{OVS - Avg 0.137ms}
 
 
 
@@ -406,7 +409,7 @@ In the case of the OVS bridge, the broker does a simple string match, and increa
  coordinates {
   (1,0.32)(2,0.31)(3,0.28)(4,0.27)(5,0.32)(6,0.29)(7,0.30)(8,0.32)(9,0.33)
  };
- \addlegendentry{EVS Bridge: Avg 0.304ms}
+ \addlegendentry{EVS : Avg 0.304ms}
  
   \addplot[
  color=green,
@@ -415,7 +418,7 @@ In the case of the OVS bridge, the broker does a simple string match, and increa
  coordinates {
   (1,0.27)(2,0.256)(3,0.28)(4,0.292)(5,0.28)(6,0.256)(7,0.329)(8,0.26)(9,0.28)
  };
- \addlegendentry{OVS Bridge: Avg 0.273ms}
+ \addlegendentry{OVS : Avg 0.273ms}
  
  \end{axis}
  \end{tikzpicture} 
@@ -439,7 +442,7 @@ mark=square,
 coordinates {
  (10,0.319)(20,0.33)(30,0.32)(40,0.32)(50,0.30)(60,0.30)(70,0.308)(80,0.32)(90,0.31)(100,0.308)
 };
-\addlegendentry{EVS Bridge: Avg 0.3135ms}
+\addlegendentry{EVS : Avg 0.3135ms}
 
 \addplot[
 color=green,
@@ -455,7 +458,7 @@ coordinates {
 \end{figure} 
 
 \subsection{Performance measurement with increasing number of event types } 
-In addition to the size of event types, the number of event types sent to the EVS bridge was also increased to measure the impact on latency. Each event type is handled by one rule in EVS bridge, so to handle 100 event types and redirect them to evntsink the EVS bridge was set up with 100 rules. As seen in the right graph in Figure 5.6, an increase in the number of event types/rules does not affect the performance of the EVS bridge. This is because the number of flow rules remains constant, only the actions on each flow rule are modified to increase filtered events. And since the Tuple Space Search Classifier only adds Hashtable when there is a new combination of fields entered as a flow rule, even increasing the number flow rules, as long as they have the same match fields would not result in additional lookups.
+In addition to the size of event types, the number of event types sent to the EVS bridge was also increased to measure the impact on latency. Each event type is handled by one rule in EVS bridge, so to handle 100 event types and redirect them to evntsink the EVS bridge was set up with 100 rules. As seen in the right graph in Figure 5.6, an increase in the number of event types/rules does not affect the performance of the EVS bridge. This is because the number of flow rules remains constant, only the actions on each flow rule are modified to increase filtered events. And since the Tuple Space Search Classifier only adds a hashtable when there is a new combination of fields entered as a flow rule, even increasing the number flow rules, as long as they have the same match fields would not result in additional lookups.
 The same two experiment setups were repeated for the standard OVS bridge, with an evntbroker responsible for handling and forwarding the event types to the evntsrc. EVS bridge and OVS bridge performed similarly in this regard showcasing the potential of the EVS bridge in real-world scenarios.
 
 
@@ -491,7 +494,7 @@ The same two experiment setups were repeated for the standard OVS bridge, with a
   (80,0.33)
   (90,0.34)
  };
- \addlegendentry{EVS bridge: Avg 0.312 ms}
+ \addlegendentry{EVS : Avg 0.312 ms}
  
  \addplot[
  color=green,
@@ -509,7 +512,7 @@ The same two experiment setups were repeated for the standard OVS bridge, with a
   (80,0.258)
   (90,0.242)
  };
- \addlegendentry{OVS bridge: Avg 0.26 ms}
+ \addlegendentry{OVS : Avg 0.26 ms}
  
  \end{axis}
  \end{tikzpicture}
@@ -852,7 +855,7 @@ In this subsection, the performance of the compare operations defined in section
  coordinates {
   (1,0.1546)(2,0.1348)(3,0.1464)(4,0.158)(5,0.1396)(6,0.1588)(7,0.144)(8,0.1396)(9,0.1424)(10,0.159)
  };
- \addlegendentry{Namespaces on EVS - Avg 0.148ms}
+ \addlegendentry{EVS - Avg 0.148ms}
  \addplot[
  color=green,
  mark=square,
@@ -860,7 +863,7 @@ In this subsection, the performance of the compare operations defined in section
  coordinates {
   (1,0.137)(2,0.1456)(3,0.1273)(4,0.1234)(5,0.1269)(6,0.1368)(7,0.1468)(8,0.1434)(9,0.1380)(10,0.1510)
  };
- \addlegendentry{Namespaces on OVS - Avg 0.137ms}
+ \addlegendentry{OVS - Avg 0.137ms}
    \addplot[
  color=blue,
  mark=square,
@@ -977,7 +980,7 @@ mark=square,
 coordinates {
  (0,29.27)(5,0.2476)(10,0.2024)(15,0.2078)(20,0.2092)(25,0.2055)
 };
-\addlegendentry{EVS Bridge - Avg 0.2145 ms}
+\addlegendentry{EVS - Avg 0.2145 ms}
 \end{axis}
 \end{tikzpicture}
 \end{figure}
@@ -1038,7 +1041,7 @@ Unlike disabling megaflows entirely, this configuration ensures that any flow ru
  coordinates {
   (8,0.191)(9,0.169)(10,0.183)(11,0.18)(12,0.2008)(13,0.1772)
  };
- \addlegendentry{EVS Bridge Avg- 0.183ms}
+ \addlegendentry{EVS - Avg 0.183ms}
  \end{axis}
  \end{tikzpicture}
 \end{figure}
@@ -1094,7 +1097,7 @@ The results shown in Figure 5.13 shows that when the idle flows are evicted ever
  coordinates {
   (8,0.161)(9,0.186)(10,0.1576)(11,0.186)(12,0.202)(13,0.204)
  };
- \addlegendentry{EVS Bridge Avg- 0.183 ms}
+ \addlegendentry{EVS - Avg 0.183 ms}
  \end{axis}
  \end{tikzpicture}
 \end{figure}
@@ -1104,7 +1107,7 @@ Analyzing the plots at Figure 5.12,5.11 and 5.10 with different maximum idle tim
 \input{55_performance_stateful_operations}
 
 \section{Evaluation with DPDK}
-In this section, the performance evaluation of the EVS bridge is presented with KVM guest virtual machines running the evntsrc,evntbroker and evntsink applications. This section aims to emulate a real-world data centre deployment with applications running in virtual machines. The EVS bridge in this section is accelerated by the Intel DPDK library, and the performance of this bridge is compared against a standard OVS bridge accelerated with DPDK. The evaluation in EVS DPDK is performed to measure the latency across two parameters:
+In this section, the performance evaluation of the EVS bridge is presented with KVM guest virtual machines running the evntsrc,evntbroker and evntsink applications. This section aims to emulate a real-world data center deployment with applications running in virtual machines. The EVS bridge in this section is accelerated by the Intel DPDK library, and the performance of this bridge is compared against a standard OVS bridge accelerated with DPDK. The evaluation in EVS DPDK is performed to measure the latency across two parameters:
 \begin{itemize}
  \item The impact of VM-context switch on latency. 
  \item The impact of megaflow disabling in DPDK on the event actions.
@@ -1288,7 +1291,7 @@ http://localhost:8080/stats/flowentry/add \end{lstlisting}
 
   
  };
- \addlegendentry{Guests on EVS - Avg 0.4741 ms}
+ \addlegendentry{EVS - Avg 0.4741 ms}
  \addplot[
  color=green,
  mark=square,
@@ -1306,7 +1309,7 @@ http://localhost:8080/stats/flowentry/add \end{lstlisting}
 (10,0.421)
   
  };
- \addlegendentry{Guests on OVS - Avg 0.5101 ms}
+ \addlegendentry{OVS - Avg 0.5101 ms}
  
  
  \end{axis}
@@ -1315,7 +1318,7 @@ http://localhost:8080/stats/flowentry/add \end{lstlisting}
 
 
 
-The results show that when event redirection is performed on EVS in a virtualization environment, removing the context switch from hypervisor to guest and back to hypervisor results in a lower round trip latency when compared to sending the events to the evntbroker for redirection. This is a key result which was not observed when the event redirection was performed in network namespaces. Avoiding the context switch - which exists in a data centre/commodity server environment, does prove benifial in terms of avoiding latency and reducing network traffic. 
+The results show that when event redirection is performed on EVS in a virtualization environment, removing the context switch from hypervisor to guest and back to hypervisor results in a lower round trip latency when compared to sending the events to the evntbroker for redirection. This is a key result which was not observed when the event redirection was performed in network namespaces. Avoiding the context switch - which exists in a data center/commodity server environment, does prove benifial in terms of avoiding latency and reducing network traffic. 
 
 \input{56_performance_compare_operations_dpdk}
 
